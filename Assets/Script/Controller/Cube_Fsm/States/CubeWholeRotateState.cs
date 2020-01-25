@@ -6,9 +6,9 @@ using Kun.Tool;
 
 namespace Kun.Controller
 {
-	public class CubeWholeRotate : CubeFlowState {
+	public class CubeWholeRotateState : CubeFlowState {
 
-		public CubeWholeRotate (CubeController cube_Controller, CubeFlowController cubeFlowController) : base (cube_Controller, cubeFlowController)
+		public CubeWholeRotateState (CubeController cube_Controller, CubeFlowController cubeFlowController) : base (cube_Controller, cubeFlowController)
 		{
 			
 		}
