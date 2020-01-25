@@ -6,7 +6,7 @@ using UnityEngine;
 using Kun.Tool;
 using Kun.Data;
 
-namespace Kun.Manager
+namespace Kun.Tool
 {
 	public class ParseManager 
 	{
