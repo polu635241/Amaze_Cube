@@ -18,10 +18,10 @@ namespace Kun.Controller
 			currentWholeRot = centerPoint.rotation;
 			currentWholeEuler = centerPoint.eulerAngles;
 
-			cubeCacheDatas = new List<CubeCacheData> ();
+			cubeEntityDatas = new List<CubeEntityData> ();
 			subCubes.ForEach (subCube=>
 				{
-					cubeCacheDatas.Add (new CubeCacheData (centerPoint, subCube));
+					cubeEntityDatas.Add (new CubeEntityData (centerPoint, subCube));
 				});
 
 			this.cubeEntitySetting = cubeEntitySetting;
@@ -31,7 +31,7 @@ namespace Kun.Controller
 		Transform centerPoint;
 
 		[SerializeField][ReadOnly]
-		List<CubeCacheData> cubeCacheDatas;
+		List<CubeEntityData> cubeEntityDatas;
 
 		[SerializeField][ReadOnly]
 		CubeEntitySetting cubeEntitySetting;
@@ -48,27 +48,12 @@ namespace Kun.Controller
 
 			Quaternion deltaRot = Quaternion.Euler (processDeltaEuler);
 
-			SetWholeRotCache (deltaRot);
-			ProcessCubeCacheDatas ();
-		}
-
-		void SetWholeRotCache(Quaternion deltaRot)
-		{
 			currentWholeRot = deltaRot * currentWholeRot;
 			currentWholeEuler = currentWholeRot.eulerAngles;
-		}
 
-		void ProcessCubeCacheDatas ()
-		{
-			cubeCacheDatas.ForEach (cubeCacheData=>
+			cubeEntityDatas.ForEach (cubeCacheData=>
 				{
-					Transform bindTransform = cubeCacheData.BindTransform;
-
-					//原始的相對座標當作旋轉矩 往新的方向轉
-					Vector3 newPos = centerPoint.position + currentWholeRot * cubeCacheData.OriginRelativelyPos;
-
-					bindTransform.rotation = currentWholeRot;
-					bindTransform.position = newPos;
+					cubeCacheData.SetWholeRot (currentWholeRot);
 				});
 		}
 	}
