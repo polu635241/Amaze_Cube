@@ -21,6 +21,6 @@ namespace Kun.HardwareInput
 
 		public abstract bool Rush ();
 
-		public abstract bool TriggerDown (out Vector3 triggerPoint);
+		public abstract bool ScreenTrigger (out Vector3 triggerPoint);
 	}
 }

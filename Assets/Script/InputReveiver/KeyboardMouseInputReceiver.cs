@@ -36,9 +36,9 @@ namespace Kun.HardwareInput
 			return Input.GetKey (KeyCode.LeftShift);
 		}
 
-		public override bool TriggerDown (out Vector3 triggerPoint)
+		public override bool ScreenTrigger (out Vector3 triggerPoint)
 		{
-			if (Input.GetMouseButtonDown (0)) 
+			if (Input.GetMouseButton(0)) 
 			{
 				triggerPoint = Input.mousePosition;
 				return true;
