@@ -40,6 +40,15 @@ namespace Kun.Data
 		public void SetWholeRot (Quaternion wholeRot)
 		{
 			this.groupRot = wholeRot;
+			this.groupEuler = groupRot.eulerAngles;
+
+			Flush ();
+		}
+
+		public void DeltaSingleRot(Quaternion deltaRot)
+		{
+			singleRot = deltaRot * singleRot;
+			singleEuler = singleRot.eulerAngles;
 
 			Flush ();
 		}
