@@ -247,8 +247,6 @@ namespace Kun.Tool
 
 		public Range(int endPoint,int beginPoint=0)
 		{
-			int length = endPoint - beginPoint;
-
 			values = new List<int>();
 
 			for (int i = beginPoint; i < endPoint; i++) 
