@@ -181,20 +181,36 @@ namespace Kun.Tool
         {
 			DirectoryInfo outputInfo = new DirectoryInfo (outputPath);
 
-			DirectoryInfo sourceInfoParent = new DirectoryInfo (Application.dataPath);
-
+			DirectoryInfo sourceInfo = new DirectoryInfo (Application.dataPath);
             #region 生成資料夾
-			CopyFolder(sourceInfoParent, outputInfo, "GameSetting");
+			CopyDirectory(sourceInfo, outputInfo, "GameSetting");
             #endregion
         }
 
-		static void CopyFolder (DirectoryInfo sourceInfoParent, DirectoryInfo outputInfo, params string[] folderNames)
+		static void CopyDirectory (DirectoryInfo sourceDirectoryInfo, DirectoryInfo outputDirectoryInfo, params string[] folderNames)
         {
 			Array.ForEach (folderNames, (folderName) => 
 				{
-					string rootFolder = Path.Combine (outputInfo.Parent.FullName, folderName);
+					string folderPath = Path.Combine (outputDirectoryInfo.Parent.FullName, folderName);
 
-					Directory.CreateDirectory (rootFolder);
+					Directory.CreateDirectory (folderPath);
+
+					string sourceFolderPath = Path.Combine (sourceDirectoryInfo.Parent.FullName, folderName);
+
+					DirectoryInfo sourceFolderInfo = new DirectoryInfo (sourceFolderPath);
+
+					FileInfo[] subFileInfos = sourceFolderInfo.GetFiles ();
+
+					Array.ForEach(subFileInfos, subFileInfo=>
+						{
+							string fileName = subFileInfo.Name;
+
+							string sourceFilePath = Path.Combine (sourceFolderPath, fileName);
+
+							string createFilePath = Path.Combine (folderPath, fileName);
+
+							File.Copy (sourceFilePath, createFilePath);
+						});
 				});
         }
     }
