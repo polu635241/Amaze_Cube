@@ -33,9 +33,7 @@ namespace Kun.Controller
 				{
 					Vector3 deltaPos = (mousePos - mouseLastPos.Value);
 
-					Vector3 dir = deltaPos.normalized;
-
-					Vector3 deltaEnler = new Vector3 (dir.y, dir.x * -1);
+					Vector3 deltaEnler = new Vector3 (deltaPos.y, deltaPos.x * -1);
 
 					cube_Controller.CubeEntityController.RotateWhole (deltaEnler, deltaTime);
 				}
