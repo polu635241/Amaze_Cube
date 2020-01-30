@@ -11,18 +11,14 @@ namespace Kun.Controller
 	[Serializable]
 	public class CubeEntityController
 	{
-		public CubeEntityController (Transform centerPoint, List<Transform> subCubes, CubeEntitySetting cubeEntitySetting)
+		public CubeEntityController (Transform centerPoint, List<KeyValuePair<int,CubeBindDataGroup>> surfaceRootPairIndexs, CubeEntitySetting cubeEntitySetting)
 		{
 			this.centerPoint = centerPoint;
 
 			currentWholeRot = centerPoint.rotation;
 			currentWholeEuler = centerPoint.eulerAngles;
 
-			cubeEntityDatas = new List<CubeEntityData> ();
-			subCubes.ForEach (subCube=>
-				{
-					cubeEntityDatas.Add (new CubeEntityData (centerPoint, subCube));
-				});
+			InitCubeEntityDatas (centerPoint, surfaceRootPairIndexs);
 
 			this.cubeEntitySetting = cubeEntitySetting;
 		}
@@ -31,7 +27,7 @@ namespace Kun.Controller
 		Transform centerPoint;
 
 		[SerializeField][ReadOnly]
-		List<CubeEntityData> cubeEntityDatas;
+		List<CubeEntityDataGroup> cubeEntityDataGroup = new List<CubeEntityDataGroup> ();
 
 		[SerializeField][ReadOnly]
 		CubeEntitySetting cubeEntitySetting;
@@ -52,8 +48,17 @@ namespace Kun.Controller
 			currentWholeEuler = currentWholeRot.eulerAngles;
 
 			cubeEntityDatas.ForEach (cubeCacheData=>
+		void InitCubeEntityDatas (Transform centerPoint, List<KeyValuePair<int,CubeBindDataGroup>> surfaceRootPairIndexs)
+		{
+			cubeEntityDataGroup = new List<CubeEntityDataGroup> ();
+
+			surfaceRootPairIndexs.ForEach (pair=>
 				{
-					cubeCacheData.SetWholeRot (currentWholeRot);
+					int groupInfo = pair.Key;
+					
+					CubeBindDataGroup cubeBindDataGroup = pair.Value;
+
+					CubeEntityDataGroup CubeEntityDataGroup = cubeBindDataGroup.GetEntityGroup (groupInfo, centerPoint);
 				});
 		}
 	}
