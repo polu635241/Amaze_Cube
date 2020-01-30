@@ -10,6 +10,22 @@ namespace Kun.Tool
 	{
 		protected T runtimeScript;
 
+		GUIStyle biggerFontSizeBtnGUIStyle;
+
+		protected GUIStyle BiggerFontSizeBtnGUIStyle
+		{
+			get
+			{
+				if (biggerFontSizeBtnGUIStyle == null) 
+				{
+					biggerFontSizeBtnGUIStyle = new GUIStyle (EditorStyles.miniButton);
+					biggerFontSizeBtnGUIStyle.fontSize = 15;
+				}
+
+				return biggerFontSizeBtnGUIStyle;
+			}
+		}
+
 		protected GUIStyle buttonGUIStyle
 		{
 			get
@@ -18,13 +34,8 @@ namespace Kun.Tool
 			}
 		}
 
-		protected GUILayoutOption buttonHeight
-		{
-			get
-			{
-				return GUILayout.Height (50);
-			}
-		}
+		protected const float buttonHeight = 50f;
+
 
 		protected GUIStyle fieldNameGUIStyle
 		{

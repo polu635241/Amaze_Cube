@@ -11,18 +11,14 @@ namespace Kun.Controller
 	[Serializable]
 	public class CubeEntityController
 	{
-		public CubeEntityController (Transform centerPoint, List<Transform> subCubes, CubeEntitySetting cubeEntitySetting)
+		public CubeEntityController (Transform centerPoint, List<KeyValuePair<int,CubeBindDataGroup>> surfaceRootPairIndexs, CubeEntitySetting cubeEntitySetting)
 		{
 			this.centerPoint = centerPoint;
 
 			currentWholeRot = centerPoint.rotation;
 			currentWholeEuler = centerPoint.eulerAngles;
 
-			cubeCacheDatas = new List<CubeCacheData> ();
-			subCubes.ForEach (subCube=>
-				{
-					cubeCacheDatas.Add (new CubeCacheData (centerPoint, subCube));
-				});
+			InitCubeEntityDatas (centerPoint, surfaceRootPairIndexs);
 
 			this.cubeEntitySetting = cubeEntitySetting;
 		}
@@ -31,7 +27,7 @@ namespace Kun.Controller
 		Transform centerPoint;
 
 		[SerializeField][ReadOnly]
-		List<CubeCacheData> cubeCacheDatas;
+		List<CubeEntityDataGroup> cubeEntityDataGroups = new List<CubeEntityDataGroup> ();
 
 		[SerializeField][ReadOnly]
 		CubeEntitySetting cubeEntitySetting;
@@ -48,28 +44,31 @@ namespace Kun.Controller
 
 			Quaternion deltaRot = Quaternion.Euler (processDeltaEuler);
 
-			SetWholeRotCache (deltaRot);
-			ProcessCubeCacheDatas ();
-		}
-
-		void SetWholeRotCache(Quaternion deltaRot)
-		{
 			currentWholeRot = deltaRot * currentWholeRot;
 			currentWholeEuler = currentWholeRot.eulerAngles;
+
+			//TODO
+			cubeEntityDataGroups.ForEach (cubeEntityDataGroup=>
+				{
+					cubeEntityDataGroup.SetWholeRot (currentWholeRot);
+				});
 		}
 
-		void ProcessCubeCacheDatas ()
+		void InitCubeEntityDatas (Transform centerPoint, List<KeyValuePair<int,CubeBindDataGroup>> surfaceRootPairIndexs)
 		{
-			cubeCacheDatas.ForEach (cubeCacheData=>
+			cubeEntityDataGroups = new List<CubeEntityDataGroup> ();
+
+			surfaceRootPairIndexs.ForEach (pair=>
 				{
-					Transform bindTransform = cubeCacheData.BindTransform;
+					int groupInfo = pair.Key;
+					
+					CubeBindDataGroup cubeBindDataGroup = pair.Value;
 
-					//原始的相對座標當作旋轉矩 往新的方向轉
-					Vector3 newPos = centerPoint.position + currentWholeRot * cubeCacheData.OriginRelativelyPos;
+					CubeEntityDataGroup cubeEntityDataGroup = cubeBindDataGroup.GetEntityGroup (groupInfo, centerPoint);
 
-					bindTransform.rotation = currentWholeRot;
-					bindTransform.position = newPos;
-				});
+                    cubeEntityDataGroups.Add (cubeEntityDataGroup);
+
+                });
 		}
 	}
 }

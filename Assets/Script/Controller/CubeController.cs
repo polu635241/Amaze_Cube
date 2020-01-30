@@ -62,19 +62,22 @@ namespace Kun.Controller
 
 			cubeFlowController = new CubeFlowController (this, mainCamera);
 
-			Transform centerPoint = refBinder.GetComponent<Transform> (AssetKeys.CenterPoint);
+			RefBinder cubeRefBinder = refBinder.GetComponent<RefBinder> (AssetKeys.Cube);
 
-			List<Transform> subCubes = new List<Transform> ();
+			Transform centerPoint = cubeRefBinder.GetComponent<Transform> (AssetKeys.CenterPoint);
 
-			foreach (Transform subBoxRoot in m_Transform) 
+			List<KeyValuePair<int,CubeBindDataGroup>> surfaceRootPairIndexs = new List<KeyValuePair<int, CubeBindDataGroup>> ();
+
+			for (int i = 1; i < 7; i++) 
 			{
-				foreach (Transform subCube in subBoxRoot) 
-				{
-					subCubes.Add (subCube);
-				}
+				string surfaceRootAsset = string.Format (AssetKeys.RootFormat, i);
+				
+				CubeBindDataGroup cubeBindDataGroup = cubeRefBinder.GetComponent<CubeBindDataGroup> (surfaceRootAsset);
+
+				surfaceRootPairIndexs.Add (new KeyValuePair<int, CubeBindDataGroup> (i, cubeBindDataGroup));
 			}
 
-			cubeEntityController = new CubeEntityController (centerPoint, subCubes, parseManager.CubeSetting.CubeEntitySetting);
+			cubeEntityController = new CubeEntityController (centerPoint, surfaceRootPairIndexs, parseManager.CubeSetting.CubeEntitySetting);
 		}
 	}
 

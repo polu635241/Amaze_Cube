@@ -61,7 +61,14 @@ namespace Kun.Tool
 
 			for (int i = 0; i < fieldInfos.Length; i++) 
 			{
-				pars.Add (fieldInfos[i].GetValue(null).ToString());
+				FieldInfo fieldInfo = fieldInfos [i];
+				//只要不具有此標籤的
+				BindConstIgnore bindConstIgnore = fieldInfo.GetCustomAttribute<Kun.Tool.BindConstIgnore> ();
+
+				if (bindConstIgnore == null) 
+				{
+					pars.Add (fieldInfo.GetValue (null).ToString ());
+				}
 			}
 
 			pars.Sort ((a, b) => a.CompareTo (b));
