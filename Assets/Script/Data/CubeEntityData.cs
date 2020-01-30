@@ -13,17 +13,16 @@ namespace Kun.Data
 		public CubeEntityData (Transform centerPoint, Transform bindTransform)
 		{
 			this.centerPoint = centerPoint;
-
-			groupRot = centerPoint.rotation;
-			groupEuler = groupRot.eulerAngles;
-
-			singleRot = Quaternion.identity;
-			singleEuler = singleRot.eulerAngles;
-
-			worldRot = groupRot;
-			worldEuler = groupEuler;
-
 			this.bindTransform = bindTransform;
+
+			wholeRot = centerPoint.rotation;
+			wholeEuler = wholeRot.eulerAngles;
+
+			worldRot = wholeRot;
+			worldEuler = wholeEuler;
+
+			rowRot = Quaternion.identity;
+			rowEuler = rowRot.eulerAngles;
 
 			this.originRelativelyPos = centerPoint.InverseTransformPoint (bindTransform.position);
 		}
@@ -39,23 +38,23 @@ namespace Kun.Data
 
 		public void SetWholeRot (Quaternion wholeRot)
 		{
-			this.groupRot = wholeRot;
-			this.groupEuler = groupRot.eulerAngles;
+			this.wholeRot = wholeRot;
+			this.wholeEuler = wholeRot.eulerAngles;
 
 			Flush ();
 		}
 
 		public void DeltaSingleRot(Quaternion deltaRot)
 		{
-			singleRot = deltaRot * singleRot;
-			singleEuler = singleRot.eulerAngles;
+			rowRot = deltaRot * rowRot;
+			rowEuler = rowRot.eulerAngles;
 
 			Flush ();
 		}
 
 		void Flush ()
-		{
-			worldRot = groupRot * singleRot;
+		{	
+			worldRot = wholeRot * rowRot;
 			worldEuler = worldRot.eulerAngles;
 			
 			//原始的相對座標當作旋轉矩 往新的方向轉
@@ -65,23 +64,22 @@ namespace Kun.Data
 			bindTransform.rotation = worldRot;
 		}
 
-		Quaternion groupRot;
+		Quaternion wholeRot;
 
-		[SerializeField][ReadOnly]
-		Vector3 groupEuler;
+		[SerializeField][ReadOnly][Header("整個方塊群體的旋轉")]
+		Vector3 wholeEuler;
 
-		Quaternion singleRot;
+		Quaternion rowRot;
 
-		[SerializeField][ReadOnly]
-		Vector3 singleEuler;
-
+		[SerializeField][ReadOnly][Header("所在行的旋轉")]
+		Vector3 rowEuler;
 
 		Quaternion worldRot;
 
 		/// <summary>
-		/// "world * single"
+		/// "whole * row * single"
 		/// </summary>
-		[SerializeField][ReadOnly][Header("world * single")]
+		[SerializeField][ReadOnly][Header("whole * row")]
 		Vector3 worldEuler;
 	}
 }

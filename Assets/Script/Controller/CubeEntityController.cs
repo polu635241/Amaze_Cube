@@ -27,7 +27,7 @@ namespace Kun.Controller
 		Transform centerPoint;
 
 		[SerializeField][ReadOnly]
-		List<CubeEntityDataGroup> cubeEntityDataGroup = new List<CubeEntityDataGroup> ();
+		List<CubeEntityDataGroup> cubeEntityDataGroups = new List<CubeEntityDataGroup> ();
 
 		[SerializeField][ReadOnly]
 		CubeEntitySetting cubeEntitySetting;
@@ -47,10 +47,16 @@ namespace Kun.Controller
 			currentWholeRot = deltaRot * currentWholeRot;
 			currentWholeEuler = currentWholeRot.eulerAngles;
 
-			cubeEntityDatas.ForEach (cubeCacheData=>
+			//TODO
+			cubeEntityDataGroups.ForEach (cubeEntityDataGroup=>
+				{
+					cubeEntityDataGroup.SetWholeRot (currentWholeRot);
+				});
+		}
+
 		void InitCubeEntityDatas (Transform centerPoint, List<KeyValuePair<int,CubeBindDataGroup>> surfaceRootPairIndexs)
 		{
-			cubeEntityDataGroup = new List<CubeEntityDataGroup> ();
+			cubeEntityDataGroups = new List<CubeEntityDataGroup> ();
 
 			surfaceRootPairIndexs.ForEach (pair=>
 				{
@@ -58,8 +64,11 @@ namespace Kun.Controller
 					
 					CubeBindDataGroup cubeBindDataGroup = pair.Value;
 
-					CubeEntityDataGroup CubeEntityDataGroup = cubeBindDataGroup.GetEntityGroup (groupInfo, centerPoint);
-				});
+					CubeEntityDataGroup cubeEntityDataGroup = cubeBindDataGroup.GetEntityGroup (groupInfo, centerPoint);
+
+                    cubeEntityDataGroups.Add (cubeEntityDataGroup);
+
+                });
 		}
 	}
 }
