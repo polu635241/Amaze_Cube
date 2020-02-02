@@ -13,7 +13,7 @@ namespace Kun.Data
 
 		public CubeGroupData (int info, List<CubeRowData> horizontalRows, List<CubeRowData> verticalRows)
 		{
-			this.info = info;
+			this.groupIndex = info;
 			this.horizontalRows = new List<CubeRowData> (horizontalRows);
 			this.verticalRows = new List<CubeRowData> (verticalRows);
 
@@ -54,9 +54,17 @@ namespace Kun.Data
 				groupStyle = CubeEntityDataGroupStyle.Vetical;
 			}
 		}
-		
+
+		public int GroupIndex
+		{
+			get
+			{
+				return groupIndex;
+			}
+		}
+
 		[SerializeField][ReadOnly][Header("對應骰子的1~6對應的面數")]
-		int info;
+		int groupIndex;
 
 		public List<CubeRowData> HorizontalRows
 		{
@@ -114,6 +122,28 @@ namespace Kun.Data
 							});
 					});
 			}
+		}
+
+		public bool CheckDataExist(Collider coll, RowRotateDirection dir, out CubeRowData cubeRowData)
+		{
+			cubeRowData = null;
+			
+			if (dir == RowRotateDirection.Right || dir == RowRotateDirection.Left) 
+			{
+				cubeRowData = horizontalRows.Find (row=>
+					{
+						return row.CheckDataExist (coll);
+					});
+			}
+			else
+			{
+				cubeRowData = verticalRows.Find (row=>
+					{
+						return row.CheckDataExist (coll);
+					});
+			}
+
+			return (cubeRowData != null);
 		}
 	}
 
