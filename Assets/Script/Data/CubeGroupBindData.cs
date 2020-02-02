@@ -7,7 +7,7 @@ using Kun.Tool;
 
 namespace Kun.Data
 {
-	public class CubeBindDataGroup : MonoBehaviour
+	public class CubeGroupBindData : MonoBehaviour
 	{
 		public int GroupIndex
 		{
@@ -20,7 +20,7 @@ namespace Kun.Data
 		[SerializeField]
 		int groupIndex;
 
-		public List<CubeBindDataRow> HorizontalRows
+		public List<CubeRowBindData> HorizontalRows
 		{
 			get
 			{
@@ -34,9 +34,9 @@ namespace Kun.Data
 		}
 
 		[SerializeField]
-		List<CubeBindDataRow> horizontalRows = new List<CubeBindDataRow> ();
+		List<CubeRowBindData> horizontalRows = new List<CubeRowBindData> ();
 
-		public List<CubeBindDataRow> VerticalRows
+		public List<CubeRowBindData> VerticalRows
 		{
 			get
 			{
@@ -50,7 +50,7 @@ namespace Kun.Data
 		}
 
 		[SerializeField]
-		List<CubeBindDataRow> verticalRows = new List<CubeBindDataRow> ();
+		List<CubeRowBindData> verticalRows = new List<CubeRowBindData> ();
 
 		#if UNITY_EDITOR && DrawDebugLine
 

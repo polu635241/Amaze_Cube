@@ -7,15 +7,15 @@ using Kun.Tool;
 namespace Kun.Data
 {
 	[Serializable]
-	public class CubeBindDataRow 
+	public class CubeRowBindData 
 	{
-		public CubeBindDataRow(int rowIndex, IEnumerable<Transform> cubeEntitys)
+		public CubeRowBindData(int rowIndex, IEnumerable<Transform> cubeEntitys)
 		{
 			this.rowIndex = rowIndex;
 			this.cubeEntitys = new List<Transform> (cubeEntitys);
 		}
 		
-		public CubeBindDataRow()
+		public CubeRowBindData()
 		{
 			
 		}

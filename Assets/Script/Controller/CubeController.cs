@@ -66,15 +66,15 @@ namespace Kun.Controller
 
 			Transform centerPoint = cubeRefBinder.GetComponent<Transform> (AssetKeys.CenterPoint);
 
-			List<KeyValuePair<int,CubeBindDataGroup>> surfaceRootPairIndexs = new List<KeyValuePair<int, CubeBindDataGroup>> ();
+			List<KeyValuePair<int,CubeGroupBindData>> surfaceRootPairIndexs = new List<KeyValuePair<int, CubeGroupBindData>> ();
 
 			for (int i = 1; i < 7; i++) 
 			{
 				string surfaceRootAsset = string.Format (AssetKeys.RootFormat, i);
 				
-				CubeBindDataGroup cubeBindDataGroup = cubeRefBinder.GetComponent<CubeBindDataGroup> (surfaceRootAsset);
+				CubeGroupBindData cubeBindDataGroup = cubeRefBinder.GetComponent<CubeGroupBindData> (surfaceRootAsset);
 
-				surfaceRootPairIndexs.Add (new KeyValuePair<int, CubeBindDataGroup> (i, cubeBindDataGroup));
+				surfaceRootPairIndexs.Add (new KeyValuePair<int, CubeGroupBindData> (i, cubeBindDataGroup));
 			}
 
 			cubeEntityController = new CubeEntityController (centerPoint, surfaceRootPairIndexs, parseManager.CubeSetting.CubeEntitySetting);

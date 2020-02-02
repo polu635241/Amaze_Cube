@@ -11,7 +11,7 @@ namespace Kun.Controller
 	[Serializable]
 	public class CubeEntityController
 	{
-		public CubeEntityController (Transform centerPoint, List<KeyValuePair<int,CubeBindDataGroup>> surfaceRootPairIndexs, CubeEntitySetting cubeEntitySetting)
+		public CubeEntityController (Transform centerPoint, List<KeyValuePair<int,CubeGroupBindData>> surfaceRootPairIndexs, CubeEntitySetting cubeEntitySetting)
 		{
 			this.centerPoint = centerPoint;
 
@@ -27,7 +27,7 @@ namespace Kun.Controller
 		Transform centerPoint;
 
 		[SerializeField][ReadOnly]
-		List<CubeEntityDataGroup> cubeEntityDataGroups = new List<CubeEntityDataGroup> ();
+		List<CubeGroupData> cubeEntityDataGroups = new List<CubeGroupData> ();
 
 		[SerializeField][ReadOnly]
 		CubeEntitySetting cubeEntitySetting;
@@ -54,17 +54,17 @@ namespace Kun.Controller
 				});
 		}
 
-		void InitCubeEntityDatas (Transform centerPoint, List<KeyValuePair<int,CubeBindDataGroup>> surfaceRootPairIndexs)
+		void InitCubeEntityDatas (Transform centerPoint, List<KeyValuePair<int,CubeGroupBindData>> surfaceRootPairIndexs)
 		{
-			cubeEntityDataGroups = new List<CubeEntityDataGroup> ();
+			cubeEntityDataGroups = new List<CubeGroupData> ();
 
 			surfaceRootPairIndexs.ForEach (pair=>
 				{
 					int groupInfo = pair.Key;
 					
-					CubeBindDataGroup cubeBindDataGroup = pair.Value;
+					CubeGroupBindData cubeBindDataGroup = pair.Value;
 
-					CubeEntityDataGroup cubeEntityDataGroup = cubeBindDataGroup.GetEntityGroup (groupInfo, centerPoint);
+					CubeGroupData cubeEntityDataGroup = cubeBindDataGroup.GetEntityGroup (groupInfo, centerPoint);
 
                     cubeEntityDataGroups.Add (cubeEntityDataGroup);
 

@@ -8,9 +8,9 @@ using Kun.HardwareInput;
 namespace Kun.Data
 {
 	[Serializable]
-	public class CubeEntityData
+	public class CubeCacheData
 	{
-		public CubeEntityData (Transform centerPoint, Transform bindTransform)
+		public CubeCacheData (Transform centerPoint, Transform bindTransform)
 		{
 			this.centerPoint = centerPoint;
 			this.bindTransform = bindTransform;

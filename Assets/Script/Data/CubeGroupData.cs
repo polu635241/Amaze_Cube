@@ -7,15 +7,15 @@ using Kun.Tool;
 namespace Kun.Data
 {
 	[Serializable]
-	public class CubeEntityDataGroup
+	public class CubeGroupData
 	{
 		CubeEntityDataGroupStyle groupStyle;
 
-		public CubeEntityDataGroup (int info, List<CubeEntityDataRow> horizontalRows, List<CubeEntityDataRow> verticalRows)
+		public CubeGroupData (int info, List<CubeRowData> horizontalRows, List<CubeRowData> verticalRows)
 		{
 			this.info = info;
-			this.horizontalRows = new List<CubeEntityDataRow> (horizontalRows);
-			this.verticalRows = new List<CubeEntityDataRow> (verticalRows);
+			this.horizontalRows = new List<CubeRowData> (horizontalRows);
+			this.verticalRows = new List<CubeRowData> (verticalRows);
 
 			bool hasHorizontal;
 			bool hasVetical;
@@ -58,7 +58,7 @@ namespace Kun.Data
 		[SerializeField][ReadOnly][Header("對應骰子的1~6對應的面數")]
 		int info;
 
-		public List<CubeEntityDataRow> HorizontalRows
+		public List<CubeRowData> HorizontalRows
 		{
 			get
 			{
@@ -67,9 +67,9 @@ namespace Kun.Data
 		}
 
         [SerializeField]
-		List<CubeEntityDataRow> horizontalRows;
+		List<CubeRowData> horizontalRows;
 
-		public List<CubeEntityDataRow> VerticalRows
+		public List<CubeRowData> VerticalRows
 		{
 			get
 			{
@@ -78,19 +78,19 @@ namespace Kun.Data
 		}
 
         [SerializeField]
-        List<CubeEntityDataRow> verticalRows;
+        List<CubeRowData> verticalRows;
 
 		[NonSerialized]
-		CubeEntityDataGroup rightGroupData;
+		CubeGroupData rightGroupData;
 
 		[NonSerialized]
-		CubeEntityDataGroup leftGroupData;
+		CubeGroupData leftGroupData;
 
 		[NonSerialized]
-		CubeEntityDataGroup upGroupData;
+		CubeGroupData upGroupData;
 
 		[NonSerialized]
-		CubeEntityDataGroup downGroupData;
+		CubeGroupData downGroupData;
 
 		public void SetWholeRot (Quaternion wholeRot)
 		{
