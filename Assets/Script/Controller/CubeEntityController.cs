@@ -38,6 +38,10 @@ namespace Kun.Controller
 		[SerializeField][ReadOnly]
 		Vector3 currentWholeEuler;
 
+		public void RotateRow(Collider receiveColl, RowRotateDirection dir)
+		{
+		}
+
 		public void RotateWhole (Vector3 deltaEuler, float deltaTime)
 		{
 			Vector3 processDeltaEuler = deltaEuler * cubeEntitySetting.RotateSpeed * deltaTime;
