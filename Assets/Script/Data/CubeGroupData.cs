@@ -98,7 +98,7 @@ namespace Kun.Data
 			{
 				verticalRows.ForEach (row=>
 					{
-						row.CubeEntityDatas.ForEach(data=>
+						row.CubeCacheDatas.ForEach(data=>
 							{
 								data.SetWholeRot(wholeRot);
 							});
@@ -108,7 +108,7 @@ namespace Kun.Data
 			{
 				horizontalRows.ForEach (row=>
 					{
-						row.CubeEntityDatas.ForEach(data=>
+						row.CubeCacheDatas.ForEach(data=>
 							{
 								data.SetWholeRot(wholeRot);
 							});

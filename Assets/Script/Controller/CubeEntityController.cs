@@ -47,7 +47,6 @@ namespace Kun.Controller
 			currentWholeRot = deltaRot * currentWholeRot;
 			currentWholeEuler = currentWholeRot.eulerAngles;
 
-			//TODO
 			cubeEntityDataGroups.ForEach (cubeEntityDataGroup=>
 				{
 					cubeEntityDataGroup.SetWholeRot (currentWholeRot);

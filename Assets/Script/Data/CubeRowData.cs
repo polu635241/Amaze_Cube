@@ -12,7 +12,7 @@ namespace Kun.Data
 		public CubeRowData(int rowIndex, List<CubeCacheData> cubeEntityDatas)
 		{
 			this.rowIndex = rowIndex;
-			this.cubeEntityDatas = new List<CubeCacheData> (cubeEntityDatas);
+			this.cubeCacheDatas = new List<CubeCacheData> (cubeEntityDatas);
 		}
 		
 		public int RowIndex
@@ -26,15 +26,15 @@ namespace Kun.Data
 		[SerializeField][ReadOnly]
 		int rowIndex;
 
-		public List<CubeCacheData> CubeEntityDatas
+		public List<CubeCacheData> CubeCacheDatas
 		{
 			get
 			{
-				return cubeEntityDatas;
+				return cubeCacheDatas;
 			}
 		}
 
 		[SerializeField][ReadOnly]
-		List<CubeCacheData> cubeEntityDatas;
+		List<CubeCacheData> cubeCacheDatas;
 	}
 }
