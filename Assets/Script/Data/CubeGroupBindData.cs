@@ -62,12 +62,17 @@ namespace Kun.Data
 			DrawCubeBindDataRow (verticalRows, Color.red);
 		}
 
-		void DrawCubeBindDataRow (List<CubeBindDataRow> rows, Color drawColor)
+		void DrawCubeBindDataRow (List<CubeRowBindData> rows, Color drawColor)
 		{
 			if (rows.Count > 0)
 			{
 				rows.ForEach (row=>
 					{
+						if(row.CubeEntitys.Exists(entity => entity == null))
+						{
+							return;
+						}
+						
 						int rowItemCount = row.CubeEntitys.Count;
 
 						if(rowItemCount > 0)
@@ -79,11 +84,15 @@ namespace Kun.Data
 							{
 								float rangeWidth = biggestWidth - (rangeDeltaWidth * rangeIndex);
 
-								Transform currentPoint = row.CubeEntitys[rangeIndex];
-								Transform nextPoint = row.CubeEntitys[rangeIndex +1];
+								Transform currentPoint = row.CubeEntitys[rangeIndex].GetChild(0);
+								Transform nextPoint = row.CubeEntitys[rangeIndex +1].GetChild(0);
 								Color originColor = Gizmos.color;
 								Gizmos.color = drawColor;
-								Gizmos.DrawLine(currentPoint.position, nextPoint.position);
+
+								Vector3 processBeginPoint = currentPoint.position + currentPoint.up * 3;
+								Vector3 processEndPoint = nextPoint.position + nextPoint.up * 3;
+
+								Gizmos.DrawLine(processBeginPoint, processEndPoint);
 								Gizmos.color = originColor;
 							}
 						}
