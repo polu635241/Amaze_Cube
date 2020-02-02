@@ -66,6 +66,7 @@ namespace Kun.Data
 			}
 		}
 
+        [SerializeField]
 		List<CubeEntityDataRow> horizontalRows;
 
 		public List<CubeEntityDataRow> VerticalRows
@@ -76,7 +77,8 @@ namespace Kun.Data
 			}
 		}
 
-		List<CubeEntityDataRow> verticalRows;
+        [SerializeField]
+        List<CubeEntityDataRow> verticalRows;
 
 		[NonSerialized]
 		CubeEntityDataGroup rightGroupData;
