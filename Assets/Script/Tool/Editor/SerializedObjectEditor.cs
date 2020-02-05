@@ -35,12 +35,21 @@ namespace Kun.Tool
 		}
 
 		protected const float buttonHeight = 50f;
+		protected const float buttonWidth = 50f;
 
 		protected GUIStyle fieldNameGUIStyle
 		{
 			get
 			{
 				return EditorStyles.miniLabel;
+			}
+		}
+
+		protected GUIStyle ToolBarButtonStyle
+		{
+			get
+			{
+				return EditorStyles.toolbarButton;
 			}
 		}
 
