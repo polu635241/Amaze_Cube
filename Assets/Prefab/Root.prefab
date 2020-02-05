@@ -14499,13 +14499,40 @@ MonoBehaviour:
   m_GameObject: {fileID: 1847769878638772}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ec9994695e99c5e4092223cbf888ee8f, type: 3}
+  m_Script: {fileID: 11500000, guid: d65a3cf4e0e9b3641b3441f98e2465d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   centerPoint: {fileID: 4919184569491264}
+  cubeEntitys:
+  - {fileID: 4533715068797114}
+  - {fileID: 4821411977672138}
+  - {fileID: 4689689818038976}
+  - {fileID: 4896018809983364}
+  - {fileID: 4045259327027930}
+  - {fileID: 4750794387149184}
+  - {fileID: 4594131965794370}
+  - {fileID: 4850821473867570}
+  - {fileID: 4202304356374020}
+  - {fileID: 4919184569491264}
+  - {fileID: 4218687375023164}
+  - {fileID: 4063749618099538}
+  - {fileID: 4372778390445616}
+  - {fileID: 4335394653225278}
+  - {fileID: 4334420059984196}
+  - {fileID: 4473543032028962}
+  - {fileID: 4855342787071760}
+  - {fileID: 4970742578151626}
+  - {fileID: 4328590094895110}
+  - {fileID: 4557060441743256}
+  - {fileID: 4609204033678872}
+  - {fileID: 4306902638052310}
+  - {fileID: 4388878169153710}
+  - {fileID: 4454290556723072}
+  - {fileID: 4622771567959726}
+  - {fileID: 4725606808751394}
+  - {fileID: 4895888301296582}
   x_RotateRows:
-  - rowIndex: 0
-    cubeEntitys:
+  - cubeEntitys:
     - {fileID: 4594131965794370}
     - {fileID: 4689689818038976}
     - {fileID: 4896018809983364}
@@ -14514,8 +14541,7 @@ MonoBehaviour:
     - {fileID: 4328590094895110}
     - {fileID: 4622771567959726}
     - {fileID: 4970742578151626}
-  - rowIndex: 0
-    cubeEntitys:
+  - cubeEntitys:
     - {fileID: 4202304356374020}
     - {fileID: 4821411977672138}
     - {fileID: 4750794387149184}
@@ -14524,8 +14550,7 @@ MonoBehaviour:
     - {fileID: 4609204033678872}
     - {fileID: 4895888301296582}
     - {fileID: 4855342787071760}
-  - rowIndex: 0
-    cubeEntitys:
+  - cubeEntitys:
     - {fileID: 4850821473867570}
     - {fileID: 4533715068797114}
     - {fileID: 4045259327027930}
@@ -14535,8 +14560,7 @@ MonoBehaviour:
     - {fileID: 4725606808751394}
     - {fileID: 4473543032028962}
   y_RotateRows:
-  - rowIndex: 0
-    cubeEntitys:
+  - cubeEntitys:
     - {fileID: 4850821473867570}
     - {fileID: 4202304356374020}
     - {fileID: 4594131965794370}
@@ -14545,8 +14569,7 @@ MonoBehaviour:
     - {fileID: 4750794387149184}
     - {fileID: 4045259327027930}
     - {fileID: 4533715068797114}
-  - rowIndex: 0
-    cubeEntitys:
+  - cubeEntitys:
     - {fileID: 4473543032028962}
     - {fileID: 4855342787071760}
     - {fileID: 4970742578151626}
@@ -14555,8 +14578,7 @@ MonoBehaviour:
     - {fileID: 4335394653225278}
     - {fileID: 4372778390445616}
     - {fileID: 4218687375023164}
-  - rowIndex: 0
-    cubeEntitys:
+  - cubeEntitys:
     - {fileID: 4725606808751394}
     - {fileID: 4895888301296582}
     - {fileID: 4622771567959726}
@@ -14566,8 +14588,7 @@ MonoBehaviour:
     - {fileID: 4388878169153710}
     - {fileID: 4557060441743256}
   z_RotateRows:
-  - rowIndex: 0
-    cubeEntitys:
+  - cubeEntitys:
     - {fileID: 4045259327027930}
     - {fileID: 4750794387149184}
     - {fileID: 4896018809983364}
@@ -14576,8 +14597,7 @@ MonoBehaviour:
     - {fileID: 4454290556723072}
     - {fileID: 4388878169153710}
     - {fileID: 4372778390445616}
-  - rowIndex: 0
-    cubeEntitys:
+  - cubeEntitys:
     - {fileID: 4533715068797114}
     - {fileID: 4821411977672138}
     - {fileID: 4689689818038976}
@@ -14586,8 +14606,7 @@ MonoBehaviour:
     - {fileID: 4609204033678872}
     - {fileID: 4557060441743256}
     - {fileID: 4218687375023164}
-  - rowIndex: 0
-    cubeEntitys:
+  - cubeEntitys:
     - {fileID: 4850821473867570}
     - {fileID: 4202304356374020}
     - {fileID: 4594131965794370}
