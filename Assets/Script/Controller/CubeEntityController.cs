@@ -47,7 +47,7 @@ namespace Kun.Controller
 		[SerializeField]
 		List<CubeRowData> z_RotateRows = new List<CubeRowData> ();
 
-		public void RotateRow(Collider receiveColl, RowRotateDirection dir)
+		public void RotateRow(Collider receiveColl, RowRotateDirection dir, bool isPositive)
 		{
 //			CubeGroupData ownerGroupData = null;
 //			CubeRowData ownerRowData = null;

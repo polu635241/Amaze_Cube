@@ -8,6 +8,6 @@ namespace Kun.Data
 {
 	public enum RowRotateDirection
 	{
-		Right,Left,Up,Down
+		X,Y,Z
 	}
 }

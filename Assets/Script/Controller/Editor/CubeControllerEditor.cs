@@ -13,7 +13,13 @@ namespace Kun.Controller
 	public class CubeControllerEditor : SerializedObjectEditor<CubeController> 
 	{
 		Collider simulationTarget;
-		
+
+		bool isPositive;
+
+		const string PositiveComment = "正向";
+		const string NegativeComment = "反向";
+		const float CenterInterval = 30f;
+
 		public override void OnInspectorGUI ()
 		{
 			base.OnInspectorGUI ();
@@ -36,45 +42,46 @@ namespace Kun.Controller
 							EditorTool.DrawInHorizontal (()=>
 								{
 									GUILayout.FlexibleSpace ();
-
-									if (GUILayout.Button ("Up", squareButtonLayoutOption))
-									{
-										currentFrameInputDir = RowRotateDirection.Up;
-									}
+									
+									DrawRowBtnGroup ("X", "仰角旋轉", ()=>
+										{
+											currentFrameInputDir = RowRotateDirection.X;
+										});
 
 									GUILayout.FlexibleSpace ();
 								});
+
+							GUILayout.Space(CenterInterval);
 
 							EditorTool.DrawInHorizontal (()=>
 								{
 									GUILayout.FlexibleSpace ();
 
-									if (GUILayout.Button ("Left", squareButtonLayoutOption))
-									{
-										currentFrameInputDir = RowRotateDirection.Left;
-									}
+									string comment = isPositive ? PositiveComment : NegativeComment;
 
-									GUILayout.Space(squareButtonSize);
-
-									if (GUILayout.Button ("Right", squareButtonLayoutOption))
+									if(GUILayout.Button(comment, ToolBarButtonStyle , GUILayout.Width(buttonWidth)))
 									{
-										currentFrameInputDir = RowRotateDirection.Right;
+										isPositive = !isPositive;
 									}
 
 									GUILayout.FlexibleSpace ();
 								});
 
+							GUILayout.Space(CenterInterval);
 
 							EditorTool.DrawInHorizontal (()=>
 								{
-									GUILayout.FlexibleSpace ();
-
-									if (GUILayout.Button ("Down", squareButtonLayoutOption))
-									{
-										currentFrameInputDir = RowRotateDirection.Down;
-									}
+									DrawRowBtnGroup("Y", "漩渦旋轉", ()=>
+										{
+											currentFrameInputDir = RowRotateDirection.Y;
+										});
 
 									GUILayout.FlexibleSpace ();
+
+									DrawRowBtnGroup("Z", "水平旋轉", ()=>
+										{
+											currentFrameInputDir = RowRotateDirection.Z;
+										});
 								});
 
 							if(currentFrameInputDir!=null)
@@ -83,7 +90,7 @@ namespace Kun.Controller
 								{
 									if(simulationTarget!=null)
 									{
-										runtimeScript.CubeEntityController.RotateRow(simulationTarget,currentFrameInputDir.Value);
+										runtimeScript.CubeEntityController.RotateRow(simulationTarget, currentFrameInputDir.Value, isPositive);
 									}
 									else
 									{
@@ -97,6 +104,22 @@ namespace Kun.Controller
 							}
 
 						},boxSkin);
+				});
+		}
+
+		void DrawRowBtnGroup (string btnName, string comment, Action callback)
+		{
+			EditorTool.DrawInVertical (()=>
+				{
+					EditorTool.DrawInHorizontal (()=>
+						{
+							if (GUILayout.Button (btnName, squareButtonLayoutOption))
+							{
+								callback.Invoke ();
+							}
+						});
+
+					GUILayout.Label (comment);
 				});
 		}
 	}
