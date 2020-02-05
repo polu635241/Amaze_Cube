@@ -8,50 +8,27 @@ namespace Kun.Data
 {
 	public static class CubeBindDataExtension
 	{
-		public static CubeRowData GetEntityRow (this CubeRowBindData cubeBindDataRow, Transform centerPoint)
+		public static CubeRowData GetEntityRow (this CubeRowBindData cubeBindDataRow, Dictionary<Transform,CubeCacheData> cubeCacheDataMappings)
 		{
 			List<CubeCacheData> cubeEntityDatas = new List<CubeCacheData> ();
 
 			cubeBindDataRow.CubeEntitys.ForEach (cubeEntity=>
 				{
-					CubeCacheData cubeEntityData = new CubeCacheData (centerPoint, cubeEntity);
-					cubeEntityDatas.Add (cubeEntityData);
+					CubeCacheData cubeCacheData;
+
+					if(cubeCacheDataMappings.TryGetValue(cubeEntity, out cubeCacheData))
+					{
+						cubeEntityDatas.Add(cubeCacheData);
+					}
+					else
+					{
+						Debug.LogError($"找不到對應的緩存檔 name -> {cubeEntity.name}");
+					}
 				});
 			
-			CubeRowData cubeEntityDataRow = new CubeRowData (cubeBindDataRow.RowIndex, cubeEntityDatas);
+			CubeRowData cubeEntityDataRow = new CubeRowData (cubeEntityDatas);
 
 			return cubeEntityDataRow;
-		}
-
-		public static CubeGroupData GetEntityGroup (this CubeGroupBindData cubeBindDataGroup, int groupInfo, Transform centerPoint)
-		{
-			List<CubeRowData> horizontalRows = GetEntityRows (cubeBindDataGroup.HorizontalRows, centerPoint);
-			List<CubeRowData> verticalRows = GetEntityRows (cubeBindDataGroup.VerticalRows, centerPoint);
-
-			List<CubeRowBindData> bindHorizontalRows = cubeBindDataGroup.HorizontalRows;
-			List<CubeRowBindData> bindVerticalRows = cubeBindDataGroup.VerticalRows;
-
-			CubeGroupData cubeEntityDataGroup = new CubeGroupData (groupInfo, horizontalRows, verticalRows);
-
-			return cubeEntityDataGroup;
-		}
-
-
-		static List<CubeRowData> GetEntityRows (List<CubeRowBindData> bindDataRows, Transform centerPoint)
-		{
-			List<CubeRowData> entityRows = new List<CubeRowData> (); 
-
-			if (bindDataRows != null) 
-			{
-				bindDataRows.ForEach (row=>
-					{
-						CubeRowData cubeEntityDataRow = row.GetEntityRow (centerPoint);
-
-						entityRows.Add(cubeEntityDataRow);
-					});
-			}
-
-			return entityRows;
 		}
 	}
 }
