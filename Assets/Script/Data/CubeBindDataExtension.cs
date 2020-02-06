@@ -8,50 +8,27 @@ namespace Kun.Data
 {
 	public static class CubeBindDataExtension
 	{
-		public static CubeEntityDataRow GetEntityRow (this CubeBindDataRow cubeBindDataRow, Transform centerPoint)
+		public static CubeRowData GetEntityRow (this CubeRowBindData cubeBindDataRow, Dictionary<Transform,CubeCacheData> cubeCacheDataMappings)
 		{
-			List<CubeEntityData> cubeEntityDatas = new List<CubeEntityData> ();
+			List<CubeCacheData> cubeEntityDatas = new List<CubeCacheData> ();
 
 			cubeBindDataRow.CubeEntitys.ForEach (cubeEntity=>
 				{
-					CubeEntityData cubeEntityData = new CubeEntityData (centerPoint, cubeEntity);
-					cubeEntityDatas.Add (cubeEntityData);
+					CubeCacheData cubeCacheData;
+
+					if(cubeCacheDataMappings.TryGetValue(cubeEntity, out cubeCacheData))
+					{
+						cubeEntityDatas.Add(cubeCacheData);
+					}
+					else
+					{
+						Debug.LogError($"找不到對應的緩存檔 name -> {cubeEntity.name}");
+					}
 				});
 			
-			CubeEntityDataRow cubeEntityDataRow = new CubeEntityDataRow (cubeBindDataRow.RowIndex, cubeEntityDatas);
+			CubeRowData cubeEntityDataRow = new CubeRowData (cubeEntityDatas);
 
 			return cubeEntityDataRow;
-		}
-
-		public static CubeEntityDataGroup GetEntityGroup (this CubeBindDataGroup cubeBindDataGroup, int groupInfo, Transform centerPoint)
-		{
-			List<CubeEntityDataRow> horizontalRows = GetEntityRows (cubeBindDataGroup.HorizontalRows, centerPoint);
-			List<CubeEntityDataRow> verticalRows = GetEntityRows (cubeBindDataGroup.VerticalRows, centerPoint);
-
-			List<CubeBindDataRow> bindHorizontalRows = cubeBindDataGroup.HorizontalRows;
-			List<CubeBindDataRow> bindVerticalRows = cubeBindDataGroup.VerticalRows;
-
-			CubeEntityDataGroup cubeEntityDataGroup = new CubeEntityDataGroup (groupInfo, horizontalRows, verticalRows);
-
-			return cubeEntityDataGroup;
-		}
-
-
-		static List<CubeEntityDataRow> GetEntityRows (List<CubeBindDataRow> bindDataRows, Transform centerPoint)
-		{
-			List<CubeEntityDataRow> entityRows = new List<CubeEntityDataRow> (); 
-
-			if (bindDataRows != null) 
-			{
-				bindDataRows.ForEach (row=>
-					{
-						CubeEntityDataRow cubeEntityDataRow = row.GetEntityRow (centerPoint);
-
-						entityRows.Add(cubeEntityDataRow);
-					});
-			}
-
-			return entityRows;
 		}
 	}
 }

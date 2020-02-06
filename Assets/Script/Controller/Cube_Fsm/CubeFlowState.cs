@@ -21,9 +21,9 @@ namespace Kun.Controller
 
 		public virtual void Enter(CubeFlowState prevState)
 		{
-			#if UNITY_EDITOR
-			Debug.LogError ($" enter -> {this.GetType ()}");
-			#endif
+//			#if UNITY_EDITOR
+//			Debug.LogError ($" enter -> {this.GetType ()}");
+//			#endif
 		}
 
 		public virtual CubeFlowState Stay (float deltaTime)
@@ -33,9 +33,9 @@ namespace Kun.Controller
 
 		public virtual void Exit()
 		{
-			#if UNITY_EDITOR
-			Debug.LogError ($" exit -> {this.GetType ()}");
-			#endif
+//			#if UNITY_EDITOR
+//			Debug.LogError ($" exit -> {this.GetType ()}");
+//			#endif
 		}
 
 		protected CubeFlowState GetState<T> () where T:CubeFlowState

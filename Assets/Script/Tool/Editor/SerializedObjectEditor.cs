@@ -35,13 +35,42 @@ namespace Kun.Tool
 		}
 
 		protected const float buttonHeight = 50f;
-
+		protected const float buttonWidth = 50f;
 
 		protected GUIStyle fieldNameGUIStyle
 		{
 			get
 			{
 				return EditorStyles.miniLabel;
+			}
+		}
+
+		protected GUIStyle ToolBarButtonStyle
+		{
+			get
+			{
+				return EditorStyles.toolbarButton;
+			}
+		}
+
+		GUILayoutOption[] _squareButtonLayoutOption;
+
+		protected float squareButtonSize = 50;
+
+		protected GUILayoutOption[] squareButtonLayoutOption
+		{
+			get
+			{
+				if (_squareButtonLayoutOption == null) 
+				{
+					_squareButtonLayoutOption = new GUILayoutOption[]
+					{
+						GUILayout.Width(squareButtonSize),
+						GUILayout.Height(squareButtonSize)
+					};
+				}
+
+				return _squareButtonLayoutOption;
 			}
 		}
 

@@ -8,12 +8,13 @@ using Kun.HardwareInput;
 namespace Kun.Data
 {
 	[Serializable]
-	public class CubeEntityData
+	public class CubeCacheData
 	{
-		public CubeEntityData (Transform centerPoint, Transform bindTransform)
+		public CubeCacheData (Transform centerPoint, Transform bindTransform)
 		{
 			this.centerPoint = centerPoint;
 			this.bindTransform = bindTransform;
+			this.receiveColl = bindTransform.GetComponent<Collider> ();
 
 			wholeRot = centerPoint.rotation;
 			wholeEuler = wholeRot.eulerAngles;
@@ -32,6 +33,17 @@ namespace Kun.Data
 
 		[SerializeField][ReadOnly]
 		Transform bindTransform;
+
+		[SerializeField][ReadOnly]
+		Collider receiveColl;
+
+		public Collider RecieveColl
+		{
+			get
+			{
+				return receiveColl;
+			}
+		}
 
 		[SerializeField][ReadOnly]
 		Vector3 originRelativelyPos;
