@@ -14,7 +14,7 @@ namespace Kun.Data
 		{
 			this.centerPoint = centerPoint;
 			this.bindTransform = bindTransform;
-			this.receiveColl = bindTransform.GetComponentInChildren<Collider> ();
+			this.receiveColl = bindTransform.GetComponent<Collider> ();
 
 			wholeRot = centerPoint.rotation;
 			wholeEuler = wholeRot.eulerAngles;

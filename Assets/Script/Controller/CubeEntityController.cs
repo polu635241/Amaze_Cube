@@ -22,7 +22,9 @@ namespace Kun.Controller
 
 			this.cubeEntitySetting = cubeEntitySetting;
 		}
-		
+
+		const int intervalCount = 2;
+
 		[SerializeField]
 		Transform centerPoint;
 
@@ -49,23 +51,138 @@ namespace Kun.Controller
 
 		public void RotateRow(Collider receiveColl, RowRotateDirection dir, bool isPositive)
 		{
-//			CubeGroupData ownerGroupData = null;
-//			CubeRowData ownerRowData = null;
-//
-//			ownerGroupData = cubeEntityDataGroups.Find (cubeEntityDataGrou=>
-//				{
-//					return cubeEntityDataGrou.CheckDataExist(receiveColl,dir, out ownerRowData);
-//				});
-//
-//			if (ownerGroupData != null) 
-//			{
-//				Debug.LogError ("--------->");
-//				Debug.Log ("dir" + dir.ToString ());
-//			}
-//			else
-//			{
-//				Debug.LogError ("搜尋不到對應的群組");
-//			}
+			List<CubeRowData> rotateRows = GetRotateRowsGroup (dir);
+
+			CubeRowData ownerRow = rotateRows.Find (rotateRow=>
+				{
+					return rotateRow.CheckDataExist (receiveColl);
+				});
+
+			if (ownerRow != null) 
+			{
+				Quaternion deltaQuaterniotn = GetDeltaQuaternion (dir, isPositive);
+				
+				ownerRow.CubeCacheDatas.ForEach (cubeCacheData=>
+					{
+						cubeCacheData.DeltaSingleRot (deltaQuaterniotn);
+					});
+
+				OnRowRotateFinish (ownerRow, isPositive);
+			}
+			else
+			{
+				string name = receiveColl.gameObject.name;
+				Debug.LogError ($"找不到所屬群組 name -> {name}, idr -> {dir}");
+			}
+		}
+
+		void OnRowRotateFinish (CubeRowData ownerRow, bool isPositive)
+		{
+			Dictionary<CubeCacheData,CubeCacheData> transferPair = new Dictionary<CubeCacheData, CubeCacheData> ();
+
+			List<CubeCacheData> cubeCacheDatas = ownerRow.CubeCacheDatas;
+
+			int count = cubeCacheDatas.Count;
+
+			cubeCacheDatas.Map ((index, cubeCacheData)=>
+				{
+					int needChangeIndex = 0;
+					
+					if(isPositive)
+					{
+						needChangeIndex = index + intervalCount;
+
+						if(needChangeIndex > (count-1))
+						{
+							needChangeIndex -= count;
+						}
+					}
+					else
+					{
+						needChangeIndex = index - intervalCount;
+
+						if(needChangeIndex < (0))
+						{
+							needChangeIndex += count;
+						}
+					}
+
+					CubeCacheData needChangeData = cubeCacheDatas[needChangeIndex];
+					transferPair.Add (needChangeData, cubeCacheData);
+				});
+
+			ProcessTransfer (x_RotateRows, transferPair);
+			ProcessTransfer (y_RotateRows, transferPair);
+			ProcessTransfer (z_RotateRows, transferPair);
+		}
+
+		void ProcessTransfer(List<CubeRowData> cubeRowDataGroup, Dictionary<CubeCacheData,CubeCacheData> transferPair)
+		{
+			cubeRowDataGroup.ForEach (cubeRowData=>
+				{
+					List<CubeCacheData> cubeCacheDatas = cubeRowData.CubeCacheDatas;
+
+					//for 是為了保留集合的參考
+					for (int i = 0; i < cubeCacheDatas.Count; i++) 
+					{
+						CubeCacheData transferCubeCaheData = null;
+
+						if(transferPair.TryGetValue(cubeCacheDatas[i], out transferCubeCaheData))
+						{
+							cubeCacheDatas[i] = transferCubeCaheData;
+						}
+					}
+				});
+		}
+
+		Quaternion GetDeltaQuaternion (RowRotateDirection dir, bool isPositive)
+		{
+			float scale = isPositive ? 1 : -1;
+
+			float processDegree = 90 * scale;
+
+			switch(dir)
+			{
+			case RowRotateDirection.X:
+				{
+					return Quaternion.Euler (processDegree, 0, 0);
+				}
+
+			case RowRotateDirection.Y:
+				{
+					return Quaternion.Euler (0, processDegree, 0);
+				}
+
+			case RowRotateDirection.Z:
+				{
+					return Quaternion.Euler (0, 0, processDegree);
+				}
+			}
+
+			throw new Exception ("無對應旋轉設定");
+		}
+
+		List<CubeRowData> GetRotateRowsGroup (RowRotateDirection dir)
+		{
+			switch(dir)
+			{
+			case RowRotateDirection.X:
+				{
+					return x_RotateRows;
+				}
+
+			case RowRotateDirection.Y:
+				{
+					return y_RotateRows;
+				}
+
+			case RowRotateDirection.Z:
+				{
+					return z_RotateRows;
+				}
+			}
+
+			throw new Exception ("無對應所屬群組");
 		}
 
 		public void RotateWhole (Vector3 deltaEuler, float deltaTime)

@@ -14,7 +14,7 @@ namespace Kun.Controller
 	{
 		Collider simulationTarget;
 
-		bool isPositive;
+		bool isPositive = true;
 
 		const string PositiveComment = "正向";
 		const string NegativeComment = "反向";
