@@ -2,6 +2,6 @@
 	"cubeEntitySetting":
 	{
 		"rotateSpeed":10,
-		"rowRotateTime" : 0.5f
+		"rowRotateTime" : 0.5
 	}
 }

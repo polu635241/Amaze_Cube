@@ -9,18 +9,18 @@ namespace Kun.Controller
 {
 	public abstract class CubeFlowState
 	{
-		protected CubeController cube_Controller;
+		protected CubeController cubeController;
 		protected CubeEntitySetting cubeEntitySetting;
 		protected CubeFlowController cubeFlowController;
 		protected InputReceiver inputReceiver;
 		protected CubeFlowData cubeFlowData;
 
-		public CubeFlowState (CubeController cube_Controller, CubeFlowController cubeFlowController)
+		public CubeFlowState (CubeController cubeController, CubeFlowController cubeFlowController)
 		{
-			this.cube_Controller = cube_Controller;
+			this.cubeController = cubeController;
 			this.cubeFlowController = cubeFlowController;
-			this.inputReceiver = cube_Controller.InputReceiver;
-			CubeSetting cubeSetting = cube_Controller.ParseManager.CubeSetting;
+			this.inputReceiver = cubeController.InputReceiver;
+			CubeSetting cubeSetting = cubeController.ParseManager.CubeSetting;
 			this.cubeEntitySetting = cubeSetting.CubeEntitySetting;
 
 			this.cubeFlowData = cubeFlowController.CubeFlowData;

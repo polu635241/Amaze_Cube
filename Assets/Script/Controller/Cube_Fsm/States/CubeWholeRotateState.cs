@@ -6,11 +6,11 @@ using Kun.Tool;
 
 namespace Kun.Controller
 {
-	public class CubeWholeRotateState : CubeFlowState {
-
+	public class CubeWholeRotateState : CubeFlowState 
+	{
 		Vector3? mouseLastPos = null;
 
-		public CubeWholeRotateState (CubeController cube_Controller, CubeFlowController cubeFlowController) : base (cube_Controller, cubeFlowController)
+		public CubeWholeRotateState (CubeController cubeController, CubeFlowController cubeFlowController) : base (cubeController, cubeFlowController)
 		{
 			
 		}
@@ -35,7 +35,7 @@ namespace Kun.Controller
 
 					Vector3 deltaEnler = new Vector3 (deltaPos.y, deltaPos.x * -1);
 
-					cube_Controller.CubeEntityController.RotateWhole (deltaEnler, deltaTime);
+					cubeController.CubeEntityController.RotateWhole (deltaEnler, deltaTime);
 				}
 
 				mouseLastPos = mousePos;
