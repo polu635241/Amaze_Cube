@@ -11,6 +11,7 @@ namespace Kun.Controller
 	{
 		protected CubeController cubeController;
 		protected CubeEntitySetting cubeEntitySetting;
+		protected CubeEntityController cubeEntityController;
 		protected CubeFlowController cubeFlowController;
 		protected InputReceiver inputReceiver;
 		protected CubeFlowData cubeFlowData;
@@ -24,6 +25,7 @@ namespace Kun.Controller
 			this.cubeEntitySetting = cubeSetting.CubeEntitySetting;
 
 			this.cubeFlowData = cubeFlowController.CubeFlowData;
+			this.cubeEntityController = cubeController.CubeEntityController;
 		}
 
 		public virtual void Enter(CubeFlowState prevState)

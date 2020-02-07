@@ -35,6 +35,7 @@ namespace Kun.Controller
 			playerFlowStateDictTable = new Dictionary<Type, CubeFlowState> ();
 			playerFlowStateDictTable.Add (typeof(CubeStandbyState), new CubeStandbyState (cube_Controller, cubeFlowController));
 			playerFlowStateDictTable.Add (typeof(CubeWholeRotateState), new CubeWholeRotateState (cube_Controller, cubeFlowController));
+			playerFlowStateDictTable.Add (typeof(CubeRowRotateState), new CubeRowRotateState (cube_Controller, cubeFlowController));
 		}
 	}
 }

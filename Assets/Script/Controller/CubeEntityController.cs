@@ -73,7 +73,7 @@ namespace Kun.Controller
 			}
 		}
 
-		void OnRowRotateFinish (CubeRowData ownerRow, bool isPositive)
+		public void OnRowRotateFinish (CubeRowData ownerRow, bool isPositive)
 		{
 			Dictionary<CubeCacheData,CubeCacheData> transferPair = new Dictionary<CubeCacheData, CubeCacheData> ();
 

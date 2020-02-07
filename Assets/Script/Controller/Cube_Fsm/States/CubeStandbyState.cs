@@ -22,6 +22,11 @@ namespace Kun.Controller
 		{
 			Vector3 mousePos;
 
+			if (cubeFlowData.RowRatateCacheData != null) 
+			{
+				return GetState<CubeRowRotateState> ();
+			}
+
 			if (inputReceiver.ScreenTrigger(out mousePos))
 			{
 				RaycastHit hit;
