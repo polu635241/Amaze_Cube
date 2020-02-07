@@ -28,5 +28,20 @@ namespace Kun.Data
 				rotateSpeed = value;
 			}
 		}
+
+		[SerializeField][Header("行轉動所需時間")]
+		float rowRotateTime;
+
+		/// <summary>
+		/// 行轉動所需時間
+		/// </summary>
+		/// <value>The row rotate time.</value>
+		public float RowRotateTime
+		{
+			get
+			{
+				return rowRotateTime;
+			}
+		}
 	}
 }
