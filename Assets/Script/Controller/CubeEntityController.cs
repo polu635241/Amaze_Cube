@@ -62,7 +62,7 @@ namespace Kun.Controller
 			{
 				Quaternion deltaQuaterniotn = GetDeltaQuaternion (dir, isPositive);
 
-				RowRatateCacheData rowRatateCacheData = new RowRatateCacheData (deltaQuaterniotn, isPositive);
+				RowRatateCacheData rowRatateCacheData = new RowRatateCacheData (ownerRow, deltaQuaterniotn, isPositive);
 
 				return rowRatateCacheData;
 			}

@@ -8,12 +8,23 @@ namespace Kun.Data
 {
 	public class RowRatateCacheData
 	{
-		public RowRatateCacheData(Quaternion rowDeltaQuaternion, bool isPositive)
+		public RowRatateCacheData (CubeRowData currentRowData, Quaternion rowDeltaQuaternion, bool isPositive)
 		{
 			this.rowDeltaQuaternion = rowDeltaQuaternion;
 			this.isPositive = isPositive;
+            this.currentRowData = currentRowData;
 		}
-		
+
+		public CubeRowData CurrentRowData
+		{
+			get
+			{
+				return currentRowData;
+			}
+		}
+
+		CubeRowData currentRowData;
+
 		public Quaternion RowDeltaQuaternion
 		{
 			get
@@ -23,10 +34,6 @@ namespace Kun.Data
 		}
 		
 		Quaternion rowDeltaQuaternion;
-		
-		public CubeRowData CurrentRowData;
-		
-		CubeRowData currentRowData;
 		
 		public bool IsPositive
 		{
