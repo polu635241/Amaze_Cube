@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Kun.Tool;
+using Kun.Data;
 
 namespace Kun.Controller
 {
@@ -12,10 +13,20 @@ namespace Kun.Controller
 		public CubeFlowController (CubeController cube_Controller, Camera mainCamera)
 		{	
 			this.mainCamera = mainCamera;
+			cubeFlowData = new CubeFlowData ();
 			cubeFlowRepository = new CubeFlowRepository (cube_Controller, this);
 			ForceChangeState<CubeStandbyState> ();
 		}
 
+		public CubeFlowData CubeFlowData
+		{
+			get
+			{
+				return cubeFlowData;
+			}
+		}
+
+		CubeFlowData cubeFlowData;
 
 		CubeFlowState currentState;
 		CubeFlowRepository cubeFlowRepository;

@@ -22,6 +22,22 @@ namespace Kun.Controller
 
 		ParseManager parseManager;
 
+		public ParseManager ParseManager
+		{
+			get
+			{
+				return parseManager;
+			}
+		}
+
+		public CubeFlowController CubeFlowController
+		{
+			get
+			{
+				return cubeFlowController;
+			}
+		}
+
 		[SerializeField][ReadOnly]
 		CubeFlowController cubeFlowController;
 

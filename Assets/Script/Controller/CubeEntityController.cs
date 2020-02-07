@@ -49,7 +49,7 @@ namespace Kun.Controller
 		[SerializeField]
 		List<CubeRowData> z_RotateRows = new List<CubeRowData> ();
 
-		public void RotateRow(Collider receiveColl, RowRotateDirection dir, bool isPositive)
+		public RowRatateCacheData GetRowRatateCacheData(Collider receiveColl, RowRotateDirection dir, bool isPositive)
 		{
 			List<CubeRowData> rotateRows = GetRotateRowsGroup (dir);
 
@@ -61,18 +61,15 @@ namespace Kun.Controller
 			if (ownerRow != null) 
 			{
 				Quaternion deltaQuaterniotn = GetDeltaQuaternion (dir, isPositive);
-				
-				ownerRow.CubeCacheDatas.ForEach (cubeCacheData=>
-					{
-						cubeCacheData.DeltaSingleRot (deltaQuaterniotn);
-					});
 
-				OnRowRotateFinish (ownerRow, isPositive);
+				RowRatateCacheData rowRatateCacheData = new RowRatateCacheData (deltaQuaterniotn, isPositive);
+
+				return rowRatateCacheData;
 			}
 			else
 			{
 				string name = receiveColl.gameObject.name;
-				Debug.LogError ($"找不到所屬群組 name -> {name}, idr -> {dir}");
+				throw new UnityException ($"找不到所屬群組 name -> {name}, idr -> {dir}");
 			}
 		}
 

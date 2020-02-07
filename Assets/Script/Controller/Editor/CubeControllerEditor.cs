@@ -90,7 +90,13 @@ namespace Kun.Controller
 								{
 									if(simulationTarget!=null)
 									{
-										runtimeScript.CubeEntityController.RotateRow(simulationTarget, currentFrameInputDir.Value, isPositive);
+										CubeEntityController cubeEntityController = runtimeScript.CubeEntityController;
+
+										RowRotateDirection dir = currentFrameInputDir.Value;
+
+										RowRatateCacheData rowRatateCacheData = cubeEntityController.GetRowRatateCacheData(simulationTarget, dir, isPositive);
+
+										runtimeScript.CubeFlowController.CubeFlowData.RowRatateCacheData = rowRatateCacheData;
 									}
 									else
 									{
