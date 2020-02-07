@@ -56,6 +56,14 @@ namespace Kun.Data
 			Flush ();
 		}
 
+		public void SetSingleRot(Quaternion rowRot)
+		{
+			this.rowRot = rowRot;
+			this.rowEuler = rowRot.eulerAngles;
+
+			Flush ();
+		}
+
 		public void DeltaSingleRot(Quaternion deltaRot)
 		{
 			rowRot = deltaRot * rowRot;
@@ -80,6 +88,14 @@ namespace Kun.Data
 
 		[SerializeField][ReadOnly][Header("整個方塊群體的旋轉")]
 		Vector3 wholeEuler;
+
+		public Quaternion RowRot
+		{
+			get
+			{
+				return rowRot;
+			}
+		}
 
 		Quaternion rowRot;
 
