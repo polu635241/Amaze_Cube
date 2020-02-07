@@ -76,11 +76,11 @@ namespace Kun.Controller
 
 			Camera mainCamera = refBinder.GetComponent<Camera> (AssetKeys.MainCamera);
 
-			cubeFlowController = new CubeFlowController (this, mainCamera);
-
 			CubeBindData cubeTotalBindData = refBinder.GetComponent<CubeBindData> (AssetKeys.Cube);
 
 			cubeEntityController = new CubeEntityController (cubeTotalBindData, parseManager.CubeSetting.CubeEntitySetting);
+
+			cubeFlowController = new CubeFlowController (this, mainCamera);
 		}
 	}
 
