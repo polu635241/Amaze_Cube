@@ -26,9 +26,19 @@ namespace Kun.Data
 					}
 				});
 			
-			CubeRowData cubeEntityDataRow = new CubeRowData (cubeEntityDatas);
+			CubeCacheData rowCenterPoint;
 
+			Transform rowCenterPointEntity = cubeBindDataRow.RowCenterPoint;
+
+			if (!cubeCacheDataMappings.TryGetValue (rowCenterPointEntity, out rowCenterPoint))
+			{
+				Debug.LogError($"找不到對應的中心點緩存檔 name -> {rowCenterPointEntity.name}");
+			}
+
+			CubeRowData cubeEntityDataRow = new CubeRowData (cubeEntityDatas, rowCenterPoint);
+			
 			return cubeEntityDataRow;
+			
 		}
 	}
 }

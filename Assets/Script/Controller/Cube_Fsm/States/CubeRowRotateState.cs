@@ -39,11 +39,17 @@ namespace Kun.Controller
 					targetRots.Add (targetRot);
 				});
 
+			centerPointOriginRot = cubeRowData.RowCenterPoint.RowRot;
+			centetPointTargetRot = rowDeltaQuaternion * centerPointOriginRot;
+
 			throuthTime = 0f;
 		}
 
 		List<Quaternion> originRots;
+		Quaternion centerPointOriginRot;
+
 		List<Quaternion> targetRots;
+		Quaternion centetPointTargetRot;
 
 		float throuthTime;
 
@@ -94,6 +100,10 @@ namespace Kun.Controller
 
 					cubeCacheData.SetSingleRot (currentRot);
 				});
+
+			Quaternion centerPointCurrentRot = Quaternion.Lerp (centerPointOriginRot, centetPointTargetRot, progress);
+
+			cubeRowData.RowCenterPoint.SetSingleRot (centerPointCurrentRot);
 		}
 	}
 }

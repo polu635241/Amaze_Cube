@@ -314,6 +314,7 @@ MonoBehaviour:
     centerPoint: {fileID: 0}
     cubeEntitySetting:
       rotateSpeed: 0
+      rowRotateTime: 0
     currentWholeRot: {x: 0, y: 0, z: 0, w: 0}
     currentWholeEuler: {x: 0, y: 0, z: 0}
     cubeCacheDatas: []
