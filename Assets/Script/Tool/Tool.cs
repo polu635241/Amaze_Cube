@@ -13,7 +13,6 @@ namespace Kun.Tool
 {
 	public static class Tool
 	{
-
 		public static void SwitchItem<T> (List<T> list1, List<T> list2)
 		{
 			List<T> _list1 = new List<T> (list2);
@@ -219,6 +218,25 @@ namespace Kun.Tool
 		public static Vector2 Vector2Multiply(Vector2 a, Vector2 b)
 		{
 			return new Vector2 (a.x * b.x, a.y * b.y);
+		}
+
+		/// <summary>
+		/// float比較有誤差 所以求近似值就好
+		/// </summary>
+		/// <param name="v3">V3.</param>
+		/// <param name="other">Other.</param>
+		/// <param name="tolerance">Tolerance.</param>
+		public static bool Approximately (this Vector3 v3, Vector3 other, float tolerance = 0.00001f)
+		{
+			for (int i = 0; i < 3; i++) 
+			{
+				if (Mathf.Abs (v3 [i] - other [i]) > tolerance) 
+				{
+					return false;
+				}
+			}
+
+			return true;
 		}
 	}
 
