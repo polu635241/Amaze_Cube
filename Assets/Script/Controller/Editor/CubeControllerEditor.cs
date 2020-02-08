@@ -31,7 +31,7 @@ namespace Kun.Controller
 		{
 			EditorTool.DrawInHorizontal (()=>
 				{
-					RowRotateDirection? currentFrameInputDir = null;
+					RowRotateAxis? currentFrameInputAxis = null;
 
 					simulationTarget = EditorGUILayout.ObjectField (simulationTarget, typeof(Collider)) as Collider;
 
@@ -45,7 +45,7 @@ namespace Kun.Controller
 									
 									DrawRowBtnGroup ("X", "仰角旋轉", ()=>
 										{
-											currentFrameInputDir = RowRotateDirection.X;
+											currentFrameInputAxis = RowRotateAxis.X;
 										});
 
 									GUILayout.FlexibleSpace ();
@@ -73,18 +73,18 @@ namespace Kun.Controller
 								{
 									DrawRowBtnGroup("Y", "漩渦旋轉", ()=>
 										{
-											currentFrameInputDir = RowRotateDirection.Y;
+											currentFrameInputAxis = RowRotateAxis.Y;
 										});
 
 									GUILayout.FlexibleSpace ();
 
 									DrawRowBtnGroup("Z", "水平旋轉", ()=>
 										{
-											currentFrameInputDir = RowRotateDirection.Z;
+											currentFrameInputAxis = RowRotateAxis.Z;
 										});
 								});
 
-							if(currentFrameInputDir!=null)
+							if(currentFrameInputAxis!=null)
 							{
 								if(EditorApplication.isPlaying)
 								{
@@ -92,9 +92,9 @@ namespace Kun.Controller
 									{
 										CubeEntityController cubeEntityController = runtimeScript.CubeEntityController;
 
-										RowRotateDirection dir = currentFrameInputDir.Value;
+										RowRotateAxis axis = currentFrameInputAxis.Value;
 
-										RowRatateCacheData rowRatateCacheData = cubeEntityController.GetRowRatateCacheData(simulationTarget, dir, isPositive);
+										RowRatateCacheData rowRatateCacheData = cubeEntityController.GetRowRatateCacheData(simulationTarget, axis, isPositive);
 
 										runtimeScript.CubeFlowController.CubeFlowData.RowRatateCacheData = rowRatateCacheData;
 									}

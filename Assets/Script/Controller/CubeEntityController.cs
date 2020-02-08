@@ -49,9 +49,9 @@ namespace Kun.Controller
 		[SerializeField]
 		List<CubeRowData> z_RotateRows = new List<CubeRowData> ();
 
-		public RowRatateCacheData GetRowRatateCacheData(Collider receiveColl, RowRotateDirection dir, bool isPositive)
+		public RowRatateCacheData GetRowRatateCacheData(Collider receiveColl, RowRotateAxis axis, bool isPositive)
 		{
-			List<CubeRowData> rotateRows = GetRotateRowsGroup (dir);
+			List<CubeRowData> rotateRows = GetRotateRowsGroup (axis);
 
 			CubeRowData ownerRow = rotateRows.Find (rotateRow=>
 				{
@@ -60,7 +60,7 @@ namespace Kun.Controller
 
 			if (ownerRow != null) 
 			{
-				Quaternion deltaQuaterniotn = GetDeltaQuaternion (dir, isPositive);
+				Quaternion deltaQuaterniotn = GetDeltaQuaternion (axis, isPositive);
 
 				RowRatateCacheData rowRatateCacheData = new RowRatateCacheData (ownerRow, deltaQuaterniotn, isPositive);
 
@@ -69,7 +69,7 @@ namespace Kun.Controller
 			else
 			{
 				string name = receiveColl.gameObject.name;
-				throw new UnityException ($"找不到所屬群組 name -> {name}, idr -> {dir}");
+				throw new UnityException ($"找不到所屬群組 name -> {name}, axis -> {axis}");
 			}
 		}
 
@@ -132,7 +132,7 @@ namespace Kun.Controller
 				});
 		}
 
-		Quaternion GetDeltaQuaternion (RowRotateDirection dir, bool isPositive)
+		Quaternion GetDeltaQuaternion (RowRotateAxis dir, bool isPositive)
 		{
 			float scale = isPositive ? 1 : -1;
 
@@ -140,17 +140,17 @@ namespace Kun.Controller
 
 			switch(dir)
 			{
-			case RowRotateDirection.X:
+			case RowRotateAxis.X:
 				{
 					return Quaternion.Euler (processDegree, 0, 0);
 				}
 
-			case RowRotateDirection.Y:
+			case RowRotateAxis.Y:
 				{
 					return Quaternion.Euler (0, processDegree, 0);
 				}
 
-			case RowRotateDirection.Z:
+			case RowRotateAxis.Z:
 				{
 					return Quaternion.Euler (0, 0, processDegree);
 				}
@@ -159,21 +159,21 @@ namespace Kun.Controller
 			throw new Exception ("無對應旋轉設定");
 		}
 
-		List<CubeRowData> GetRotateRowsGroup (RowRotateDirection dir)
+		List<CubeRowData> GetRotateRowsGroup (RowRotateAxis dir)
 		{
 			switch(dir)
 			{
-			case RowRotateDirection.X:
+			case RowRotateAxis.X:
 				{
 					return x_RotateRows;
 				}
 
-			case RowRotateDirection.Y:
+			case RowRotateAxis.Y:
 				{
 					return y_RotateRows;
 				}
 
-			case RowRotateDirection.Z:
+			case RowRotateAxis.Z:
 				{
 					return z_RotateRows;
 				}
