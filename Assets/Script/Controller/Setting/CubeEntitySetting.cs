@@ -29,7 +29,7 @@ namespace Kun.Data
 			}
 		}
 
-		[SerializeField][Header("行轉動所需時間")]
+		[SerializeField][Header("行轉動所需時間")][ReadOnly]
 		float rowRotateTime;
 
 		/// <summary>
@@ -41,6 +41,17 @@ namespace Kun.Data
 			get
 			{
 				return rowRotateTime;
+			}
+		}
+
+		[SerializeField][Header("行旋轉 所需的觸碰點移動長度")][ReadOnly]
+		float rowRotateNeedLength;
+
+		public float RowRotateNeedLength
+		{
+			get
+			{
+				return rowRotateNeedLength;
 			}
 		}
 	}
