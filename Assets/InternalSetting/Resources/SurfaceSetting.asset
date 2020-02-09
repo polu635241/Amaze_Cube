@@ -12,51 +12,63 @@ MonoBehaviour:
   m_Name: SurfaceSetting
   m_EditorClassIdentifier: 
   rotPairSurfaces:
-  - index: 1
+  - info: 1
+    index: 1
     bindEuler: {x: 270, y: 0, z: 0}
-    horizontalSetting:
+    axisPairs:
+    - positionSource: 0
       axis: 2
       isPositive: 0
-    verticalSetting:
+    - positionSource: 2
       axis: 0
-      isPositive: 0
-  - index: 2
+      isPositive: 1
+  - info: 2
+    index: 2
     bindEuler: {x: 0, y: 270, z: 0}
-    horizontalSetting:
+    axisPairs:
+    - positionSource: 2
       axis: 1
       isPositive: 1
-    verticalSetting:
+    - positionSource: 1
       axis: 2
       isPositive: 0
-  - index: 3
+  - info: 3
+    index: 3
     bindEuler: {x: 0, y: 0, z: 0}
-    horizontalSetting:
+    axisPairs:
+    - positionSource: 0
       axis: 1
       isPositive: 1
-    verticalSetting:
+    - positionSource: 1
       axis: 0
       isPositive: 0
-  - index: 4
+  - info: 4
+    index: 4
     bindEuler: {x: 0, y: 180, z: 0}
-    horizontalSetting:
+    axisPairs:
+    - positionSource: 0
       axis: 1
-      isPositive: 1
-    verticalSetting:
+      isPositive: 0
+    - positionSource: 1
       axis: 0
       isPositive: 1
-  - index: 5
+  - info: 5
+    index: 5
     bindEuler: {x: 0, y: 90, z: 0}
-    horizontalSetting:
+    axisPairs:
+    - positionSource: 2
       axis: 1
-      isPositive: 1
-    verticalSetting:
+      isPositive: 0
+    - positionSource: 1
       axis: 2
       isPositive: 1
-  - index: 6
+  - info: 6
+    index: 6
     bindEuler: {x: 90, y: 0, z: 0}
-    horizontalSetting:
+    axisPairs:
+    - positionSource: 0
       axis: 2
       isPositive: 1
-    verticalSetting:
+    - positionSource: 2
       axis: 0
       isPositive: 0

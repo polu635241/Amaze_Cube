@@ -56,15 +56,15 @@ namespace Kun.Controller
 
 						Vector3 deltaPosInbox = wholeInverseRot * deltaPos;
 
-						Vector3 processDeltaPos = currentSurfaceInverseRot * deltaPosInbox;
+//						Vector3 processDeltaPos = currentSurfaceInverseRot * deltaPosInbox;
 
 						Debug.Log ($"deltaPos -> {deltaPos}");
 						Debug.Log ($"deltaPosInbox -> {deltaPosInbox}");
-						Debug.Log ($"processDeltaPos -> {processDeltaPos}");
+//						Debug.Log ($"processDeltaPos -> {processDeltaPos}");
 
-						PosDeltaData posDeltaData = GetPosDeltaData (processDeltaPos);
+						PosDeltaData posDeltaData = GetPosDeltaData (deltaPosInbox);
 
-						RowRatateCacheData rowRatateCacheData = GetRowRatateCacheData (hitColl, posDeltaData.IsHorizontal, posDeltaData.IsPositive);
+						RowRatateCacheData rowRatateCacheData = GetRowRatateCacheData (hitColl, posDeltaData);
 						cubeFlowData.RowRatateCacheData = rowRatateCacheData;
 
 						return GetState<CubeRowRotateState> ();
@@ -87,17 +87,17 @@ namespace Kun.Controller
 
 		PosDeltaData GetPosDeltaData(Vector3 posDelta)
 		{
-			bool isHorizontal;
+			int axisIndex;
 			bool isPositive;
 
-			float deltaX = posDelta.x;
-			float deltaY = posDelta.y;
+			float delta_0 = GetValue (0, posDelta);
+			float delta_1 = GetValue (1, posDelta);
 
-			if (Mathf.Abs (deltaX) > Mathf.Abs (deltaY))
+			if (Mathf.Abs (delta_0) > Mathf.Abs (delta_1))
 			{
-				isHorizontal = true;
+				axisIndex = 0;
 
-				if (deltaX > 0) 
+				if (delta_0 > 0) 
 				{
 					isPositive = true;
 				}
@@ -108,9 +108,9 @@ namespace Kun.Controller
 			}
 			else
 			{
-				isHorizontal = false;
+				axisIndex = 1;
 
-				if (deltaY > 0) 
+				if (delta_1 > 0) 
 				{
 					isPositive = true;
 				}
@@ -120,7 +120,36 @@ namespace Kun.Controller
 				}
 			}
 
-			return new PosDeltaData (isHorizontal, isPositive);
+			return new PosDeltaData (axisIndex, isPositive);
+		}
+
+		float GetValue(int index, Vector3 posDelta)
+		{
+			PositionSource positionSource = currentRotPairSurface.AxisPairs [index].PositionSource;
+
+			switch (positionSource) 
+			{
+			case PositionSource.X:
+				{
+					return posDelta.x;
+				}
+
+			case PositionSource.Y:
+				{
+					return posDelta.y;
+				}
+
+			case PositionSource.Z:
+				{
+					return posDelta.z;
+				}
+
+			default:
+				{
+					Debug.LogError ("Mapping fail");
+					return 0f;
+				}
+			}
 		}
 
 		void ProcessHit (RaycastHit hitCache)
@@ -151,20 +180,13 @@ namespace Kun.Controller
 			}
 		}
 
-		RowRatateCacheData GetRowRatateCacheData (Collider hitColl, bool isHorizontal, bool isPositive)
+		RowRatateCacheData GetRowRatateCacheData (Collider hitColl, PosDeltaData posDeltaData)
 		{
 			AxisPair settingAxisPair = null;
 
-			if (isHorizontal) 
-			{
-				settingAxisPair = currentRotPairSurface.HorizontalSetting;
-			}
-			else
-			{
-				settingAxisPair = currentRotPairSurface.VerticalSetting;
-			}
+			settingAxisPair = currentRotPairSurface.AxisPairs[posDeltaData.AxisIndex];
 
-			bool processIsPositive = Tool.Tool.ProcessBool (settingAxisPair.IsPositive, isPositive);
+			bool processIsPositive = Tool.Tool.ProcessBool (settingAxisPair.IsPositive, posDeltaData.IsPositive);
 
 			RowRotateAxis axis = settingAxisPair.Axis;
 
