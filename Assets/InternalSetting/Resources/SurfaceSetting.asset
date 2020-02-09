@@ -24,10 +24,10 @@ MonoBehaviour:
     bindEuler: {x: 0, y: 270, z: 0}
     horizontalSetting:
       axis: 1
-      isPositive: 0
+      isPositive: 1
     verticalSetting:
       axis: 2
-      isPositive: 1
+      isPositive: 0
   - index: 3
     bindEuler: {x: 0, y: 0, z: 0}
     horizontalSetting:
@@ -35,27 +35,27 @@ MonoBehaviour:
       isPositive: 1
     verticalSetting:
       axis: 0
-      isPositive: 1
+      isPositive: 0
   - index: 4
     bindEuler: {x: 0, y: 180, z: 0}
     horizontalSetting:
       axis: 1
-      isPositive: 0
+      isPositive: 1
     verticalSetting:
       axis: 0
-      isPositive: 0
+      isPositive: 1
   - index: 5
     bindEuler: {x: 0, y: 90, z: 0}
     horizontalSetting:
       axis: 1
-      isPositive: 0
+      isPositive: 1
     verticalSetting:
       axis: 2
-      isPositive: 0
+      isPositive: 1
   - index: 6
     bindEuler: {x: 90, y: 90, z: 0}
     horizontalSetting:
-      axis: 0
+      axis: 2
       isPositive: 0
     verticalSetting:
       axis: 0

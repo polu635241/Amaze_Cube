@@ -78,9 +78,9 @@ namespace Kun.Controller
 
 			CubeBindData cubeTotalBindData = refBinder.GetComponent<CubeBindData> (AssetKeys.Cube);
 
-			cubeEntityController = new CubeEntityController (cubeTotalBindData, parseManager.CubeSetting.CubeEntitySetting);
+			cubeEntityController = new CubeEntityController (mainCamera, cubeTotalBindData, parseManager.CubeSetting.CubeEntitySetting);
 
-			cubeFlowController = new CubeFlowController (this, mainCamera);
+			cubeFlowController = new CubeFlowController (this);
 		}
 	}
 
