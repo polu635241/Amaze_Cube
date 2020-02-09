@@ -9,6 +9,17 @@ namespace Kun.Data
 	[Serializable]
 	public class AxisPair
 	{
+		public PositionSource PositionSource
+		{
+			get
+			{
+				return positionSource;
+			}
+		}
+		
+		[SerializeField]
+		PositionSource positionSource;
+		
 		public RowRotateAxis Axis
 		{
 			get
