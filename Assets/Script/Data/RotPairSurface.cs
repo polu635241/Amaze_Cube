@@ -60,5 +60,15 @@ namespace Kun.Data
 
 		[SerializeField]
 		AxisPair verticalSetting;
+		public List<AxisPair> AxisPairs
+		{
+			get
+			{
+				return axisPairs;
+			}
+		}
+
+		[SerializeField]
+		List<AxisPair> axisPairs;
 	}
 }
