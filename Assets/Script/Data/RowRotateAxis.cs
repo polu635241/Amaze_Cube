@@ -6,7 +6,7 @@ using Kun.Tool;
 
 namespace Kun.Data
 {
-	public enum RowRotateDirection
+	public enum RowRotateAxis
 	{
 		X,Y,Z
 	}

@@ -11,7 +11,7 @@ namespace Kun.Controller
 	[Serializable]
 	public class CubeEntityController
 	{
-		public CubeEntityController (CubeBindData cubeTotalBindData, CubeEntitySetting cubeEntitySetting)
+		public CubeEntityController (Camera mainCamera, CubeBindData cubeTotalBindData, CubeEntitySetting cubeEntitySetting)
 		{
 			this.centerPoint = cubeTotalBindData.CenterPoint;
 
@@ -21,6 +21,8 @@ namespace Kun.Controller
 			InitCubeEntityDatas (cubeTotalBindData);
 
 			this.cubeEntitySetting = cubeEntitySetting;
+
+			this.mainCamera = mainCamera;
 		}
 
 		const int intervalCount = 2;
@@ -30,6 +32,14 @@ namespace Kun.Controller
 
 		[SerializeField][ReadOnly]
 		CubeEntitySetting cubeEntitySetting;
+
+		public Quaternion CurrentWholeRot
+		{
+			get
+			{
+				return currentWholeRot;
+			}
+		}
 
 		[SerializeField][ReadOnly]
 		Quaternion currentWholeRot;
@@ -49,9 +59,12 @@ namespace Kun.Controller
 		[SerializeField]
 		List<CubeRowData> z_RotateRows = new List<CubeRowData> ();
 
-		public void RotateRow(Collider receiveColl, RowRotateDirection dir, bool isPositive)
+		[SerializeField]
+		Camera mainCamera;
+
+		public RowRatateCacheData GetRowRatateCacheData(Collider receiveColl, RowRotateAxis axis, bool isPositive)
 		{
-			List<CubeRowData> rotateRows = GetRotateRowsGroup (dir);
+			List<CubeRowData> rotateRows = GetRotateRowsGroup (axis);
 
 			CubeRowData ownerRow = rotateRows.Find (rotateRow=>
 				{
@@ -60,23 +73,20 @@ namespace Kun.Controller
 
 			if (ownerRow != null) 
 			{
-				Quaternion deltaQuaterniotn = GetDeltaQuaternion (dir, isPositive);
-				
-				ownerRow.CubeCacheDatas.ForEach (cubeCacheData=>
-					{
-						cubeCacheData.DeltaSingleRot (deltaQuaterniotn);
-					});
+				Quaternion deltaQuaterniotn = GetDeltaQuaternion (axis, isPositive);
 
-				OnRowRotateFinish (ownerRow, isPositive);
+				RowRatateCacheData rowRatateCacheData = new RowRatateCacheData (ownerRow, deltaQuaterniotn, isPositive);
+
+				return rowRatateCacheData;
 			}
 			else
 			{
 				string name = receiveColl.gameObject.name;
-				Debug.LogError ($"找不到所屬群組 name -> {name}, idr -> {dir}");
+				throw new UnityException ($"找不到所屬群組 name -> {name}, axis -> {axis}");
 			}
 		}
 
-		void OnRowRotateFinish (CubeRowData ownerRow, bool isPositive)
+		public void OnRowRotateFinish (CubeRowData ownerRow, bool isPositive)
 		{
 			Dictionary<CubeCacheData,CubeCacheData> transferPair = new Dictionary<CubeCacheData, CubeCacheData> ();
 
@@ -132,28 +142,35 @@ namespace Kun.Controller
 							cubeCacheDatas[i] = transferCubeCaheData;
 						}
 					}
+
+					CubeCacheData transferCenterCubeCaheData = null;
+
+					if(transferPair.TryGetValue(cubeRowData.RowCenterPoint , out transferCenterCubeCaheData))
+					{
+						cubeRowData.RowCenterPoint = transferCenterCubeCaheData;
+					}
 				});
 		}
 
-		Quaternion GetDeltaQuaternion (RowRotateDirection dir, bool isPositive)
+		Quaternion GetDeltaQuaternion (RowRotateAxis axis, bool isPositive)
 		{
 			float scale = isPositive ? 1 : -1;
 
 			float processDegree = 90 * scale;
 
-			switch(dir)
+			switch(axis)
 			{
-			case RowRotateDirection.X:
+			case RowRotateAxis.X:
 				{
 					return Quaternion.Euler (processDegree, 0, 0);
 				}
 
-			case RowRotateDirection.Y:
+			case RowRotateAxis.Y:
 				{
 					return Quaternion.Euler (0, processDegree, 0);
 				}
 
-			case RowRotateDirection.Z:
+			case RowRotateAxis.Z:
 				{
 					return Quaternion.Euler (0, 0, processDegree);
 				}
@@ -162,21 +179,21 @@ namespace Kun.Controller
 			throw new Exception ("無對應旋轉設定");
 		}
 
-		List<CubeRowData> GetRotateRowsGroup (RowRotateDirection dir)
+		List<CubeRowData> GetRotateRowsGroup (RowRotateAxis dir)
 		{
 			switch(dir)
 			{
-			case RowRotateDirection.X:
+			case RowRotateAxis.X:
 				{
 					return x_RotateRows;
 				}
 
-			case RowRotateDirection.Y:
+			case RowRotateAxis.Y:
 				{
 					return y_RotateRows;
 				}
 
-			case RowRotateDirection.Z:
+			case RowRotateAxis.Z:
 				{
 					return z_RotateRows;
 				}
@@ -233,6 +250,19 @@ namespace Kun.Controller
 			}
 
 			return entityRows;
+		}
+
+		public bool Raycast (Vector3 mousePos, out RaycastHit hit)
+		{
+			Ray ray = mainCamera.ScreenPointToRay (mousePos);
+
+			Vector3 beginPos = ray.origin;
+			float lineLength = 10f;
+			Vector3 endPos = beginPos + ray.direction * lineLength;
+
+			Debug.DrawLine(beginPos, endPos, Color.red, 0.1f);
+
+			return Physics.Raycast (ray, out hit);
 		}
 	}
 }

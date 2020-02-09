@@ -3,33 +3,32 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Kun.Tool;
+using Kun.Data;
 
 namespace Kun.Controller
 {
 	[Serializable]
 	public class CubeFlowController
 	{
-		public CubeFlowController (CubeController cube_Controller, Camera mainCamera)
-		{	
-			this.mainCamera = mainCamera;
+		public CubeFlowController (CubeController cube_Controller)
+		{
+			cubeFlowData = new CubeFlowData ();
 			cubeFlowRepository = new CubeFlowRepository (cube_Controller, this);
 			ForceChangeState<CubeStandbyState> ();
 		}
 
-
-		CubeFlowState currentState;
-		CubeFlowRepository cubeFlowRepository;
-
-		public Camera MainCamera
+		public CubeFlowData CubeFlowData
 		{
 			get
 			{
-				return mainCamera;
+				return cubeFlowData;
 			}
 		}
 
-		[SerializeField][ReadOnly]
-		Camera mainCamera;
+		CubeFlowData cubeFlowData;
+
+		CubeFlowState currentState;
+		CubeFlowRepository cubeFlowRepository;
 
 		[SerializeField][ReadOnly]
 		string currentStateInfo;

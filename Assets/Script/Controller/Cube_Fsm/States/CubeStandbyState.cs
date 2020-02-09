@@ -6,9 +6,9 @@ using Kun.Tool;
 
 namespace Kun.Controller
 {
-	public class CubeStandbyState : CubeFlowState {
-
-		public CubeStandbyState (CubeController cube_Controller, CubeFlowController cubeFlowController) : base (cube_Controller, cubeFlowController)
+	public class CubeStandbyState : CubeFlowState 
+	{
+		public CubeStandbyState (CubeController cubeController, CubeFlowController cubeFlowController) : base (cubeController, cubeFlowController)
 		{
 
 		}
@@ -22,23 +22,21 @@ namespace Kun.Controller
 		{
 			Vector3 mousePos;
 
+			if (cubeFlowData.RowRatateCacheData != null) 
+			{
+				return GetState<CubeRowRotateState> ();
+			}
+
 			if (inputReceiver.ScreenTrigger(out mousePos))
 			{
 				RaycastHit hit;
 
-				Ray ray = cubeFlowController.MainCamera.ScreenPointToRay (mousePos);
-
-				string hitName;
-
-				Vector3 beginPos = ray.origin;
-				float lineLength = 10f;
-				Vector3 endPos = beginPos + ray.direction * lineLength;
-
-				Debug.DrawLine(beginPos, endPos, Color.red, 0.1f);
-
-				if (Physics.Raycast(ray, out hit))
+				if (cubeEntityController.Raycast (mousePos, out hit))
 				{
-					//TODO Internal Single Row Rotate
+					cubeFlowData.HitCache = hit;
+					cubeFlowData.MousePosCache = mousePos;
+
+					return GetState<CubeRowRotateStandbyState> ();
 				}
 				else
 				{

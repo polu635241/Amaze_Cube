@@ -19,5 +19,20 @@ namespace Kun.Data
 
 		[SerializeField]
 		List<Transform> cubeEntitys;
+
+		/// <summary>
+		/// 中心點 參與旋轉 不參與換位
+		/// </summary>
+		/// <value>The row center point.</value>
+		public Transform RowCenterPoint
+		{
+			get
+			{
+				return rowCenterPoint;
+			}
+		}
+
+		[SerializeField][Header("中心點 參與旋轉 不參與換位")]
+		Transform rowCenterPoint;
 	}
 }

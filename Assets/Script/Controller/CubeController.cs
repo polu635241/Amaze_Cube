@@ -22,6 +22,22 @@ namespace Kun.Controller
 
 		ParseManager parseManager;
 
+		public ParseManager ParseManager
+		{
+			get
+			{
+				return parseManager;
+			}
+		}
+
+		public CubeFlowController CubeFlowController
+		{
+			get
+			{
+				return cubeFlowController;
+			}
+		}
+
 		[SerializeField][ReadOnly]
 		CubeFlowController cubeFlowController;
 
@@ -60,11 +76,11 @@ namespace Kun.Controller
 
 			Camera mainCamera = refBinder.GetComponent<Camera> (AssetKeys.MainCamera);
 
-			cubeFlowController = new CubeFlowController (this, mainCamera);
-
 			CubeBindData cubeTotalBindData = refBinder.GetComponent<CubeBindData> (AssetKeys.Cube);
 
-			cubeEntityController = new CubeEntityController (cubeTotalBindData, parseManager.CubeSetting.CubeEntitySetting);
+			cubeEntityController = new CubeEntityController (mainCamera, cubeTotalBindData, parseManager.CubeSetting.CubeEntitySetting);
+
+			cubeFlowController = new CubeFlowController (this);
 		}
 	}
 

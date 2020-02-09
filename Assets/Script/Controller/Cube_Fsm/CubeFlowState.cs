@@ -3,20 +3,32 @@ using System.Collections.Generic;
 using UnityEngine;
 using Kun.HardwareInput;
 using Kun.Tool;
+using Kun.Data;
 
 namespace Kun.Controller
 {
 	public abstract class CubeFlowState
 	{
-		protected CubeController cube_Controller;
+		protected CubeController cubeController;
+		protected CubeEntitySetting cubeEntitySetting;
+		protected SurfaceSetting surfaceSetting;
+		protected CubeEntityController cubeEntityController;
 		protected CubeFlowController cubeFlowController;
 		protected InputReceiver inputReceiver;
+		protected CubeFlowData cubeFlowData;
 
-		public CubeFlowState (CubeController cube_Controller, CubeFlowController cubeFlowController)
+		public CubeFlowState (CubeController cubeController, CubeFlowController cubeFlowController)
 		{
-			this.cube_Controller = cube_Controller;
+			this.cubeController = cubeController;
 			this.cubeFlowController = cubeFlowController;
-			this.inputReceiver = cube_Controller.InputReceiver;
+			this.inputReceiver = cubeController.InputReceiver;
+			ParseManager parseManager = cubeController.ParseManager;
+			CubeSetting cubeSetting = parseManager.CubeSetting;
+			this.surfaceSetting = parseManager.SurfaceSetting;
+			this.cubeEntitySetting = cubeSetting.CubeEntitySetting;
+
+			this.cubeFlowData = cubeFlowController.CubeFlowData;
+			this.cubeEntityController = cubeController.CubeEntityController;
 		}
 
 		public virtual void Enter(CubeFlowState prevState)

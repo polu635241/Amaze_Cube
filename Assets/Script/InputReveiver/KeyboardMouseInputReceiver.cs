@@ -41,6 +41,9 @@ namespace Kun.HardwareInput
 			if (Input.GetMouseButton(0)) 
 			{
 				triggerPoint = Input.mousePosition;
+
+//				Debug.Log (triggerPoint);
+
 				return true;
 			}
 			else
