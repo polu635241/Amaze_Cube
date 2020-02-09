@@ -53,10 +53,10 @@ MonoBehaviour:
       axis: 2
       isPositive: 1
   - index: 6
-    bindEuler: {x: 90, y: 90, z: 0}
+    bindEuler: {x: 90, y: 0, z: 0}
     horizontalSetting:
       axis: 2
-      isPositive: 0
+      isPositive: 1
     verticalSetting:
       axis: 0
       isPositive: 0
