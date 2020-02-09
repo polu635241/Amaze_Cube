@@ -11,7 +11,7 @@ namespace Kun.Controller
 	[Serializable]
 	public class CubeEntityController
 	{
-		public CubeEntityController (CubeBindData cubeTotalBindData, CubeEntitySetting cubeEntitySetting)
+		public CubeEntityController (Camera mainCamera, CubeBindData cubeTotalBindData, CubeEntitySetting cubeEntitySetting)
 		{
 			this.centerPoint = cubeTotalBindData.CenterPoint;
 
@@ -21,6 +21,8 @@ namespace Kun.Controller
 			InitCubeEntityDatas (cubeTotalBindData);
 
 			this.cubeEntitySetting = cubeEntitySetting;
+
+			this.mainCamera = mainCamera;
 		}
 
 		const int intervalCount = 2;
@@ -30,6 +32,14 @@ namespace Kun.Controller
 
 		[SerializeField][ReadOnly]
 		CubeEntitySetting cubeEntitySetting;
+
+		public Quaternion CurrentWholeRot
+		{
+			get
+			{
+				return currentWholeRot;
+			}
+		}
 
 		[SerializeField][ReadOnly]
 		Quaternion currentWholeRot;
@@ -48,6 +58,9 @@ namespace Kun.Controller
 
 		[SerializeField]
 		List<CubeRowData> z_RotateRows = new List<CubeRowData> ();
+
+		[SerializeField]
+		Camera mainCamera;
 
 		public RowRatateCacheData GetRowRatateCacheData(Collider receiveColl, RowRotateAxis axis, bool isPositive)
 		{
@@ -129,16 +142,23 @@ namespace Kun.Controller
 							cubeCacheDatas[i] = transferCubeCaheData;
 						}
 					}
+
+					CubeCacheData transferCenterCubeCaheData = null;
+
+					if(transferPair.TryGetValue(cubeRowData.RowCenterPoint , out transferCenterCubeCaheData))
+					{
+						cubeRowData.RowCenterPoint = transferCenterCubeCaheData;
+					}
 				});
 		}
 
-		Quaternion GetDeltaQuaternion (RowRotateAxis dir, bool isPositive)
+		Quaternion GetDeltaQuaternion (RowRotateAxis axis, bool isPositive)
 		{
 			float scale = isPositive ? 1 : -1;
 
 			float processDegree = 90 * scale;
 
-			switch(dir)
+			switch(axis)
 			{
 			case RowRotateAxis.X:
 				{
@@ -230,6 +250,19 @@ namespace Kun.Controller
 			}
 
 			return entityRows;
+		}
+
+		public bool Raycast (Vector3 mousePos, out RaycastHit hit)
+		{
+			Ray ray = mainCamera.ScreenPointToRay (mousePos);
+
+			Vector3 beginPos = ray.origin;
+			float lineLength = 10f;
+			Vector3 endPos = beginPos + ray.direction * lineLength;
+
+			Debug.DrawLine(beginPos, endPos, Color.red, 0.1f);
+
+			return Physics.Raycast (ray, out hit);
 		}
 	}
 }

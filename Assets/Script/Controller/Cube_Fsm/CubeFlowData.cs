@@ -24,5 +24,37 @@ namespace Kun.Data
 		
 		[SerializeField][ReadOnly]
 		RowRatateCacheData rowRatateCacheData = null;
+
+		public RaycastHit HitCache
+		{
+			get
+			{
+				return hitCache;
+			}
+
+			set
+			{
+				hitCache = value;
+			}
+		}
+
+		[SerializeField][ReadOnly]
+		RaycastHit hitCache;
+
+		public Vector3 MousePosCache
+		{
+			get
+			{
+				return mousePosCache;
+			}
+
+			set
+			{
+				mousePosCache = value;
+			}
+		}
+
+		[SerializeField][ReadOnly]
+		Vector3 mousePosCache;
 	}
 }

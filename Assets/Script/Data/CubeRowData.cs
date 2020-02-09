@@ -36,6 +36,11 @@ namespace Kun.Data
 			{
 				return rowCenterPoint;
 			}
+
+			set
+			{
+				rowCenterPoint = value;
+			}
 		}
 
 		CubeCacheData rowCenterPoint;

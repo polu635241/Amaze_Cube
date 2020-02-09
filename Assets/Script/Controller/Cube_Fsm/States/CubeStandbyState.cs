@@ -31,19 +31,12 @@ namespace Kun.Controller
 			{
 				RaycastHit hit;
 
-				Ray ray = cubeFlowController.MainCamera.ScreenPointToRay (mousePos);
-
-				string hitName;
-
-				Vector3 beginPos = ray.origin;
-				float lineLength = 10f;
-				Vector3 endPos = beginPos + ray.direction * lineLength;
-
-				Debug.DrawLine(beginPos, endPos, Color.red, 0.1f);
-
-				if (Physics.Raycast(ray, out hit))
+				if (cubeEntityController.Raycast (mousePos, out hit))
 				{
-					//TODO Internal Single Row Rotate
+					cubeFlowData.HitCache = hit;
+					cubeFlowData.MousePosCache = mousePos;
+
+					return GetState<CubeRowRotateStandbyState> ();
 				}
 				else
 				{

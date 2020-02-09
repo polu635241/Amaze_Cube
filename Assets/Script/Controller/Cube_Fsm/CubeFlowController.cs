@@ -10,9 +10,8 @@ namespace Kun.Controller
 	[Serializable]
 	public class CubeFlowController
 	{
-		public CubeFlowController (CubeController cube_Controller, Camera mainCamera)
-		{	
-			this.mainCamera = mainCamera;
+		public CubeFlowController (CubeController cube_Controller)
+		{
 			cubeFlowData = new CubeFlowData ();
 			cubeFlowRepository = new CubeFlowRepository (cube_Controller, this);
 			ForceChangeState<CubeStandbyState> ();
@@ -30,17 +29,6 @@ namespace Kun.Controller
 
 		CubeFlowState currentState;
 		CubeFlowRepository cubeFlowRepository;
-
-		public Camera MainCamera
-		{
-			get
-			{
-				return mainCamera;
-			}
-		}
-
-		[SerializeField][ReadOnly]
-		Camera mainCamera;
 
 		[SerializeField][ReadOnly]
 		string currentStateInfo;

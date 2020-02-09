@@ -238,6 +238,21 @@ namespace Kun.Tool
 
 			return true;
 		}
+
+		public static bool ProcessBool(params bool[] bools)
+		{
+			bool result = true;
+
+			for (int i = 0; i < bools.Length; i++) 
+			{
+				if (bools [i] == false) 
+				{
+					result = !result;
+				}
+			}
+
+			return result;
+		}
 	}
 
 	[Serializable]

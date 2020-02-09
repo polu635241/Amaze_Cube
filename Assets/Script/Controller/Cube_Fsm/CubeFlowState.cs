@@ -11,6 +11,7 @@ namespace Kun.Controller
 	{
 		protected CubeController cubeController;
 		protected CubeEntitySetting cubeEntitySetting;
+		protected SurfaceSetting surfaceSetting;
 		protected CubeEntityController cubeEntityController;
 		protected CubeFlowController cubeFlowController;
 		protected InputReceiver inputReceiver;
@@ -21,7 +22,9 @@ namespace Kun.Controller
 			this.cubeController = cubeController;
 			this.cubeFlowController = cubeFlowController;
 			this.inputReceiver = cubeController.InputReceiver;
-			CubeSetting cubeSetting = cubeController.ParseManager.CubeSetting;
+			ParseManager parseManager = cubeController.ParseManager;
+			CubeSetting cubeSetting = parseManager.CubeSetting;
+			this.surfaceSetting = parseManager.SurfaceSetting;
 			this.cubeEntitySetting = cubeSetting.CubeEntitySetting;
 
 			this.cubeFlowData = cubeFlowController.CubeFlowData;
