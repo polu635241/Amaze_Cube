@@ -48,13 +48,13 @@ namespace Kun.Controller
 				
 				if (cubeEntityController.Raycast (mousePos, out hit)) 
 				{
-					Vector3 targetPos = hit.point;
+					Vector3 mouseEndPos = hit.point;
 					
-					float mousePosDistance = Vector3.Distance (mouseBegintPos, targetPos);
+					float mousePosDistance = Vector3.Distance (mouseBegintPos, mouseEndPos);
 
 					if (mousePosDistance > rowRotateNeedLength)
 					{
-						Vector3 deltaPos = targetPos - mouseBegintPos;
+						Vector3 deltaPos = mouseEndPos - mouseBegintPos;
 
 						Vector3 processDeltaPos = wholeInverseRot * currentSurfaceInverseRot * deltaPos;
 
