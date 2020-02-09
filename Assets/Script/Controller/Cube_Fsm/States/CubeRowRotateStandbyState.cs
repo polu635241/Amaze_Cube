@@ -72,8 +72,8 @@ namespace Kun.Controller
 				}
 				else
 				{
-					//回到待命狀態
-					return GetState<CubeStandbyState> ();
+					//進到等待放開狀態
+					return GetState<CubeWaitScreenUpState> ();
 				}
 			}
 			else

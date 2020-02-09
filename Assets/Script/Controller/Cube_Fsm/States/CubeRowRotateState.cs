@@ -82,7 +82,7 @@ namespace Kun.Controller
 				ProcessRowRotateProgress (1);
 				cubeEntityController.OnRowRotateFinish (cubeRowData, isPositive);
 
-				return GetState<CubeStandbyState> ();
+				return GetState<CubeWaitScreenUpState> ();
 			}
 
 		}
