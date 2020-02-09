@@ -33,8 +33,6 @@ namespace Kun.Controller
 
 			ProcessHit (cubeFlowData.HitCache);
 
-			Debug.Log ($"index -> {currentRotPairSurface.Index}");
-
 			mouseBegintPos = cubeFlowData.HitCache.point;
 		}
 
@@ -56,7 +54,13 @@ namespace Kun.Controller
 					{
 						Vector3 deltaPos = mouseEndPos - mouseBegintPos;
 
-						Vector3 processDeltaPos = wholeInverseRot * currentSurfaceInverseRot * deltaPos;
+						Vector3 deltaPosInbox = wholeInverseRot * deltaPos;
+
+						Vector3 processDeltaPos = currentSurfaceInverseRot * deltaPosInbox;
+
+						Debug.Log ($"deltaPos -> {deltaPos}");
+						Debug.Log ($"deltaPosInbox -> {deltaPosInbox}");
+						Debug.Log ($"processDeltaPos -> {processDeltaPos}");
 
 						PosDeltaData posDeltaData = GetPosDeltaData (processDeltaPos);
 
