@@ -9,22 +9,22 @@ namespace Kun.Data
 	[Serializable]
 	public class PosDeltaData
 	{
-		public PosDeltaData (bool isHorizontal, bool isPositive)
+		public PosDeltaData (int axisIndex, bool isPositive)
 		{
-			this.isHorizontal = isHorizontal;
+			this.axisIndex = axisIndex;
 			this.isPositive = isPositive;
 		}
 
-		public bool IsHorizontal
+		public int AxisIndex
 		{
 			get
 			{
-				return isHorizontal;
+				return axisIndex;
 			}
 		}
 
 		[SerializeField][ReadOnly]
-		bool isHorizontal;
+		int axisIndex;
 
 		public bool IsPositive
 		{

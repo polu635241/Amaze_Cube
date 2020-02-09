@@ -15,68 +15,36 @@ MonoBehaviour:
   - info: 1
     index: 1
     bindEuler: {x: 270, y: 0, z: 0}
-    horizontalSetting:
-      positionSource: 0
-      axis: 2
-      isPositive: 0
-    verticalSetting:
-      positionSource: 2
-      axis: 0
-      isPositive: 0
     axisPairs:
     - positionSource: 0
       axis: 2
       isPositive: 0
     - positionSource: 2
       axis: 0
-      isPositive: 0
+      isPositive: 1
   - info: 2
     index: 2
     bindEuler: {x: 0, y: 270, z: 0}
-    horizontalSetting:
-      positionSource: 2
-      axis: 1
-      isPositive: 0
-    verticalSetting:
-      positionSource: 1
-      axis: 2
-      isPositive: 1
     axisPairs:
     - positionSource: 2
       axis: 1
-      isPositive: 0
+      isPositive: 1
     - positionSource: 1
       axis: 2
-      isPositive: 1
+      isPositive: 0
   - info: 3
     index: 3
     bindEuler: {x: 0, y: 0, z: 0}
-    horizontalSetting:
-      positionSource: 0
-      axis: 1
-      isPositive: 0
-    verticalSetting:
-      positionSource: 1
-      axis: 0
-      isPositive: 1
     axisPairs:
     - positionSource: 0
       axis: 1
-      isPositive: 0
+      isPositive: 1
     - positionSource: 1
       axis: 0
-      isPositive: 1
+      isPositive: 0
   - info: 4
     index: 4
     bindEuler: {x: 0, y: 180, z: 0}
-    horizontalSetting:
-      positionSource: 0
-      axis: 1
-      isPositive: 0
-    verticalSetting:
-      positionSource: 1
-      axis: 0
-      isPositive: 1
     axisPairs:
     - positionSource: 0
       axis: 1
@@ -87,14 +55,6 @@ MonoBehaviour:
   - info: 5
     index: 5
     bindEuler: {x: 0, y: 90, z: 0}
-    horizontalSetting:
-      positionSource: 2
-      axis: 1
-      isPositive: 0
-    verticalSetting:
-      positionSource: 1
-      axis: 2
-      isPositive: 1
     axisPairs:
     - positionSource: 2
       axis: 1
@@ -105,18 +65,10 @@ MonoBehaviour:
   - info: 6
     index: 6
     bindEuler: {x: 90, y: 0, z: 0}
-    horizontalSetting:
-      positionSource: 0
-      axis: 2
-      isPositive: 0
-    verticalSetting:
-      positionSource: 2
-      axis: 0
-      isPositive: 0
     axisPairs:
     - positionSource: 0
       axis: 2
-      isPositive: 0
+      isPositive: 1
     - positionSource: 2
       axis: 0
       isPositive: 0

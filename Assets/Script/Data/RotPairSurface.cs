@@ -39,27 +39,6 @@ namespace Kun.Data
 		[SerializeField]
 		Vector3 bindEuler;
 
-		public AxisPair HorizontalSetting
-		{
-			get
-			{
-				return horizontalSetting;
-			}
-		}
-
-		[SerializeField]
-		AxisPair horizontalSetting;
-
-		public AxisPair VerticalSetting
-		{
-			get
-			{
-				return verticalSetting;
-			}
-		}
-
-		[SerializeField]
-		AxisPair verticalSetting;
 		public List<AxisPair> AxisPairs
 		{
 			get
