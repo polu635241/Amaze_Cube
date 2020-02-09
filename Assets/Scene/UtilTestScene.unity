@@ -1408,6 +1408,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1683453917}
+  - component: {fileID: 1683453916}
   m_Layer: 0
   m_Name: Test
   m_TagString: Untagged
@@ -1415,6 +1416,18 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 0
+--- !u!114 &1683453916
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1683453915}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a3e7b8c1c71eb974f955d0c113a0f635, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cubeController: {fileID: 1158745152}
 --- !u!4 &1683453917
 Transform:
   m_ObjectHideFlags: 0
