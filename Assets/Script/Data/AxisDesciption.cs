@@ -52,6 +52,11 @@ namespace Kun.Data
 		[SerializeField][ReadOnly]
 		float dotValue;
 
+		public void ReDot (Vector3 newVelocity)
+		{
+			dotValue = Vector3.Dot (bindDirVector3, newVelocity.normalized);
+		}
+
 		Vector3 GetBindDirVector3 (RowRotateAxis axis, Quaternion bindRot)
 		{
 			switch (axis) 

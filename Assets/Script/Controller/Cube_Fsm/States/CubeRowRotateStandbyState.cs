@@ -33,7 +33,7 @@ namespace Kun.Controller
 
 			ProcessHit (cubeFlowData.HitCache);
 
-			mouseBegintPos = cubeFlowData.HitCache.point;
+			mouseBegintPos = cubeFlowData.MousePosCache;
 		}
 
 		public override CubeFlowState Stay (float deltaTime)
@@ -46,12 +46,51 @@ namespace Kun.Controller
 				
 				if (cubeEntityController.Raycast (mousePos, out hit)) 
 				{
-					Vector3 mouseEndPos = hit.point;
-					
-					float mousePosDistance = Vector3.Distance (mouseBegintPos, mouseEndPos);
+					float mousePosDistance = Vector3.Distance (mouseBegintPos, mousePos);
 
 					if (mousePosDistance > rowRotateNeedLength)
 					{
+						List<AxisDesciption> remainingAxisDesciptions = GetRemainingAxisDesciptions ();
+
+						if (cubeEntityController.Raycast (mousePos, out hit))
+						{
+							Vector3 deltaHitPoint = hit.point - cubeFlowData.HitCache.point;
+
+							remainingAxisDesciptions.ForEach (desc => 
+							{
+								desc.ReDot (deltaHitPoint);
+							});
+
+							remainingAxisDesciptions.Sort ((descA,descB)=>
+								{
+									float absDotValueA = Mathf.Abs (descA.DotValue);
+									float absDotValueB = Mathf.Abs (descB.DotValue);
+
+									Debug.LogError (descA.Axis);
+									Debug.LogError (descA.DotValue);
+
+									Debug.LogError (descB.Axis);
+									Debug.LogError (descB.DotValue);
+
+									//大到小排
+									return -absDotValueA.CompareTo (absDotValueB);
+								});
+
+							AxisDesciption targetDesc = remainingAxisDesciptions [0];
+
+							bool isPositive = (targetDesc.DotValue >= 0);
+
+							RowRatateCacheData rowRatateCacheData = cubeEntityController.GetRowRatateCacheData (hitColl, targetDesc.Axis, isPositive);
+							cubeFlowData.RowRatateCacheData = rowRatateCacheData;
+
+							return GetState<CubeRowRotateState> ();
+						}
+						else	
+						{
+							return GetState<CubeWaitScreenUpState> ();
+						}
+
+						/*
 						Vector3 deltaPos = mouseEndPos - mouseBegintPos;
 
 						Vector3 deltaPosInbox = wholeInverseRot * deltaPos;
@@ -68,6 +107,7 @@ namespace Kun.Controller
 						cubeFlowData.RowRatateCacheData = rowRatateCacheData;
 
 						return GetState<CubeRowRotateState> ();
+						*/
 					}
 				}
 				else
@@ -195,9 +235,39 @@ namespace Kun.Controller
 			return rowRatateCacheData;
 		}
 			
-		AxisPair GetAxisPair (Vector3 deltaPos)
+		List<AxisDesciption> GetRemainingAxisDesciptions ()
 		{
-			return null;
+			List<AxisDesciption> remainingAxisDesciptions = new List<AxisDesciption> ();
+
+			Vector3 hitNormal = cubeFlowData.HitCache.normal;
+			Quaternion cubeWholeRot = cubeEntityController.CurrentWholeRot;
+
+			//拿方塊的三軸 與 射線的法線 求內積 最大的那個就表示目前的平面與該軸垂直
+			AxisDesciption xAxisDesciption = new AxisDesciption (RowRotateAxis.X, cubeWholeRot, hitNormal);
+			remainingAxisDesciptions.Add (xAxisDesciption);
+
+			AxisDesciption yAxisDesciption = new AxisDesciption (RowRotateAxis.Y, cubeWholeRot, hitNormal);
+			remainingAxisDesciptions.Add (yAxisDesciption);
+
+			AxisDesciption zAxisDesciption = new AxisDesciption (RowRotateAxis.Z, cubeWholeRot, hitNormal);
+			remainingAxisDesciptions.Add (zAxisDesciption);
+
+			remainingAxisDesciptions.Sort ((descA,descB)=>
+				{
+					float absDotValueA = Mathf.Abs (descA.DotValue);
+					float absDotValueB = Mathf.Abs (descB.DotValue);
+
+					//大到小排
+					return -absDotValueA.CompareTo (absDotValueB);
+				});
+
+			//把垂直的軸排除掉 魔術方塊的機構上 垂直的軸不能轉
+			Debug.LogError (remainingAxisDesciptions [0].Axis);
+			Debug.LogError (remainingAxisDesciptions [0].DotValue);
+
+			remainingAxisDesciptions.RemoveAt (0);
+
+			return remainingAxisDesciptions;
 		}
 	}
 }
