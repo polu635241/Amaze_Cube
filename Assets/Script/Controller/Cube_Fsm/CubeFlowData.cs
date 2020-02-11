@@ -56,5 +56,12 @@ namespace Kun.Data
 
 		[SerializeField][ReadOnly]
 		Vector3 mousePosCache;
+
+		public void ClearCache ()
+		{
+			rowRatateCacheData = null;
+			hitCache = new RaycastHit ();
+			mousePosCache = Vector3.zero;
+		}
 	}
 }

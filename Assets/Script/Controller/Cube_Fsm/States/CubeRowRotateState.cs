@@ -11,6 +11,8 @@ namespace Kun.Controller
 	{
 		float rowRotateTime;
 
+		bool hasExitScreen = false;
+
 		public CubeRowRotateState (CubeController cubeController, CubeFlowController cubeFlowController) : base (cubeController, cubeFlowController)
 		{
 			rowRotateTime = cubeEntitySetting.RowRotateTime;
@@ -43,6 +45,8 @@ namespace Kun.Controller
 			centetPointTargetRot = rowDeltaQuaternion * centerPointOriginRot;
 
 			throuthTime = 0f;
+
+			hasExitScreen = false;
 		}
 
 		List<Quaternion> originRots;
@@ -57,6 +61,13 @@ namespace Kun.Controller
 
 		public override CubeFlowState Stay (float deltaTime)
 		{
+			Vector3 mousePos;
+
+			if (!inputReceiver.ScreenTrigger (out mousePos)) 
+			{
+				hasExitScreen = true;
+			}
+			
 			CubeRowData cubeRowData = rowRatateCacheData.CurrentRowData;
 
 			Quaternion rowDeltaQuaternion = rowRatateCacheData.RowDeltaQuaternion;
@@ -82,7 +93,17 @@ namespace Kun.Controller
 				ProcessRowRotateProgress (1);
 				cubeEntityController.OnRowRotateFinish (cubeRowData, isPositive);
 
-				return GetState<CubeWaitScreenUpState> ();
+				if (!hasExitScreen) 
+				{
+					//把進入狀態前的最後一個點當作開始滑動的點
+					cubeFlowData.MousePosCache = mousePos;
+					return GetState<CubeRowRotateStandbyState> ();
+				}
+				else
+				{
+					cubeFlowData.ClearCache ();
+					return GetState<CubeStandbyState> ();
+				}
 			}
 
 		}
