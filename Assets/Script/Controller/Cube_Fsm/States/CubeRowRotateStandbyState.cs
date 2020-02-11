@@ -13,7 +13,6 @@ namespace Kun.Controller
 		float rowRotateNeedLength;
 		Vector3 mouseBegintPos = new Vector3 ();
 
-		List<RotPairSurface> rotPairSurfaces;
 		Quaternion wholeInverseRot = Quaternion.identity;
 
 		Collider hitColl;
@@ -22,7 +21,6 @@ namespace Kun.Controller
 		public CubeRowRotateStandbyState (CubeController cubeController, CubeFlowController cubeFlowController) : base (cubeController, cubeFlowController)
 		{
 			rowRotateNeedLength = cubeEntitySetting.RowRotateNeedLength;
-			rotPairSurfaces = new List<RotPairSurface> (surfaceSetting.rotPairSurfaces);
 		}
 
 		public override void Enter (CubeFlowState prevState)
@@ -110,14 +108,6 @@ namespace Kun.Controller
 			Quaternion currentWholeRot = cubeEntityController.CurrentWholeRot;
 
 			wholeInverseRot = Quaternion.Inverse (currentWholeRot);
-
-			//把該法線 從world 轉到方塊的local
-			Vector3 processNormal = wholeInverseRot * hitCache.normal;
-
-			RotPairSurface findRotPairSurface = rotPairSurfaces.Find (rotPairSurface =>
-				{
-					return rotPairSurface.Forward.Approximately (processNormal);
-				});
 		}
 			
 		List<AxisDesciption> GetRemainingAxisDesciptions ()
