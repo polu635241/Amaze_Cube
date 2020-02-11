@@ -14,12 +14,10 @@ namespace Kun.Controller
 		Vector3 mouseBegintPos = new Vector3 ();
 
 		List<RotPairSurface> rotPairSurfaces;
-
-		RotPairSurface currentRotPairSurface;
 		Quaternion wholeInverseRot = Quaternion.identity;
-		Quaternion currentSurfaceInverseRot = Quaternion.identity;
 
 		Collider hitColl;
+		RaycastHit hitCache;
 
 		public CubeRowRotateStandbyState (CubeController cubeController, CubeFlowController cubeFlowController) : base (cubeController, cubeFlowController)
 		{
@@ -34,6 +32,7 @@ namespace Kun.Controller
 			ProcessHit (cubeFlowData.HitCache);
 
 			mouseBegintPos = cubeFlowData.MousePosCache;
+			hitCache = cubeFlowData.HitCache;
 		}
 
 		public override CubeFlowState Stay (float deltaTime)
@@ -44,28 +43,15 @@ namespace Kun.Controller
 			{	
 				RaycastHit hit;
 				
-				if (cubeEntityController.Raycast (mousePos, out hit)) 
-				{
-					float mousePosDistance = Vector3.Distance (mouseBegintPos, mousePos);
+				float mousePosDistance = Vector3.Distance (mouseBegintPos, mousePos);
 
-					if (mousePosDistance > rowRotateNeedLength)
-					{
-						if (cubeEntityController.Raycast (mousePos, out hit))
-						{
-							
-
-							return GetState<CubeRowRotateState> ();
-						}
-						else	
-						{
-							return GetState<CubeWaitScreenUpState> ();
-						}
-					}
-				}
-				else
+				if (mousePosDistance > rowRotateNeedLength)
 				{
-					//進到等待放開狀態
-					return GetState<CubeWaitScreenUpState> ();
+					Vector3 deltaPos = mousePos - mouseBegintPos;
+
+					ProcessRowRotateData (deltaPos);
+					
+					return GetState<CubeRowRotateState> ();
 				}
 			}
 			else
@@ -77,14 +63,18 @@ namespace Kun.Controller
 			return null;
 		}
 
-		void ProcessRowRotateData (RaycastHit hit)
+		void ProcessRowRotateData (Vector3 deltaPos)
 		{
 			List<AxisDesciption> remainingAxisDesciptions = GetRemainingAxisDesciptions ();
-			Vector3 deltaHitPoint = hit.point - cubeFlowData.HitCache.point;
+
+			Vector3 mainCameraRight = mainCamreaTransform.right;
+			Vector3 mainCameraUp = mainCamreaTransform.up;
+
+			Vector3 processDeltaPos = deltaPos.x * mainCameraRight + deltaPos.y * mainCameraUp;
 
 			remainingAxisDesciptions.ForEach (desc => 
 				{
-					desc.ReDot (deltaHitPoint);
+					desc.ReDot (processDeltaPos);
 				});
 
 			remainingAxisDesciptions.Sort ((descA,descB)=>
@@ -97,13 +87,12 @@ namespace Kun.Controller
 				});
 
 			AxisDesciption targetDesc = remainingAxisDesciptions [0];
-			AxisDesciption anotherDesc = remainingAxisDesciptions [1];
 
 			//手碰到方塊的時候 會有一個與射線法線相反的力去推動方塊
-			Vector3 inverseNormal = hit.normal * -1;
+			Vector3 inverseNormal = hitCache.normal * -1;
 
 			//兩個分力作cross
-			Vector3 crossForce = Vector3.Cross (deltaHitPoint.normalized, inverseNormal);
+			Vector3 crossForce = Vector3.Cross (processDeltaPos.normalized, inverseNormal);
 
 			//如果求出來的 與 軸向 dot是負數的話 代表是向 逆時鐘旋轉
 			targetDesc.ReDot (crossForce);
@@ -129,17 +118,6 @@ namespace Kun.Controller
 				{
 					return rotPairSurface.Forward.Approximately (processNormal);
 				});
-
-			if (findRotPairSurface != null) 
-			{
-				currentRotPairSurface = findRotPairSurface;
-
-				currentSurfaceInverseRot = Quaternion.Inverse (currentRotPairSurface.BindRot);
-			}
-			else
-			{
-				Debug.LogError ($"can't get RotPairSurface, normal -> {hitCache.normal}");
-			}
 		}
 			
 		List<AxisDesciption> GetRemainingAxisDesciptions ()

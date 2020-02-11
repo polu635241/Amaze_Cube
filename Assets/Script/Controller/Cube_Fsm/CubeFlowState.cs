@@ -16,6 +16,7 @@ namespace Kun.Controller
 		protected CubeFlowController cubeFlowController;
 		protected InputReceiver inputReceiver;
 		protected CubeFlowData cubeFlowData;
+		protected Transform mainCamreaTransform;
 
 		public CubeFlowState (CubeController cubeController, CubeFlowController cubeFlowController)
 		{
@@ -29,6 +30,7 @@ namespace Kun.Controller
 
 			this.cubeFlowData = cubeFlowController.CubeFlowData;
 			this.cubeEntityController = cubeController.CubeEntityController;
+			this.mainCamreaTransform = cubeEntityController.MainCameraTransform;
 		}
 
 		public virtual void Enter(CubeFlowState prevState)
