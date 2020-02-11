@@ -3,6 +3,6 @@
 	{
 		"rotateSpeed" : 10,
 		"rowRotateTime" : 0.5,
-		"rowRotateNeedLength" : 1
+		"rowRotateNeedLength" : 50
 	}
 }

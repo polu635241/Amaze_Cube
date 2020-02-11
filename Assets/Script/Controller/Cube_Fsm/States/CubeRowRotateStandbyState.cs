@@ -13,18 +13,14 @@ namespace Kun.Controller
 		float rowRotateNeedLength;
 		Vector3 mouseBegintPos = new Vector3 ();
 
-		List<RotPairSurface> rotPairSurfaces;
-
-		RotPairSurface currentRotPairSurface;
 		Quaternion wholeInverseRot = Quaternion.identity;
-		Quaternion currentSurfaceInverseRot = Quaternion.identity;
 
 		Collider hitColl;
+		RaycastHit hitCache;
 
 		public CubeRowRotateStandbyState (CubeController cubeController, CubeFlowController cubeFlowController) : base (cubeController, cubeFlowController)
 		{
 			rowRotateNeedLength = cubeEntitySetting.RowRotateNeedLength;
-			rotPairSurfaces = new List<RotPairSurface> (surfaceSetting.rotPairSurfaces);
 		}
 
 		public override void Enter (CubeFlowState prevState)
@@ -33,7 +29,8 @@ namespace Kun.Controller
 
 			ProcessHit (cubeFlowData.HitCache);
 
-			mouseBegintPos = cubeFlowData.HitCache.point;
+			mouseBegintPos = cubeFlowData.MousePosCache;
+			hitCache = cubeFlowData.HitCache;
 		}
 
 		public override CubeFlowState Stay (float deltaTime)
@@ -44,36 +41,15 @@ namespace Kun.Controller
 			{	
 				RaycastHit hit;
 				
-				if (cubeEntityController.Raycast (mousePos, out hit)) 
+				float mousePosDistance = Vector3.Distance (mouseBegintPos, mousePos);
+
+				if (mousePosDistance > rowRotateNeedLength)
 				{
-					Vector3 mouseEndPos = hit.point;
+					Vector3 deltaPos = mousePos - mouseBegintPos;
+
+					ProcessRowRotateData (deltaPos);
 					
-					float mousePosDistance = Vector3.Distance (mouseBegintPos, mouseEndPos);
-
-					if (mousePosDistance > rowRotateNeedLength)
-					{
-						Vector3 deltaPos = mouseEndPos - mouseBegintPos;
-
-						Vector3 deltaPosInbox = wholeInverseRot * deltaPos;
-
-//						Vector3 processDeltaPos = currentSurfaceInverseRot * deltaPosInbox;
-
-						Debug.Log ($"deltaPos -> {deltaPos}");
-						Debug.Log ($"deltaPosInbox -> {deltaPosInbox}");
-//						Debug.Log ($"processDeltaPos -> {processDeltaPos}");
-
-						PosDeltaData posDeltaData = GetPosDeltaData (deltaPosInbox);
-
-						RowRatateCacheData rowRatateCacheData = GetRowRatateCacheData (hitColl, posDeltaData);
-						cubeFlowData.RowRatateCacheData = rowRatateCacheData;
-
-						return GetState<CubeRowRotateState> ();
-					}
-				}
-				else
-				{
-					//進到等待放開狀態
-					return GetState<CubeWaitScreenUpState> ();
+					return GetState<CubeRowRotateState> ();
 				}
 			}
 			else
@@ -85,71 +61,44 @@ namespace Kun.Controller
 			return null;
 		}
 
-		PosDeltaData GetPosDeltaData(Vector3 posDelta)
+		void ProcessRowRotateData (Vector3 deltaPos)
 		{
-			int axisIndex;
-			bool isPositive;
+			List<AxisDesciption> remainingAxisDesciptions = GetRemainingAxisDesciptions ();
 
-			float delta_0 = GetValue (0, posDelta);
-			float delta_1 = GetValue (1, posDelta);
+			Vector3 mainCameraRight = mainCamreaTransform.right;
+			Vector3 mainCameraUp = mainCamreaTransform.up;
 
-			if (Mathf.Abs (delta_0) > Mathf.Abs (delta_1))
-			{
-				axisIndex = 0;
+			Vector3 processDeltaPos = deltaPos.x * mainCameraRight + deltaPos.y * mainCameraUp;
 
-				if (delta_0 > 0) 
+			remainingAxisDesciptions.ForEach (desc => 
 				{
-					isPositive = true;
-				}
-				else
-				{
-					isPositive = false;
-				}
-			}
-			else
-			{
-				axisIndex = 1;
+					desc.ReDot (processDeltaPos);
+				});
 
-				if (delta_1 > 0) 
+			remainingAxisDesciptions.Sort ((descA,descB)=>
 				{
-					isPositive = true;
-				}
-				else
-				{
-					isPositive = false;
-				}
-			}
+					float absDotValueA = Mathf.Abs (descA.DotValue);
+					float absDotValueB = Mathf.Abs (descB.DotValue);
 
-			return new PosDeltaData (axisIndex, isPositive);
-		}
+					// 找最接近0 垂直的  轉軸會垂直施力方向
+					return absDotValueA.CompareTo (absDotValueB);
+				});
 
-		float GetValue(int index, Vector3 posDelta)
-		{
-			PositionSource positionSource = currentRotPairSurface.AxisPairs [index].PositionSource;
+			AxisDesciption targetDesc = remainingAxisDesciptions [0];
 
-			switch (positionSource) 
-			{
-			case PositionSource.X:
-				{
-					return posDelta.x;
-				}
+			//手碰到方塊的時候 會有一個與射線法線相反的力去推動方塊
+			Vector3 inverseNormal = hitCache.normal * -1;
 
-			case PositionSource.Y:
-				{
-					return posDelta.y;
-				}
+			//兩個分力作cross
+			Vector3 crossForce = Vector3.Cross (processDeltaPos.normalized, inverseNormal);
 
-			case PositionSource.Z:
-				{
-					return posDelta.z;
-				}
+			//如果求出來的 與 軸向 dot是負數的話 代表是向 逆時鐘旋轉
+			targetDesc.ReDot (crossForce);
 
-			default:
-				{
-					Debug.LogError ("Mapping fail");
-					return 0f;
-				}
-			}
+			bool isPositive = (targetDesc.DotValue >= 0);
+
+			RowRatateCacheData rowRatateCacheData = cubeEntityController.GetRowRatateCacheData (hitColl, targetDesc.Axis, isPositive);
+			cubeFlowData.RowRatateCacheData = rowRatateCacheData;
 		}
 
 		void ProcessHit (RaycastHit hitCache)
@@ -159,45 +108,38 @@ namespace Kun.Controller
 			Quaternion currentWholeRot = cubeEntityController.CurrentWholeRot;
 
 			wholeInverseRot = Quaternion.Inverse (currentWholeRot);
-
-			//把該法線 從world 轉到方塊的local
-			Vector3 processNormal = wholeInverseRot * hitCache.normal;
-
-			RotPairSurface findRotPairSurface = rotPairSurfaces.Find (rotPairSurface =>
-				{
-					return rotPairSurface.Forward.Approximately (processNormal);
-				});
-
-			if (findRotPairSurface != null) 
-			{
-				currentRotPairSurface = findRotPairSurface;
-
-				currentSurfaceInverseRot = Quaternion.Inverse (currentRotPairSurface.BindRot);
-			}
-			else
-			{
-				Debug.LogError ($"can't get RotPairSurface, normal -> {hitCache.normal}");
-			}
-		}
-
-		RowRatateCacheData GetRowRatateCacheData (Collider hitColl, PosDeltaData posDeltaData)
-		{
-			AxisPair settingAxisPair = null;
-
-			settingAxisPair = currentRotPairSurface.AxisPairs[posDeltaData.AxisIndex];
-
-			bool processIsPositive = Tool.Tool.ProcessBool (settingAxisPair.IsPositive, posDeltaData.IsPositive);
-
-			RowRotateAxis axis = settingAxisPair.Axis;
-
-			RowRatateCacheData rowRatateCacheData = cubeEntityController.GetRowRatateCacheData (hitColl, axis, processIsPositive);
-
-			return rowRatateCacheData;
 		}
 			
-		AxisPair GetAxisPair (Vector3 deltaPos)
+		List<AxisDesciption> GetRemainingAxisDesciptions ()
 		{
-			return null;
+			List<AxisDesciption> remainingAxisDesciptions = new List<AxisDesciption> ();
+
+			Vector3 hitNormal = cubeFlowData.HitCache.normal;
+			Quaternion cubeWholeRot = cubeEntityController.CurrentWholeRot;
+
+			//拿方塊的三軸 與 射線的法線 求內積 最大的那個就表示目前的平面與該軸垂直
+			AxisDesciption xAxisDesciption = new AxisDesciption (RowRotateAxis.X, cubeWholeRot, hitNormal);
+			remainingAxisDesciptions.Add (xAxisDesciption);
+
+			AxisDesciption yAxisDesciption = new AxisDesciption (RowRotateAxis.Y, cubeWholeRot, hitNormal);
+			remainingAxisDesciptions.Add (yAxisDesciption);
+
+			AxisDesciption zAxisDesciption = new AxisDesciption (RowRotateAxis.Z, cubeWholeRot, hitNormal);
+			remainingAxisDesciptions.Add (zAxisDesciption);
+
+			remainingAxisDesciptions.Sort ((descA,descB)=>
+				{
+					float absDotValueA = Mathf.Abs (descA.DotValue);
+					float absDotValueB = Mathf.Abs (descB.DotValue);
+
+					//大到小排
+					return -absDotValueA.CompareTo (absDotValueB);
+				});
+
+			//把垂直的軸排除掉 魔術方塊的機構上 垂直的軸不能轉
+			remainingAxisDesciptions.RemoveAt (0);
+
+			return remainingAxisDesciptions;
 		}
 	}
 }

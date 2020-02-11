@@ -13,7 +13,6 @@ namespace Kun.Tool
 		public void ParseSettings()
 		{
 			cubeSetting = JsonLoader<CubeSetting> ();
-			surfaceSetting = Resources.Load<SurfaceSetting> ("SurfaceSetting");
 		}
 		
 		[SerializeField][ReadOnly]
@@ -24,17 +23,6 @@ namespace Kun.Tool
 			get
 			{
 				return cubeSetting;
-			}
-		}
-
-		[SerializeField][ReadOnly]
-		SurfaceSetting surfaceSetting;
-
-		public SurfaceSetting SurfaceSetting
-		{
-			get
-			{
-				return surfaceSetting;
 			}
 		}
 

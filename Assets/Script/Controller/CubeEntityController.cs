@@ -23,6 +23,8 @@ namespace Kun.Controller
 			this.cubeEntitySetting = cubeEntitySetting;
 
 			this.mainCamera = mainCamera;
+
+			mainCameraTransform = mainCamera.transform;
 		}
 
 		const int intervalCount = 2;
@@ -61,6 +63,17 @@ namespace Kun.Controller
 
 		[SerializeField]
 		Camera mainCamera;
+
+		public Transform MainCameraTransform
+		{
+			get
+			{
+				return mainCameraTransform;
+			}
+		}
+
+		[SerializeField]
+		Transform mainCameraTransform;
 
 		public RowRatateCacheData GetRowRatateCacheData(Collider receiveColl, RowRotateAxis axis, bool isPositive)
 		{
