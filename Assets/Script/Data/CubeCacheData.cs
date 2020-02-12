@@ -17,13 +17,10 @@ namespace Kun.Data
 			this.receiveColl = bindTransform.GetComponent<Collider> ();
 
 			wholeRot = centerPoint.rotation;
-			wholeEuler = wholeRot.eulerAngles;
 
 			worldRot = wholeRot;
-			worldEuler = wholeEuler;
 
 			rowRot = Quaternion.identity;
-			rowEuler = rowRot.eulerAngles;
 
 			this.originRelativelyPos = centerPoint.InverseTransformPoint (bindTransform.position);
 		}
@@ -48,46 +45,7 @@ namespace Kun.Data
 		[SerializeField][ReadOnly]
 		Vector3 originRelativelyPos;
 
-		public void SetWholeRot (Quaternion wholeRot)
-		{
-			this.wholeRot = wholeRot;
-			this.wholeEuler = wholeRot.eulerAngles;
-
-			Flush ();
-		}
-
-		public void SetSingleRot(Quaternion rowRot)
-		{
-			this.rowRot = rowRot;
-			this.rowEuler = rowRot.eulerAngles;
-
-			Flush ();
-		}
-
-		public void DeltaSingleRot(Quaternion deltaRot)
-		{
-			rowRot = deltaRot * rowRot;
-			rowEuler = rowRot.eulerAngles;
-
-			Flush ();
-		}
-
-		void Flush ()
-		{	
-			worldRot = wholeRot * rowRot;
-			worldEuler = worldRot.eulerAngles;
-			
-			//原始的相對座標當作旋轉矩 往新的方向轉
-			Vector3 newPos = centerPoint.position + worldRot * originRelativelyPos;
-
-			bindTransform.position = newPos;
-			bindTransform.rotation = worldRot;
-		}
-
 		Quaternion wholeRot;
-
-		[SerializeField][ReadOnly][Header("整個方塊群體的旋轉")]
-		Vector3 wholeEuler;
 
 		public Quaternion RowRot
 		{
@@ -99,15 +57,37 @@ namespace Kun.Data
 
 		Quaternion rowRot;
 
-		[SerializeField][ReadOnly][Header("所在行的旋轉")]
-		Vector3 rowEuler;
-
 		Quaternion worldRot;
+		public void SetWholeRot (Quaternion wholeRot)
+		{
+			this.wholeRot = wholeRot;
 
-		/// <summary>
-		/// "whole * row * single"
-		/// </summary>
-		[SerializeField][ReadOnly][Header("whole * row")]
-		Vector3 worldEuler;
+			Flush ();
+		}
+
+		public void SetSingleRot(Quaternion rowRot)
+		{
+			this.rowRot = rowRot;
+
+			Flush ();
+		}
+
+		public void DeltaSingleRot(Quaternion deltaRot)
+		{
+			rowRot = deltaRot * rowRot;
+
+			Flush ();
+		}
+
+		void Flush ()
+		{	
+			worldRot = wholeRot * rowRot;
+
+			//原始的相對座標當作旋轉矩 往新的方向轉
+			Vector3 newPos = centerPoint.position + worldRot * originRelativelyPos;
+
+			bindTransform.position = newPos;
+			bindTransform.rotation = worldRot;
+		}
 	}
 }
