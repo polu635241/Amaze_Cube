@@ -15,6 +15,11 @@ namespace Kun.Data
 			this.rowCenterPoint = rowCenterPoint;
 		}
 
+		CubeRowData()
+		{
+			
+		}
+
 		public List<CubeCacheData> CubeCacheDatas
 		{
 			get
@@ -44,6 +49,24 @@ namespace Kun.Data
 		}
 
 		CubeCacheData rowCenterPoint;
+
+		public CubeRowData GetDeepClone ()
+		{
+			CubeRowData cloneRowData = new CubeRowData ();
+
+			cloneRowData.cubeCacheDatas = new List<CubeCacheData> ();
+
+			this.cubeCacheDatas.ForEach ((data)=>
+				{
+					CubeCacheData cloneData = data.GetDeepClone();
+					
+					cloneRowData.cubeCacheDatas.Add(cloneData);
+				});
+
+			cloneRowData.rowCenterPoint = this.rowCenterPoint.GetDeepClone ();
+
+			return cloneRowData;
+		}
 
 		public bool CheckDataExist(Collider coll)
 		{
