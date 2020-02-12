@@ -25,6 +25,11 @@ namespace Kun.Data
 			this.originRelativelyPos = centerPoint.InverseTransformPoint (bindTransform.position);
 		}
 
+		CubeCacheData()
+		{
+			
+		}
+
 		[SerializeField][ReadOnly]
 		Transform centerPoint;
 
@@ -58,6 +63,29 @@ namespace Kun.Data
 		Quaternion rowRot;
 
 		Quaternion worldRot;
+
+		//Vector3,Quaternion 和 Transform不能序列化 所以不能靠序列化成bitArray來達成DeepClone
+		public CubeCacheData GetDeepClone ()
+		{
+			CubeCacheData cloneData = new CubeCacheData ();
+			cloneData.centerPoint = this.centerPoint;
+			cloneData.bindTransform = this.bindTransform;
+			cloneData.receiveColl = this.receiveColl;
+			cloneData.originRelativelyPos = this.originRelativelyPos;
+			cloneData.wholeRot = this.wholeRot;
+			cloneData.rowRot = this.rowRot;
+			return cloneData;
+		}
+
+		public void Reset ()
+		{
+			this.wholeRot = Quaternion.identity;
+
+			this.rowRot = Quaternion.identity;
+
+			Flush ();
+		}
+
 		public void SetWholeRot (Quaternion wholeRot)
 		{
 			this.wholeRot = wholeRot;
