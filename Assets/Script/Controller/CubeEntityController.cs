@@ -52,14 +52,6 @@ namespace Kun.Controller
 		[SerializeField][ReadOnly]
 		List<CubeCacheData> cubeCacheDatas = new List<CubeCacheData> ();
 
-		[SerializeField]
-		List<CubeRowData> x_RotateRows = new List<CubeRowData> ();
-
-		[SerializeField]
-		List<CubeRowData> y_RotateRows = new List<CubeRowData> ();
-
-		[SerializeField]
-		List<CubeRowData> z_RotateRows = new List<CubeRowData> ();
 
 		[SerializeField]
 		Camera mainCamera;
@@ -71,6 +63,12 @@ namespace Kun.Controller
 				return mainCameraTransform;
 			}
 		}
+
+		[SerializeField][ReadOnly]
+		CubeWholeData originCubeWholeData;
+
+		[SerializeField][ReadOnly]
+		CubeWholeData gamePlayCubeWholeData;
 
 		[SerializeField]
 		Transform mainCameraTransform;
@@ -134,9 +132,9 @@ namespace Kun.Controller
 					transferPair.Add (needChangeData, cubeCacheData);
 				});
 
-			ProcessTransfer (x_RotateRows, transferPair);
-			ProcessTransfer (y_RotateRows, transferPair);
-			ProcessTransfer (z_RotateRows, transferPair);
+			ProcessTransfer (gamePlayCubeWholeData.X_RotateRows, transferPair);
+			ProcessTransfer (gamePlayCubeWholeData.Y_RotateRows, transferPair);
+			ProcessTransfer (gamePlayCubeWholeData.Z_RotateRows, transferPair);
 		}
 
 		void ProcessTransfer(List<CubeRowData> cubeRowDataGroup, Dictionary<CubeCacheData,CubeCacheData> transferPair)
@@ -198,17 +196,17 @@ namespace Kun.Controller
 			{
 			case RowRotateAxis.X:
 				{
-					return x_RotateRows;
+					return gamePlayCubeWholeData.X_RotateRows;
 				}
 
 			case RowRotateAxis.Y:
 				{
-					return y_RotateRows;
+					return gamePlayCubeWholeData.Y_RotateRows;
 				}
 
 			case RowRotateAxis.Z:
 				{
-					return z_RotateRows;
+					return gamePlayCubeWholeData.Z_RotateRows;
 				}
 			}
 
@@ -243,26 +241,8 @@ namespace Kun.Controller
 					cubeCacheDataMappings.Add (cubeEntity, cubeCacheData);
 				});
 
-			x_RotateRows = GetEntityRows (cubeTotalBindData.X_RotateRows, cubeCacheDataMappings);
-			y_RotateRows = GetEntityRows (cubeTotalBindData.Y_RotateRows, cubeCacheDataMappings);
-			z_RotateRows = GetEntityRows (cubeTotalBindData.Z_RotateRows, cubeCacheDataMappings);
-		}
-
-		List<CubeRowData> GetEntityRows (List<CubeRowBindData> bindDataRows, Dictionary<Transform,CubeCacheData> cubeCacheDataMappings)
-		{
-			List<CubeRowData> entityRows = new List<CubeRowData> (); 
-
-			if (bindDataRows != null) 
-			{
-				bindDataRows.ForEach (row=>
-					{
-						CubeRowData cubeEntityDataRow = row.GetEntityRow (cubeCacheDataMappings);
-
-						entityRows.Add(cubeEntityDataRow);
-					});
-			}
-
-			return entityRows;
+			originCubeWholeData = new CubeWholeData (cubeTotalBindData, cubeCacheDataMappings);
+			gamePlayCubeWholeData = new CubeWholeData (originCubeWholeData);
 		}
 
 		public bool Raycast (Vector3 mousePos, out RaycastHit hit)
@@ -276,6 +256,16 @@ namespace Kun.Controller
 			Debug.DrawLine(beginPos, endPos, Color.red, 0.1f);
 
 			return Physics.Raycast (ray, out hit);
+		}
+
+		public void Reset()
+		{
+			cubeCacheDatas.ForEach (cubeCacheData=>
+				{
+					cubeCacheData.Reset();
+				});
+
+			gamePlayCubeWholeData = new CubeWholeData (originCubeWholeData);
 		}
 	}
 }

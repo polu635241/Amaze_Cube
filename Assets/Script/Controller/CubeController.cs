@@ -82,6 +82,12 @@ namespace Kun.Controller
 
 			cubeFlowController = new CubeFlowController (this);
 		}
+
+		[ContextMenu("Reset")]
+		void Reset ()
+		{
+			cubeEntityController.Reset ();
+		}
 	}
 
 }

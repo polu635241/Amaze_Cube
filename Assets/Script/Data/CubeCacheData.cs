@@ -16,9 +16,9 @@ namespace Kun.Data
 			this.bindTransform = bindTransform;
 			this.receiveColl = bindTransform.GetComponent<Collider> ();
 
-			wholeRot = centerPoint.rotation;
+			wholeRot = Quaternion.identity;
 
-			worldRot = wholeRot;
+			worldRot = Quaternion.identity;
 
 			rowRot = Quaternion.identity;
 
@@ -63,19 +63,6 @@ namespace Kun.Data
 		Quaternion rowRot;
 
 		Quaternion worldRot;
-
-		//Vector3,Quaternion 和 Transform不能序列化 所以不能靠序列化成bitArray來達成DeepClone
-		public CubeCacheData GetDeepClone ()
-		{
-			CubeCacheData cloneData = new CubeCacheData ();
-			cloneData.centerPoint = this.centerPoint;
-			cloneData.bindTransform = this.bindTransform;
-			cloneData.receiveColl = this.receiveColl;
-			cloneData.originRelativelyPos = this.originRelativelyPos;
-			cloneData.wholeRot = this.wholeRot;
-			cloneData.rowRot = this.rowRot;
-			return cloneData;
-		}
 
 		public void Reset ()
 		{

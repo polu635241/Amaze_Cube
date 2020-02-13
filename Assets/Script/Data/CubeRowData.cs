@@ -15,7 +15,7 @@ namespace Kun.Data
 			this.rowCenterPoint = rowCenterPoint;
 		}
 
-		CubeRowData()
+		public CubeRowData ()
 		{
 			
 		}
@@ -50,22 +50,11 @@ namespace Kun.Data
 
 		CubeCacheData rowCenterPoint;
 
-		public CubeRowData GetDeepClone ()
+		public void SetUp (CubeRowData other)
 		{
-			CubeRowData cloneRowData = new CubeRowData ();
+			this.cubeCacheDatas = new List<CubeCacheData> (other.cubeCacheDatas);
 
-			cloneRowData.cubeCacheDatas = new List<CubeCacheData> ();
-
-			this.cubeCacheDatas.ForEach ((data)=>
-				{
-					CubeCacheData cloneData = data.GetDeepClone();
-					
-					cloneRowData.cubeCacheDatas.Add(cloneData);
-				});
-
-			cloneRowData.rowCenterPoint = this.rowCenterPoint.GetDeepClone ();
-
-			return cloneRowData;
+			this.rowCenterPoint = other.rowCenterPoint;
 		}
 
 		public bool CheckDataExist(Collider coll)
