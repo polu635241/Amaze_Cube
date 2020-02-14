@@ -12,7 +12,7 @@ namespace Kun.Controller
 			InitTable (cube_Controller, cubeFlowController);
 		}
 		
-		Dictionary<Type,CubeFlowState> playerFlowStateDictTable;
+		Dictionary<Type,CubeFlowState> cubeFlowStateDictTable;
 
 		public CubeFlowState GetState<T> () where T:CubeFlowState
 		{
@@ -20,7 +20,7 @@ namespace Kun.Controller
 
 			Type type = typeof(T);
 
-			if (playerFlowStateDictTable.TryGetValue (type, out state))
+			if (cubeFlowStateDictTable.TryGetValue (type, out state))
 			{
 				return state as T;
 			}
@@ -32,12 +32,12 @@ namespace Kun.Controller
 
 		void InitTable (CubeController cube_Controller, CubeFlowController cubeFlowController)
 		{
-			playerFlowStateDictTable = new Dictionary<Type, CubeFlowState> ();
-			playerFlowStateDictTable.Add (typeof(CubeStandbyState), new CubeStandbyState (cube_Controller, cubeFlowController));
-			playerFlowStateDictTable.Add (typeof(CubeWholeRotateState), new CubeWholeRotateState (cube_Controller, cubeFlowController));
-			playerFlowStateDictTable.Add (typeof(CubeRowRotateStandbyState), new CubeRowRotateStandbyState (cube_Controller, cubeFlowController));
-			playerFlowStateDictTable.Add (typeof(CubeRowRotateState), new CubeRowRotateState (cube_Controller, cubeFlowController));
-			playerFlowStateDictTable.Add (typeof(CubeWaitScreenUpState), new CubeWaitScreenUpState (cube_Controller, cubeFlowController));
+			cubeFlowStateDictTable = new Dictionary<Type, CubeFlowState> ();
+			cubeFlowStateDictTable.Add (typeof(CubeStandbyState), new CubeStandbyState (cube_Controller, cubeFlowController));
+			cubeFlowStateDictTable.Add (typeof(CubeWholeRotateState), new CubeWholeRotateState (cube_Controller, cubeFlowController));
+			cubeFlowStateDictTable.Add (typeof(CubeRowRotateStandbyState), new CubeRowRotateStandbyState (cube_Controller, cubeFlowController));
+			cubeFlowStateDictTable.Add (typeof(CubeRowRotateState), new CubeRowRotateState (cube_Controller, cubeFlowController));
+			cubeFlowStateDictTable.Add (typeof(CubeWaitScreenUpState), new CubeWaitScreenUpState (cube_Controller, cubeFlowController));
 		}
 	}
 }

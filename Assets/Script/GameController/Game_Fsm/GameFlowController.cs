@@ -9,11 +9,13 @@ namespace Kun.Controller
 {
 	public class GameFlowController 
 	{
-		public GameFlowController(GameController gameController)
+		public GameFlowController (GameController gameController)
 		{
 			this.gameController = gameController;
 
 			gameFlowRepository = new GameFlowRepository (gameController, this);
+
+			ForceChangeState<GameStandbyState> ();
 		}
 		
 		public GameController GameController
@@ -33,7 +35,7 @@ namespace Kun.Controller
 
 		GameFlowRepository gameFlowRepository;
 
-		public void Stay(float deltaTime)
+		public void Stay (float deltaTime)
 		{
 			GameFlowState nextState = currentState.Stay (deltaTime);
 

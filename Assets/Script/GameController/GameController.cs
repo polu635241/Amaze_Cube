@@ -14,9 +14,13 @@ namespace Kun.Controller
 		CubeController cubeController;
 
 		[SerializeField][ReadOnly]
+		GameFlowController gameFlowController;
+
+		[SerializeField][ReadOnly]
 		ParseManager parseManager;
 
 		KeyboardMouseInputReceiver keyboardMouseInputReceiver;
+
 
 		// Use this for initialization
 		void Awake () 
@@ -34,6 +38,7 @@ namespace Kun.Controller
 			cubeController = cubeGo.AddComponent<CubeController> ();
 			cubeController.Init (sceneRefBinder, parseManager.CubeSetting, keyboardMouseInputReceiver);
 
+			gameFlowController = new GameFlowController (this);
 		}
 		
 		// Update is called once per frame
@@ -41,7 +46,8 @@ namespace Kun.Controller
 		{
 			float deltaTime = Time.deltaTime;
 
-			cubeController.Update_ (deltaTime);
+			gameFlowController.Stay (deltaTime);
+			cubeController.Stay (deltaTime);
 		}
 	}
 }

@@ -12,7 +12,7 @@ namespace Kun.Controller
 			InitTable (gameController, gameFlowController);
 		}
 
-		Dictionary<Type,GameFlowState> playerFlowStateDictTable;
+		Dictionary<Type,GameFlowState> gameFlowStateDictTable;
 
 		public GameFlowState GetState<T> () where T:GameFlowState
 		{
@@ -20,7 +20,7 @@ namespace Kun.Controller
 
 			Type type = typeof(T);
 
-			if (playerFlowStateDictTable.TryGetValue (type, out state))
+			if (gameFlowStateDictTable.TryGetValue (type, out state))
 			{
 				return state as T;
 			}
@@ -32,7 +32,9 @@ namespace Kun.Controller
 
 		void InitTable (GameController gameController, GameFlowController gameFlowController)
 		{
-			playerFlowStateDictTable = new Dictionary<Type, GameFlowState> ();
+			gameFlowStateDictTable = new Dictionary<Type, GameFlowState> ();
+			gameFlowStateDictTable.Add (typeof(GameStandbyState), new GameStandbyState (gameController, gameFlowController));
+			gameFlowStateDictTable.Add (typeof(GamePlayState), new GamePlayState (gameController, gameFlowController));
 		}
 	}
 }
