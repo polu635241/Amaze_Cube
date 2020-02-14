@@ -8,27 +8,10 @@ using Kun.HardwareInput;
 
 namespace Kun.Controller
 {
-	public class CubeController : GenericEntityController 
+	//配合Editor 保留MonoBehaviour
+	public class CubeController : MonoBehaviour
 	{
-		InputReceiver inputReceiver;
-
-		public InputReceiver InputReceiver
-		{
-			get
-			{
-				return inputReceiver;
-			}
-		}
-
-		ParseManager parseManager;
-
-		public ParseManager ParseManager
-		{
-			get
-			{
-				return parseManager;
-			}
-		}
+		public InputReceiver InputReceiver{ get; private set;}
 
 		public CubeFlowController CubeFlowController
 		{
@@ -52,41 +35,40 @@ namespace Kun.Controller
 			}
 		}
 
-		protected override void Awake ()
+		public CubeSetting CubeSetting{ get; private set;}
+
+		public void Init (RefBinder sceneRefBinder, CubeSetting cubeSetting, InputReceiver inputReceiver)
 		{
-			base.Awake ();
-			InitController ();
+			this.InputReceiver = inputReceiver;
+			InitController (sceneRefBinder, cubeSetting);
 		}
 
-		void Update ()
+		public void Update_ (float deltaTime)
 		{
-			float deltaTime = Time.deltaTime;
-
 			cubeFlowController.Stay (deltaTime);
 		}
 
-		void InitController ()
+		void InitController (RefBinder sceneRefBinder, CubeSetting cubeSetting)
 		{
-			parseManager = new ParseManager ();
-			parseManager.ParseSettings ();
-			
-			inputReceiver = new KeyboardMouseInputReceiver ();
+			this.CubeSetting = cubeSetting;
 
-			RefBinder refBinder = this.GetComponent<RefBinder> ();
+			Camera mainCamera = sceneRefBinder.GetComponent<Camera> (AssetKeys.MainCamera);
 
-			Camera mainCamera = refBinder.GetComponent<Camera> (AssetKeys.MainCamera);
+			// 控制器會直接長在方塊上
+			CubeBindData cubeTotalBindData = this.GetComponent<CubeBindData> ();
 
-			CubeBindData cubeTotalBindData = refBinder.GetComponent<CubeBindData> (AssetKeys.Cube);
-
-			cubeEntityController = new CubeEntityController (mainCamera, cubeTotalBindData, parseManager.CubeSetting.CubeEntitySetting);
+			cubeEntityController = new CubeEntityController (mainCamera, cubeTotalBindData, cubeSetting.CubeEntitySetting);
 
 			cubeFlowController = new CubeFlowController (this);
+
+			Destroy (cubeTotalBindData);
 		}
 
 		[ContextMenu("Reset")]
 		void Reset ()
 		{
 			cubeEntityController.Reset ();
+			cubeFlowController.Reset ();
 		}
 	}
 

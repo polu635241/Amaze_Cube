@@ -74,5 +74,10 @@ namespace Kun.Controller
 		{
 			currentStateInfo = currentState.GetType ().Name;
 		}
+
+		public void Reset ()
+		{
+			ForceChangeState<CubeStandbyState> ();
+		}
 	}
 }

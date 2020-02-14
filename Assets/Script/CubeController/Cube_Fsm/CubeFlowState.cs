@@ -22,9 +22,7 @@ namespace Kun.Controller
 			this.cubeController = cubeController;
 			this.cubeFlowController = cubeFlowController;
 			this.inputReceiver = cubeController.InputReceiver;
-			ParseManager parseManager = cubeController.ParseManager;
-			CubeSetting cubeSetting = parseManager.CubeSetting;
-			this.cubeEntitySetting = cubeSetting.CubeEntitySetting;
+			this.cubeEntitySetting = cubeController.CubeSetting.CubeEntitySetting;
 
 			this.cubeFlowData = cubeFlowController.CubeFlowData;
 			this.cubeEntityController = cubeController.CubeEntityController;

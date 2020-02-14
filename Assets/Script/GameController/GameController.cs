@@ -10,14 +10,38 @@ namespace Kun.Controller
 {
 	public class GameController : MonoBehaviour 
 	{
+		[SerializeField][ReadOnly]
+		CubeController cubeController;
+
+		[SerializeField][ReadOnly]
+		ParseManager parseManager;
+
+		KeyboardMouseInputReceiver keyboardMouseInputReceiver;
+
 		// Use this for initialization
-		void Start () {
+		void Awake () 
+		{
+			keyboardMouseInputReceiver = new KeyboardMouseInputReceiver ();
 			
+			parseManager = new ParseManager ();
+			parseManager.ParseSettings ();
+			
+			GameObject sceneRefBinderGo = GameObject.FindWithTag (Tags.SceneRefBinder);
+
+			RefBinder sceneRefBinder = sceneRefBinderGo.GetComponent<RefBinder> ();
+
+			GameObject cubeGo = sceneRefBinder.GetGameobject (AssetKeys.Cube);
+			cubeController = cubeGo.AddComponent<CubeController> ();
+			cubeController.Init (sceneRefBinder, parseManager.CubeSetting, keyboardMouseInputReceiver);
+
 		}
 		
 		// Update is called once per frame
-		void Update () {
-			
+		void Update () 
+		{
+			float deltaTime = Time.deltaTime;
+
+			cubeController.Update_ (deltaTime);
 		}
 	}
 }
