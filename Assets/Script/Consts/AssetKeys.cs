@@ -20,5 +20,11 @@ namespace Kun.Data
 		public const string Root_4 = "Root_4";
 		public const string Root_5 = "Root_5";
 		public const string Root_6 = "Root_6";
-	}
+
+        public const string UIRoot = "UIRoot";
+        public const string ResetBtn = "ResetBtn";
+        public const string GameStartBtn = "GameStartBtn";
+        public const string TimeText = "TimeText";
+
+    }
 }
