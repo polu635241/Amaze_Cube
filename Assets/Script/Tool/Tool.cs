@@ -288,6 +288,18 @@ namespace Kun.Tool
 
 			return result;
 		}
+
+		public static Vector3 GetPosToEuler (Vector2 deltaPos)
+		{
+			return GetPosToEuler (deltaPos.x, deltaPos.y);
+		}
+
+		public static Vector3 GetPosToEuler (float deltaX, float deltaY)
+		{
+			Vector3 deltaEnler = new Vector3 (deltaY, deltaX * -1);
+
+			return deltaEnler;
+		}
 	}
 
 	[Serializable]
