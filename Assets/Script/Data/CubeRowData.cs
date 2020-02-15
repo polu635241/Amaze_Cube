@@ -15,6 +15,11 @@ namespace Kun.Data
 			this.rowCenterPoint = rowCenterPoint;
 		}
 
+		public CubeRowData ()
+		{
+			
+		}
+
 		public List<CubeCacheData> CubeCacheDatas
 		{
 			get
@@ -44,6 +49,13 @@ namespace Kun.Data
 		}
 
 		CubeCacheData rowCenterPoint;
+
+		public void SetUp (CubeRowData other)
+		{
+			this.cubeCacheDatas = new List<CubeCacheData> (other.cubeCacheDatas);
+
+			this.rowCenterPoint = other.rowCenterPoint;
+		}
 
 		public bool CheckDataExist(Collider coll)
 		{

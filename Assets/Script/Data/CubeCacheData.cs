@@ -16,16 +16,18 @@ namespace Kun.Data
 			this.bindTransform = bindTransform;
 			this.receiveColl = bindTransform.GetComponent<Collider> ();
 
-			wholeRot = centerPoint.rotation;
-			wholeEuler = wholeRot.eulerAngles;
+			wholeRot = Quaternion.identity;
 
-			worldRot = wholeRot;
-			worldEuler = wholeEuler;
+			worldRot = Quaternion.identity;
 
 			rowRot = Quaternion.identity;
-			rowEuler = rowRot.eulerAngles;
 
 			this.originRelativelyPos = centerPoint.InverseTransformPoint (bindTransform.position);
+		}
+
+		CubeCacheData()
+		{
+			
 		}
 
 		[SerializeField][ReadOnly]
@@ -48,46 +50,7 @@ namespace Kun.Data
 		[SerializeField][ReadOnly]
 		Vector3 originRelativelyPos;
 
-		public void SetWholeRot (Quaternion wholeRot)
-		{
-			this.wholeRot = wholeRot;
-			this.wholeEuler = wholeRot.eulerAngles;
-
-			Flush ();
-		}
-
-		public void SetSingleRot(Quaternion rowRot)
-		{
-			this.rowRot = rowRot;
-			this.rowEuler = rowRot.eulerAngles;
-
-			Flush ();
-		}
-
-		public void DeltaSingleRot(Quaternion deltaRot)
-		{
-			rowRot = deltaRot * rowRot;
-			rowEuler = rowRot.eulerAngles;
-
-			Flush ();
-		}
-
-		void Flush ()
-		{	
-			worldRot = wholeRot * rowRot;
-			worldEuler = worldRot.eulerAngles;
-			
-			//原始的相對座標當作旋轉矩 往新的方向轉
-			Vector3 newPos = centerPoint.position + worldRot * originRelativelyPos;
-
-			bindTransform.position = newPos;
-			bindTransform.rotation = worldRot;
-		}
-
 		Quaternion wholeRot;
-
-		[SerializeField][ReadOnly][Header("整個方塊群體的旋轉")]
-		Vector3 wholeEuler;
 
 		public Quaternion RowRot
 		{
@@ -99,15 +62,47 @@ namespace Kun.Data
 
 		Quaternion rowRot;
 
-		[SerializeField][ReadOnly][Header("所在行的旋轉")]
-		Vector3 rowEuler;
-
 		Quaternion worldRot;
 
-		/// <summary>
-		/// "whole * row * single"
-		/// </summary>
-		[SerializeField][ReadOnly][Header("whole * row")]
-		Vector3 worldEuler;
+		public void Reset ()
+		{
+			this.wholeRot = Quaternion.identity;
+
+			this.rowRot = Quaternion.identity;
+
+			Flush ();
+		}
+
+		public void SetWholeRot (Quaternion wholeRot)
+		{
+			this.wholeRot = wholeRot;
+
+			Flush ();
+		}
+
+		public void SetSingleRot(Quaternion rowRot)
+		{
+			this.rowRot = rowRot;
+
+			Flush ();
+		}
+
+		public void DeltaSingleRot(Quaternion deltaRot)
+		{
+			rowRot = deltaRot * rowRot;
+
+			Flush ();
+		}
+
+		void Flush ()
+		{	
+			worldRot = wholeRot * rowRot;
+
+			//原始的相對座標當作旋轉矩 往新的方向轉
+			Vector3 newPos = centerPoint.position + worldRot * originRelativelyPos;
+
+			bindTransform.position = newPos;
+			bindTransform.rotation = worldRot;
+		}
 	}
 }

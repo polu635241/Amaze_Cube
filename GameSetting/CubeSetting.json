@@ -2,7 +2,7 @@
 	"cubeEntitySetting":
 	{
 		"rotateSpeed" : 10,
-		"rowRotateTime" : 0.5,
+		"rowRotateTime" : 0.1,
 		"rowRotateNeedLength" : 50
 	}
 }
