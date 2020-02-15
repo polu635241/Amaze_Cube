@@ -52,7 +52,6 @@ namespace Kun.Controller
 		[SerializeField][ReadOnly]
 		List<CubeCacheData> cubeCacheDatas = new List<CubeCacheData> ();
 
-
 		[SerializeField]
 		Camera mainCamera;
 
@@ -63,12 +62,12 @@ namespace Kun.Controller
 				return mainCameraTransform;
 			}
 		}
-
-		[SerializeField][ReadOnly]
-		CubeWholeData originCubeWholeData;
-
+			
 		[SerializeField][ReadOnly]
 		CubeWholeData gamePlayCubeWholeData;
+
+		[SerializeField][ReadOnly]
+		CubeWholeIndexData originCubeWholeData;
 
 		[SerializeField]
 		Transform mainCameraTransform;
@@ -241,8 +240,8 @@ namespace Kun.Controller
 					cubeCacheDataMappings.Add (cubeEntity, cubeCacheData);
 				});
 
-			originCubeWholeData = new CubeWholeData (cubeTotalBindData, cubeCacheDataMappings);
-			gamePlayCubeWholeData = new CubeWholeData (originCubeWholeData);
+			gamePlayCubeWholeData = new CubeWholeData (cubeTotalBindData, cubeCacheDataMappings);
+			originCubeWholeData = new CubeWholeIndexData (gamePlayCubeWholeData, cubeCacheDatas);
 		}
 
 		public bool Raycast (Vector3 mousePos, out RaycastHit hit)
@@ -265,7 +264,7 @@ namespace Kun.Controller
 					cubeCacheData.Reset();
 				});
 
-			gamePlayCubeWholeData = new CubeWholeData (originCubeWholeData);
+			gamePlayCubeWholeData = originCubeWholeData.GetValue (cubeCacheDatas);
 		}
 	}
 }

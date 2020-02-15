@@ -15,11 +15,11 @@ namespace Kun.Data
 			z_RotateRows = GetEntityRows (cubeTotalBindData.Z_RotateRows, cubeCacheDataMappings);
 		}
 
-		public CubeWholeData (CubeWholeData otherData)
+		public CubeWholeData (List<CubeRowData> x_RotateRows, List<CubeRowData> y_RotateRows, List<CubeRowData> z_RotateRows)
 		{
-			this.x_RotateRows = GetCloneRows (otherData.x_RotateRows);
-			this.y_RotateRows = GetCloneRows (otherData.y_RotateRows);
-			this.z_RotateRows = GetCloneRows (otherData.z_RotateRows);
+			this.x_RotateRows = x_RotateRows;
+			this.y_RotateRows = y_RotateRows;
+			this.z_RotateRows = z_RotateRows;
 		}
 
 		public List<CubeRowData> X_RotateRows
