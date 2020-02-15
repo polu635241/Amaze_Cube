@@ -10,11 +10,29 @@ namespace Kun.Controller
 {
 	public class GameController : MonoBehaviour 
 	{
+		public CubeController CubeController
+		{
+			get
+			{
+				return cubeController;
+			}
+		}
+		
 		[SerializeField][ReadOnly]
 		CubeController cubeController;
 
 		[SerializeField][ReadOnly]
 		GameFlowController gameFlowController;
+
+		public FlowUIController FlowUIController
+		{
+			get
+			{
+				return flowUIController;
+			}
+		}
+
+		FlowUIController flowUIController;
 
 		[SerializeField][ReadOnly]
 		ParseManager parseManager;
@@ -38,6 +56,10 @@ namespace Kun.Controller
 			cubeController = cubeGo.AddComponent<CubeController> ();
 			cubeController.Init (sceneRefBinder, parseManager.CubeSetting, keyboardMouseInputReceiver);
 
+			RefBinder uIRootRefBinder = sceneRefBinder.GetComponent<RefBinder> (AssetKeys.UIRoot);
+			flowUIController = new FlowUIController ();
+			flowUIController.SetUp (uIRootRefBinder, OnGameFlowUIClick, OnApplicationQuitClick);
+
 			gameFlowController = new GameFlowController (this);
 		}
 		
@@ -47,7 +69,41 @@ namespace Kun.Controller
 			float deltaTime = Time.deltaTime;
 
 			gameFlowController.Stay (deltaTime);
-			cubeController.Stay (deltaTime);
+		}
+
+		public void OnGameFlowUIClick (GameFlowUIStatus enterStatus)
+		{
+			switch (enterStatus) 
+			{
+			case GameFlowUIStatus.GameStart:
+				{
+					OnGameStart ();
+					break;
+				}
+
+			case GameFlowUIStatus.Reset:
+				{
+					OnGameReset ();
+					break;
+				}
+			}
+		}
+
+		void OnGameStart()
+		{
+			gameFlowController.ForceChangeState<GamePlayState> ();
+		}
+
+		void OnGameReset()
+		{
+			gameFlowController.ForceChangeState<GameStandbyState> ();
+			cubeController.Reset ();
+			flowUIController.Reset ();
+		}
+
+		void OnApplicationQuitClick()
+		{
+			Application.Quit ();
 		}
 	}
 }

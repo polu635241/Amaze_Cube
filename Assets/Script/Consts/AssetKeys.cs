@@ -24,6 +24,7 @@ namespace Kun.Data
         public const string UIRoot = "UIRoot";
         public const string ResetBtn = "ResetBtn";
         public const string GameStartBtn = "GameStartBtn";
+		public const string ApplicationQuitBtn = "ApplicationQuitBtn";
         public const string TimeText = "TimeText";
 
     }

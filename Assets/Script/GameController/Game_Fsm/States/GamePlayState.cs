@@ -13,5 +13,24 @@ namespace Kun.Controller
 		{
 			
 		}
+
+		float throughTime;
+
+		public override void Enter (GameFlowState prevState)
+		{
+			base.Enter (prevState);
+			throughTime = 0f;
+		}
+
+		public override GameFlowState Stay (float deltaTime)
+		{
+			gameController.CubeController.Stay (deltaTime);
+
+			throughTime += deltaTime;
+
+			gameController.FlowUIController.SetTime (throughTime);
+
+			return null;
+		}
 	}
 }

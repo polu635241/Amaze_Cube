@@ -43,7 +43,7 @@ namespace Kun.Controller
 			InitController (sceneRefBinder, cubeSetting);
 		}
 
-		public void Update_ (float deltaTime)
+		public void Stay (float deltaTime)
 		{
 			cubeFlowController.Stay (deltaTime);
 		}
@@ -63,9 +63,8 @@ namespace Kun.Controller
 
 			Destroy (cubeTotalBindData);
 		}
-
-		[ContextMenu("Reset")]
-		void Reset ()
+			
+		public void Reset ()
 		{
 			cubeEntityController.Reset ();
 			cubeFlowController.Reset ();

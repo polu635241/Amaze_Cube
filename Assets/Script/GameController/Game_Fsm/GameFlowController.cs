@@ -7,6 +7,7 @@ using Kun.Data;
 
 namespace Kun.Controller
 {
+	[Serializable]
 	public class GameFlowController 
 	{
 		public GameFlowController (GameController gameController)
