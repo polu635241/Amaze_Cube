@@ -31,11 +31,14 @@ namespace Kun.Controller
 				//開始滑的第一frame無視掉 之後每一frame都比較跟上一個frame的位移取標準化
 				if (mouseLastPos != null)
 				{
-					Vector3 deltaPos = (mousePos - mouseLastPos.Value);
-
-					Vector3 deltaEnler = new Vector3 (deltaPos.y, deltaPos.x * -1);
-
-					cubeController.CubeEntityController.RotateWhole (deltaEnler, deltaTime);
+					if (!Tool.Tool.Approximately (mousePos, mouseLastPos.Value)) 
+					{
+						Vector3 deltaPos = (mousePos - mouseLastPos.Value);
+						
+						Vector3 deltaEnler = new Vector3 (deltaPos.y, deltaPos.x * -1);
+						
+						cubeController.CubeEntityController.RotateWhole (deltaEnler, deltaTime);
+					}
 				}
 
 				mouseLastPos = mousePos;
