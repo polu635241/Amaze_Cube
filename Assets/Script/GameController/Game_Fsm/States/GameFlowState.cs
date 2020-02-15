@@ -11,22 +11,23 @@ namespace Kun.Controller
 	{
 		protected GameController gameController;
 		protected GameFlowController gameFlowController;
+		protected GameFlowData gameFlowData;
 
 		public GameFlowState (GameController gameController, GameFlowController gameFlowController)
 		{
 			this.gameController = gameController;
 			this.gameFlowController = gameFlowController;
+			this.gameFlowData = gameFlowController.GameFlowData;
 		}
 
 		public virtual void Enter(GameFlowState prevState)
 		{
-			//			#if UNITY_EDITOR
-			//			Debug.LogError ($" enter -> {this.GetType ()}");
-			//			#endif
+			gameFlowData.FlowTime = 0f;
 		}
 
 		public virtual GameFlowState Stay (float deltaTime)
 		{
+			gameFlowData.FlowTime += Time.deltaTime;
 			return null;
 		}
 

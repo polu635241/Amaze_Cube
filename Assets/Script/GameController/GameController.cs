@@ -17,7 +17,7 @@ namespace Kun.Controller
 				return cubeController;
 			}
 		}
-		
+
 		[SerializeField][ReadOnly]
 		CubeController cubeController;
 
@@ -38,7 +38,6 @@ namespace Kun.Controller
 		ParseManager parseManager;
 
 		KeyboardMouseInputReceiver keyboardMouseInputReceiver;
-
 
 		// Use this for initialization
 		void Awake () 
