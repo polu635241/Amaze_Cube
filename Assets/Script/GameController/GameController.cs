@@ -42,6 +42,14 @@ namespace Kun.Controller
 
 		FlowUIController flowUIController;
 
+		public ParseManager ParseManager
+		{
+			get
+			{
+				return parseManager;
+			}
+		}
+
 		[SerializeField][ReadOnly]
 		ParseManager parseManager;
 
@@ -61,7 +69,7 @@ namespace Kun.Controller
 			parseManager = new ParseManager ();
 			parseManager.ParseSettings ();
 
-			PlyerHistoryGroupFlusher = new PlyerHistoryGroupFlusher (parseManager.AppendPlayerHistoryGroup);
+			PlyerHistoryGroupFlusher = new PlyerHistoryGroupFlusher (parseManager.FlushPlayerHistoryGroup);
 			PlyerHistoryGroupFlusher.Run ();
 
 			GameObject sceneRefBinderGo = GameObject.FindWithTag (Tags.SceneRefBinder);

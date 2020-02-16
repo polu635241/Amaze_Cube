@@ -73,7 +73,6 @@ namespace Kun.Controller
 						});
 				}
 			}
-
 		}
 
 		void Flush (PlayHistoryGroup data)
@@ -86,7 +85,9 @@ namespace Kun.Controller
 		/// </summary>
 		~PlyerHistoryGroupFlusher ()
 		{
-			Debug.LogError ("destructor");
+			#if UNITY_EDITOR
+			Debug.LogError ("PlyerHistoryGroupFlusher destructor");
+			#endif
 
 			if (runThread != null) 
 			{

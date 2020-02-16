@@ -25,7 +25,22 @@ namespace Kun.Data
 		}
 		
 		DateTime startTime;
-		
+
+		public float TotalTime
+		{
+			get
+			{
+				return totalTime;
+			}
+
+			set
+			{
+				totalTime = value;
+			}
+		}
+
+		float totalTime;
+
 		public List<PlayHistory> PlayHistorys
 		{
 			get

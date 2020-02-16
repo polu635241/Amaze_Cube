@@ -8,6 +8,7 @@ using Kun.Data;
 
 namespace Kun.Tool
 {
+	[Serializable]
 	public class ParseManager 
 	{
 		public void ParseSettings()
@@ -16,6 +17,7 @@ namespace Kun.Tool
 			DirInfoParent = dirInfo.Parent.FullName;
 
 			cubeSetting = JsonLoader<CubeSetting> ();
+			LoadPlayerHistoryGroup ();
 		}
 		
 		[SerializeField][ReadOnly]
@@ -35,7 +37,7 @@ namespace Kun.Tool
         /// <returns>The loader.</returns>
         /// <param name="dataName">Data name.</param>
         /// <typeparam name="T">The 1st type parameter.</typeparam>
-        public static T JsonLoader<T>(string dataName = "")
+        public T JsonLoader<T>(string dataName = "")
         {
             if (dataName == "")
             {
@@ -71,13 +73,13 @@ namespace Kun.Tool
             return process;
         }
 
-		static string DirInfoParent;
+		string DirInfoParent;
 
         public const string SettingPath = "GameSetting";
 
-        static string settingfolderPath = "";
+        string settingfolderPath = "";
 
-        public static string SettingFolderPath
+        string SettingFolderPath
         {
             get
             {
@@ -90,7 +92,31 @@ namespace Kun.Tool
             }
         }
 
-		public void AppendPlayerHistoryGroup (PlayHistoryGroup data)
+		void LoadPlayerHistoryGroup ()
+		{
+			playHistoryGroups = new List<PlayHistoryGroup> ();
+
+			using (StreamReader sr = new StreamReader (HistoryFullPath))
+			{
+				while (true) 
+				{
+					//1行1個紀錄
+					string line = sr.ReadLine ();
+
+					if (!string.IsNullOrEmpty (line)) 
+					{
+						PlayHistoryGroup playHistoryGroup = JsonUtility.FromJson<PlayHistoryGroup> (line);
+						playHistoryGroups.Add (playHistoryGroup);
+					}
+					else
+					{
+						break;
+					}
+				}
+			}
+		}
+
+		public void FlushPlayerHistoryGroup (PlayHistoryGroup data)
 		{	
 			using (StreamWriter sw = new StreamWriter (HistoryFullPath, true))
 			{
@@ -98,11 +124,22 @@ namespace Kun.Tool
 			}
 		}
 
+		public List<PlayHistoryGroup> PlayHistoryGroups
+		{
+			get
+			{
+				return playHistoryGroups;
+			}
+		}
+
+		[SerializeField][ReadOnly]
+		List<PlayHistoryGroup> playHistoryGroups = new List<PlayHistoryGroup> ();
+
 		const string HistoryPath = "hisp.kp";
 
-		static string historyFullPath;
+		string historyFullPath;
 
-		public static string HistoryFullPath
+		public string HistoryFullPath
 		{
 			get
 			{

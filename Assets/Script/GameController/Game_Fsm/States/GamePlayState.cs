@@ -37,7 +37,10 @@ namespace Kun.Controller
 		public override void Exit ()
 		{
 			base.Exit ();
-			gameController.PlyerHistoryGroupFlusher.AddPlayHistoryGroup (gameFlowData.PlayHistoryGroup);
+			PlayHistoryGroup playHistoryGroup = gameFlowData.PlayHistoryGroup;
+			playHistoryGroup.TotalTime = gameFlowData.FlowTime;
+			gameController.ParseManager.PlayHistoryGroups.Add (playHistoryGroup);
+			gameController.PlyerHistoryGroupFlusher.AddPlayHistoryGroup (playHistoryGroup);
 		}
 	}
 }
