@@ -12,6 +12,9 @@ namespace Kun.Tool
 	{
 		public void ParseSettings()
 		{
+			DirectoryInfo dirInfo = new DirectoryInfo(Application.dataPath);
+			DirInfoParent = dirInfo.Parent.FullName;
+
 			cubeSetting = JsonLoader<CubeSetting> ();
 		}
 		
@@ -68,6 +71,8 @@ namespace Kun.Tool
             return process;
         }
 
+		static string DirInfoParent;
+
         public const string SettingPath = "GameSetting";
 
         static string settingfolderPath = "";
@@ -78,12 +83,36 @@ namespace Kun.Tool
             {
                 if (string.IsNullOrEmpty(settingfolderPath))
                 {
-                    DirectoryInfo dirInfo = new DirectoryInfo(Application.dataPath);
-                    settingfolderPath = Path.Combine(dirInfo.Parent.FullName, SettingPath);
+					settingfolderPath = Path.Combine(DirInfoParent, SettingPath);
                 }
 
                 return settingfolderPath;
             }
         }
+
+		public void AppendPlayerHistoryGroup (PlayHistoryGroup data)
+		{	
+			using (StreamWriter sw = new StreamWriter (HistoryFullPath, true))
+			{
+				sw.WriteLine (JsonUtility.ToJson (data));
+			}
+		}
+
+		const string HistoryPath = "hisp.kp";
+
+		static string historyFullPath;
+
+		public static string HistoryFullPath
+		{
+			get
+			{
+				if (string.IsNullOrEmpty(historyFullPath))
+				{
+					historyFullPath = Path.Combine (DirInfoParent, HistoryPath);
+				}
+
+				return historyFullPath;
+			}
+		}
     }
 }

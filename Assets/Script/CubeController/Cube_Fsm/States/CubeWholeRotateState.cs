@@ -38,6 +38,7 @@ namespace Kun.Controller
 						Vector3 deltaEnler = Tool.Tool.GetPosToEuler (deltaPos);
 						
 						cubeController.CubeEntityController.RotateWhole (deltaEnler, deltaTime);
+						GameFlowData.AddPlayWholeRotateHistory (deltaPos);
 					}
 				}
 

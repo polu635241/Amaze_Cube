@@ -57,6 +57,7 @@ namespace Kun.Data
 			}
 		}
 
+		[SerializeField][ReadOnly]
 		PlayHistoryGroup playHistoryGroup;
 	}
 }

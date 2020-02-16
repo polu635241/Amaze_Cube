@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Kun.HardwareInput;
@@ -17,6 +18,9 @@ namespace Kun.Controller
 		public override void Enter (GameFlowState prevState)
 		{
 			base.Enter (prevState);
+		
+			DateTime startTime = DateTime.UtcNow;
+			gameFlowData.PlayHistoryGroup = new PlayHistoryGroup (startTime);
 		}
 
 		public override GameFlowState Stay (float deltaTime)
@@ -28,6 +32,12 @@ namespace Kun.Controller
 			gameController.FlowUIController.SetTime (gameFlowData.FlowTime);
 
 			return null;
+		}
+
+		public override void Exit ()
+		{
+			base.Exit ();
+			gameController.PlyerHistoryGroupFlusher.AddPlayHistoryGroup (gameFlowData.PlayHistoryGroup);
 		}
 	}
 }

@@ -69,7 +69,7 @@ namespace Kun.Data
 			PlayHistory playHistory = new PlayHistory ();
 			playHistory.time = time;
 			playHistory.playHistoryStyle = PlayHistoryStyle.RowRotate;
-			playHistory.rowRotateHistory = new RowRotateHistory (rowRotateAxis, rowIndex, isPositive);
+			playHistory.rowRotateHistory = new RowRotateHistory (rowIndex, rowRotateAxis, isPositive);
 			return playHistory;
 		}
 

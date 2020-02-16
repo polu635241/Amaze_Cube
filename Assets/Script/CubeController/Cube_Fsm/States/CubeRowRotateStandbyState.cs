@@ -95,10 +95,12 @@ namespace Kun.Controller
 			//如果求出來的 與 軸向 dot是負數的話 代表是向 逆時鐘旋轉
 			targetDesc.ReDot (crossForce);
 
+			RowRotateAxis axis = targetDesc.Axis;
 			bool isPositive = (targetDesc.DotValue >= 0);
-
-			RowRatateCacheData rowRatateCacheData = cubeEntityController.GetRowRatateCacheData (hitColl, targetDesc.Axis, isPositive);
+			RowRatateCacheData rowRatateCacheData = cubeEntityController.GetRowRatateCacheData (hitColl, axis, isPositive);
 			cubeFlowData.RowRatateCacheData = rowRatateCacheData;
+
+			GameFlowData.AddPlayRowRotateHistory (0, axis, isPositive);
 		}
 
 		void ProcessHit (RaycastHit hitCache)

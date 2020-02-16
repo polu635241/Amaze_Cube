@@ -21,6 +21,14 @@ namespace Kun.Controller
 		[SerializeField][ReadOnly]
 		CubeController cubeController;
 
+		public GameFlowController GameFlowController
+		{
+			get
+			{
+				return gameFlowController;
+			}
+		}
+
 		[SerializeField][ReadOnly]
 		GameFlowController gameFlowController;
 
@@ -39,6 +47,12 @@ namespace Kun.Controller
 
 		KeyboardMouseInputReceiver keyboardMouseInputReceiver;
 
+		public PlyerHistoryGroupFlusher PlyerHistoryGroupFlusher 
+		{
+			get;
+			private set;
+		}
+
 		// Use this for initialization
 		void Awake () 
 		{
@@ -46,14 +60,17 @@ namespace Kun.Controller
 			
 			parseManager = new ParseManager ();
 			parseManager.ParseSettings ();
-			
+
+			PlyerHistoryGroupFlusher = new PlyerHistoryGroupFlusher (parseManager.AppendPlayerHistoryGroup);
+			PlyerHistoryGroupFlusher.Run ();
+
 			GameObject sceneRefBinderGo = GameObject.FindWithTag (Tags.SceneRefBinder);
 
 			RefBinder sceneRefBinder = sceneRefBinderGo.GetComponent<RefBinder> ();
 
 			GameObject cubeGo = sceneRefBinder.GetGameobject (AssetKeys.Cube);
 			cubeController = cubeGo.AddComponent<CubeController> ();
-			cubeController.Init (sceneRefBinder, parseManager.CubeSetting, keyboardMouseInputReceiver);
+			cubeController.Init (sceneRefBinder, parseManager.CubeSetting, keyboardMouseInputReceiver, this);
 
 			RefBinder uIRootRefBinder = sceneRefBinder.GetComponent<RefBinder> (AssetKeys.UIRoot);
 			flowUIController = new FlowUIController ();
