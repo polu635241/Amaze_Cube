@@ -49,7 +49,7 @@ namespace Kun.Controller
 
 					ProcessRowRotateData (deltaPos);
 					
-					return GetState<CubeRowRotateState> ();
+					return GetState<CubeGameRowRotateState> ();
 				}
 			}
 			else

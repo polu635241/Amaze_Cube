@@ -7,103 +7,109 @@ using Kun.Data;
 
 namespace Kun.Controller
 {
-	public class CubeRowRotateState : CubeFlowState 
-	{
-		float rowRotateTime;
+    public abstract class CubeRowRotateState : CubeFlowState
+    {
+        float rowRotateTime;
 
-		public CubeRowRotateState (CubeController cubeController, CubeFlowController cubeFlowController) : base (cubeController, cubeFlowController)
-		{
-			rowRotateTime = cubeEntitySetting.RowRotateTime;
-		}
+        public CubeRowRotateState (CubeController cubeController, CubeFlowController cubeFlowController) : base (cubeController, cubeFlowController)
+        {
+            rowRotateTime = cubeEntitySetting.RowRotateTime;
+        }
 
-		public override void Enter (CubeFlowState prevState)
-		{
-			base.Enter (prevState);
+        public override void Enter (CubeFlowState prevState)
+        {
+            base.Enter (prevState);
+        }
 
-			rowRatateCacheData = cubeFlowData.RowRatateCacheData;
-			cubeFlowData.RowRatateCacheData = null;
+        List<Quaternion> originRots;
+        Quaternion centerPointOriginRot;
 
-			CubeRowData cubeRowData = rowRatateCacheData.CurrentRowData;
+        List<Quaternion> targetRots;
+        Quaternion centetPointTargetRot;
 
-			Quaternion rowDeltaQuaternion = rowRatateCacheData.RowDeltaQuaternion;
+        float throuthTime;
 
-			originRots = new List<Quaternion> ();
-			targetRots = new List<Quaternion> ();
+        protected RowRatateCacheData rowRatateCacheData;
 
-			cubeRowData.CubeCacheDatas.ForEach (cubeCacheData=>
-				{
-					Quaternion originRot = cubeCacheData.RowRot;
-					Quaternion targetRot = rowDeltaQuaternion * originRot;
+        public override CubeFlowState Stay (float deltaTime)
+        {
+            CubeRowData cubeRowData = rowRatateCacheData.CurrentRowData;
 
-					originRots.Add (originRot);
-					targetRots.Add (targetRot);
-				});
+            Quaternion rowDeltaQuaternion = rowRatateCacheData.RowDeltaQuaternion;
 
-			centerPointOriginRot = cubeRowData.RowCenterPoint.RowRot;
-			centetPointTargetRot = rowDeltaQuaternion * centerPointOriginRot;
+            bool isPositive = rowRatateCacheData.IsPositive;
 
-			throuthTime = 0f;
-		}
+            cubeRowData.CubeCacheDatas.ForEach (cubeCacheData =>
+            {
+                cubeCacheData.DeltaSingleRot (rowDeltaQuaternion);
+            });
 
-		List<Quaternion> originRots;
-		Quaternion centerPointOriginRot;
+            throuthTime += deltaTime;
 
-		List<Quaternion> targetRots;
-		Quaternion centetPointTargetRot;
+            if (throuthTime < rowRotateTime)
+            {
+                float progress = throuthTime / rowRotateTime;
+                ProcessRowRotateProgress (progress);
 
-		float throuthTime;
+                return null;
+            }
+            else
+            {
+                ProcessRowRotateProgress (1);
+                cubeEntityController.OnRowRotateFinish (cubeRowData, isPositive);
+                cubeFlowData.ClearCache ();
+                return GetPreveState ();
+            }
 
-		RowRatateCacheData rowRatateCacheData;
+        }
 
-		public override CubeFlowState Stay (float deltaTime)
-		{
-			CubeRowData cubeRowData = rowRatateCacheData.CurrentRowData;
+        /// <summary>
+        /// 應該回歸的上一個狀態
+        /// </summary>
+        /// <returns></returns>
+        protected abstract CubeFlowState GetPreveState ();
 
-			Quaternion rowDeltaQuaternion = rowRatateCacheData.RowDeltaQuaternion;
+        void ProcessRowRotateProgress (float progress)
+        {
+            CubeRowData cubeRowData = rowRatateCacheData.CurrentRowData;
 
-			bool isPositive = rowRatateCacheData.IsPositive;
+            cubeRowData.CubeCacheDatas.Map ((index, cubeCacheData) =>
+            {
+                Quaternion originRot = originRots[index];
+                Quaternion targetRot = targetRots[index];
 
-			cubeRowData.CubeCacheDatas.ForEach (cubeCacheData=>
-				{
-					cubeCacheData.DeltaSingleRot (rowDeltaQuaternion);
-				});
+                Quaternion currentRot = Quaternion.Lerp (originRot, targetRot, progress);
 
-			throuthTime += deltaTime;
+                cubeCacheData.SetSingleRot (currentRot);
+            });
 
-			if (throuthTime < rowRotateTime) 
-			{
-				float progress = throuthTime / rowRotateTime;
-				ProcessRowRotateProgress (progress);
+            Quaternion centerPointCurrentRot = Quaternion.Lerp (centerPointOriginRot, centetPointTargetRot, progress);
 
-				return null;
-			}
-			else
-			{
-				ProcessRowRotateProgress (1);
-				cubeEntityController.OnRowRotateFinish (cubeRowData, isPositive);
-				cubeFlowData.ClearCache ();
-				return GetState<CubeStandbyState> ();
-			}
+            cubeRowData.RowCenterPoint.SetSingleRot (centerPointCurrentRot);
+        }
 
-		}
+        protected void ProcessRotateCache ()
+        {
+            CubeRowData cubeRowData = rowRatateCacheData.CurrentRowData;
 
-		void ProcessRowRotateProgress (float progress)
-		{
-			CubeRowData cubeRowData = rowRatateCacheData.CurrentRowData;
+            Quaternion rowDeltaQuaternion = rowRatateCacheData.RowDeltaQuaternion;
 
-			cubeRowData.CubeCacheDatas.Map ((index, cubeCacheData)=>
-				{	
-					Quaternion originRot = originRots[index];
-					Quaternion targetRot = targetRots[index];
+            originRots = new List<Quaternion> ();
+            targetRots = new List<Quaternion> ();
 
-					Quaternion currentRot = Quaternion.Lerp (originRot, targetRot, progress);
+            cubeRowData.CubeCacheDatas.ForEach (cubeCacheData =>
+            {
+                Quaternion originRot = cubeCacheData.RowRot;
+                Quaternion targetRot = rowDeltaQuaternion * originRot;
 
-					cubeCacheData.SetSingleRot (currentRot);
-				});
+                originRots.Add (originRot);
+                targetRots.Add (targetRot);
+            });
 
-			Quaternion centerPointCurrentRot = Quaternion.Lerp (centerPointOriginRot, centetPointTargetRot, progress);
+            centerPointOriginRot = cubeRowData.RowCenterPoint.RowRot;
+            centetPointTargetRot = rowDeltaQuaternion * centerPointOriginRot;
 
-			cubeRowData.RowCenterPoint.SetSingleRot (centerPointCurrentRot);
-		}
-	}
+            throuthTime = 0f;
+        }
+    }
 }

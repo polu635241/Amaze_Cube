@@ -24,7 +24,7 @@ namespace Kun.Controller
 
 			if (cubeFlowData.RowRatateCacheData != null) 
 			{
-				return GetState<CubeRowRotateState> ();
+				return GetState<CubeGameRowRotateState> ();
 			}
 
 			if (inputReceiver.ScreenTrigger(out mousePos))
