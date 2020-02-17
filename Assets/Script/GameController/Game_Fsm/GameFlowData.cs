@@ -59,5 +59,22 @@ namespace Kun.Data
 
 		[SerializeField][ReadOnly]
 		PlayHistoryGroup playHistoryGroup;
-	}
+
+        public RowRatateCacheData HistoryRowRatateCacheData
+        {
+            get
+            {
+                return historyRowRatateCacheData;
+            }
+
+            set
+            {
+                historyRowRatateCacheData = value;
+            }
+        }
+
+        [SerializeField]
+        [ReadOnly]
+        RowRatateCacheData historyRowRatateCacheData = null;
+    }
 }
