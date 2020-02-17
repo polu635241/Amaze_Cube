@@ -34,7 +34,7 @@ namespace Kun.Tool
 			return string.Format ("<color=#{0}>{1}</color>",left,inputStr);
 		}
 
-		static bool CheckIsSampleType<T>()
+		public static bool CheckIsSampleType<T>()
 		{
 			bool result = false;
 
