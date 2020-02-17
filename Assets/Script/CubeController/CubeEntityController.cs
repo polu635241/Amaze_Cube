@@ -8,263 +8,296 @@ using Kun.HardwareInput;
 
 namespace Kun.Controller
 {
-	[Serializable]
-	public class CubeEntityController
-	{
-		public CubeEntityController (Camera mainCamera, CubeBindData cubeTotalBindData, CubeEntitySetting cubeEntitySetting)
-		{
-			this.centerPoint = cubeTotalBindData.CenterPoint;
+    [Serializable]
+    public class CubeEntityController
+    {
+        public CubeEntityController (Camera mainCamera, CubeBindData cubeTotalBindData, CubeEntitySetting cubeEntitySetting)
+        {
+            this.centerPoint = cubeTotalBindData.CenterPoint;
 
-			currentWholeRot = centerPoint.rotation;
-			currentWholeEuler = centerPoint.eulerAngles;
+            currentWholeRot = centerPoint.rotation;
+            currentWholeEuler = centerPoint.eulerAngles;
 
-			InitCubeEntityDatas (cubeTotalBindData);
+            InitCubeEntityDatas(cubeTotalBindData);
 
-			this.cubeEntitySetting = cubeEntitySetting;
+            this.cubeEntitySetting = cubeEntitySetting;
 
-			this.mainCamera = mainCamera;
+            this.mainCamera = mainCamera;
 
-			mainCameraTransform = mainCamera.transform;
-		}
+            mainCameraTransform = mainCamera.transform;
+        }
 
-		const int intervalCount = 2;
+        const int intervalCount = 2;
 
-		[SerializeField]
-		Transform centerPoint;
+        [SerializeField]
+        Transform centerPoint;
 
-		[SerializeField][ReadOnly]
-		CubeEntitySetting cubeEntitySetting;
+        [SerializeField]
+        [ReadOnly]
+        CubeEntitySetting cubeEntitySetting;
 
-		public Quaternion CurrentWholeRot
-		{
-			get
-			{
-				return currentWholeRot;
-			}
-		}
+        public Quaternion CurrentWholeRot
+        {
+            get
+            {
+                return currentWholeRot;
+            }
+        }
 
-		[SerializeField][ReadOnly]
-		Quaternion currentWholeRot;
+        [SerializeField]
+        [ReadOnly]
+        Quaternion currentWholeRot;
 
-		[SerializeField][ReadOnly]
-		Vector3 currentWholeEuler;
+        [SerializeField]
+        [ReadOnly]
+        Vector3 currentWholeEuler;
 
-		[SerializeField][ReadOnly]
-		List<CubeCacheData> cubeCacheDatas = new List<CubeCacheData> ();
+        [SerializeField]
+        [ReadOnly]
+        List<CubeCacheData> cubeCacheDatas = new List<CubeCacheData>();
 
-		[SerializeField]
-		Camera mainCamera;
+        [SerializeField]
+        Camera mainCamera;
 
-		public Transform MainCameraTransform
-		{
-			get
-			{
-				return mainCameraTransform;
-			}
-		}
-			
-		[SerializeField][ReadOnly]
-		CubeWholeData gamePlayCubeWholeData;
+        public Transform MainCameraTransform
+        {
+            get
+            {
+                return mainCameraTransform;
+            }
+        }
 
-		[SerializeField][ReadOnly]
-		CubeWholeIndexData originCubeWholeData;
+        [SerializeField]
+        [ReadOnly]
+        CubeWholeData gamePlayCubeWholeData;
 
-		[SerializeField]
-		Transform mainCameraTransform;
+        [SerializeField]
+        [ReadOnly]
+        CubeWholeIndexData originCubeWholeData;
 
-		public RowRatateCacheData GetRowRatateCacheData(Collider receiveColl, RowRotateAxis axis, bool isPositive)
-		{
-			List<CubeRowData> rotateRows = GetRotateRowsGroup (axis);
+        [SerializeField]
+        Transform mainCameraTransform;
 
-			CubeRowData ownerRow = rotateRows.Find (rotateRow=>
-				{
-					return rotateRow.CheckDataExist (receiveColl);
-				});
+        public RowRatateCacheData GetRowRatateCacheData (Collider receiveColl, RowRotateAxis axis, bool isPositive)
+        {
+            List<CubeRowData> rotateRows = GetRotateRowsGroup(axis);
 
-			if (ownerRow != null) 
-			{
-				Quaternion deltaQuaterniotn = GetDeltaQuaternion (axis, isPositive);
+            CubeRowData ownerRow = rotateRows.Find(rotateRow =>
+               {
+                   return rotateRow.CheckDataExist(receiveColl);
+               });
 
-				RowRatateCacheData rowRatateCacheData = new RowRatateCacheData (ownerRow, deltaQuaterniotn, isPositive);
+            if (ownerRow != null)
+            {
+                Quaternion deltaQuaterniotn = GetDeltaQuaternion(axis, isPositive);
 
-				return rowRatateCacheData;
-			}
-			else
-			{
-				string name = receiveColl.gameObject.name;
-				throw new UnityException ($"找不到所屬群組 name -> {name}, axis -> {axis}");
-			}
-		}
+                RowRatateCacheData rowRatateCacheData = new RowRatateCacheData(ownerRow, deltaQuaterniotn, isPositive);
 
-		public void OnRowRotateFinish (CubeRowData ownerRow, bool isPositive)
-		{
-			Dictionary<CubeCacheData,CubeCacheData> transferPair = new Dictionary<CubeCacheData, CubeCacheData> ();
+                return rowRatateCacheData;
+            }
+            else
+            {
+                string name = receiveColl.gameObject.name;
+                throw new UnityException($"找不到所屬群組 name -> {name}, axis -> {axis}");
+            }
+        }
 
-			List<CubeCacheData> cubeCacheDatas = ownerRow.CubeCacheDatas;
+        public RowRatateCacheData GetRowRatateCacheData (int cubeIndex, RowRotateAxis axis, bool isPositive)
+        {
+            List<CubeRowData> rotateRows = GetRotateRowsGroup(axis);
 
-			int count = cubeCacheDatas.Count;
+            CubeCacheData cubeCacheData = cubeCacheDatas[cubeIndex];
 
-			cubeCacheDatas.Map ((index, cubeCacheData)=>
-				{
-					int needChangeIndex = 0;
-					
-					if(isPositive)
-					{
-						needChangeIndex = index + intervalCount;
+            CubeRowData ownerRow = rotateRows.Find(rotateRow =>
+            {
+                return rotateRow.CheckDataExist (cubeCacheData);
+            });
 
-						if(needChangeIndex > (count-1))
-						{
-							needChangeIndex -= count;
-						}
-					}
-					else
-					{
-						needChangeIndex = index - intervalCount;
+            if (ownerRow != null)
+            {
+                Quaternion deltaQuaterniotn = GetDeltaQuaternion(axis, isPositive);
 
-						if(needChangeIndex < (0))
-						{
-							needChangeIndex += count;
-						}
-					}
+                RowRatateCacheData rowRatateCacheData = new RowRatateCacheData(ownerRow, deltaQuaterniotn, isPositive);
 
-					CubeCacheData needChangeData = cubeCacheDatas[needChangeIndex];
-					transferPair.Add (needChangeData, cubeCacheData);
-				});
+                return rowRatateCacheData;
+            }
+            else
+            {
+                throw new UnityException($"找不到所屬群組 cubeIndex -> {cubeIndex}, axis -> {axis}");
+            }
+        }
 
-			ProcessTransfer (gamePlayCubeWholeData.X_RotateRows, transferPair);
-			ProcessTransfer (gamePlayCubeWholeData.Y_RotateRows, transferPair);
-			ProcessTransfer (gamePlayCubeWholeData.Z_RotateRows, transferPair);
-		}
+        //RowRatateCacheData
 
-		void ProcessTransfer(List<CubeRowData> cubeRowDataGroup, Dictionary<CubeCacheData,CubeCacheData> transferPair)
-		{
-			cubeRowDataGroup.ForEach (cubeRowData=>
-				{
-					List<CubeCacheData> cubeCacheDatas = cubeRowData.CubeCacheDatas;
+        public void OnRowRotateFinish (CubeRowData ownerRow, bool isPositive)
+        {
+            Dictionary<CubeCacheData, CubeCacheData> transferPair = new Dictionary<CubeCacheData, CubeCacheData>();
 
-					//for 是為了保留集合的參考
-					for (int i = 0; i < cubeCacheDatas.Count; i++) 
-					{
-						CubeCacheData transferCubeCaheData = null;
+            List<CubeCacheData> cubeCacheDatas = ownerRow.CubeCacheDatas;
 
-						if(transferPair.TryGetValue(cubeCacheDatas[i], out transferCubeCaheData))
-						{
-							cubeCacheDatas[i] = transferCubeCaheData;
-						}
-					}
+            int count = cubeCacheDatas.Count;
 
-					CubeCacheData transferCenterCubeCaheData = null;
+            cubeCacheDatas.Map((index, cubeCacheData) =>
+               {
+                   int needChangeIndex = 0;
 
-					if(transferPair.TryGetValue(cubeRowData.RowCenterPoint , out transferCenterCubeCaheData))
-					{
-						cubeRowData.RowCenterPoint = transferCenterCubeCaheData;
-					}
-				});
-		}
+                   if (isPositive)
+                   {
+                       needChangeIndex = index + intervalCount;
 
-		Quaternion GetDeltaQuaternion (RowRotateAxis axis, bool isPositive)
-		{
-			float scale = isPositive ? 1 : -1;
+                       if (needChangeIndex > (count - 1))
+                       {
+                           needChangeIndex -= count;
+                       }
+                   }
+                   else
+                   {
+                       needChangeIndex = index - intervalCount;
 
-			float processDegree = 90 * scale;
+                       if (needChangeIndex < (0))
+                       {
+                           needChangeIndex += count;
+                       }
+                   }
 
-			switch(axis)
-			{
-			case RowRotateAxis.X:
-				{
-					return Quaternion.Euler (processDegree, 0, 0);
-				}
+                   CubeCacheData needChangeData = cubeCacheDatas[needChangeIndex];
+                   transferPair.Add(needChangeData, cubeCacheData);
+               });
 
-			case RowRotateAxis.Y:
-				{
-					return Quaternion.Euler (0, processDegree, 0);
-				}
+            ProcessTransfer(gamePlayCubeWholeData.X_RotateRows, transferPair);
+            ProcessTransfer(gamePlayCubeWholeData.Y_RotateRows, transferPair);
+            ProcessTransfer(gamePlayCubeWholeData.Z_RotateRows, transferPair);
+        }
 
-			case RowRotateAxis.Z:
-				{
-					return Quaternion.Euler (0, 0, processDegree);
-				}
-			}
+        void ProcessTransfer (List<CubeRowData> cubeRowDataGroup, Dictionary<CubeCacheData, CubeCacheData> transferPair)
+        {
+            cubeRowDataGroup.ForEach(cubeRowData =>
+               {
+                   List<CubeCacheData> cubeCacheDatas = cubeRowData.CubeCacheDatas;
 
-			throw new Exception ("無對應旋轉設定");
-		}
+                    //for 是為了保留集合的參考
+                    for (int i = 0; i < cubeCacheDatas.Count; i++)
+                   {
+                       CubeCacheData transferCubeCaheData = null;
 
-		List<CubeRowData> GetRotateRowsGroup (RowRotateAxis dir)
-		{
-			switch(dir)
-			{
-			case RowRotateAxis.X:
-				{
-					return gamePlayCubeWholeData.X_RotateRows;
-				}
+                       if (transferPair.TryGetValue(cubeCacheDatas[i], out transferCubeCaheData))
+                       {
+                           cubeCacheDatas[i] = transferCubeCaheData;
+                       }
+                   }
 
-			case RowRotateAxis.Y:
-				{
-					return gamePlayCubeWholeData.Y_RotateRows;
-				}
+                   CubeCacheData transferCenterCubeCaheData = null;
 
-			case RowRotateAxis.Z:
-				{
-					return gamePlayCubeWholeData.Z_RotateRows;
-				}
-			}
+                   if (transferPair.TryGetValue(cubeRowData.RowCenterPoint, out transferCenterCubeCaheData))
+                   {
+                       cubeRowData.RowCenterPoint = transferCenterCubeCaheData;
+                   }
+               });
+        }
 
-			throw new Exception ("無對應所屬群組");
-		}
+        Quaternion GetDeltaQuaternion (RowRotateAxis axis, bool isPositive)
+        {
+            float scale = isPositive ? 1 : -1;
 
-		public void RotateWhole (Vector3 deltaEuler, float deltaTime)
-		{
-			Vector3 processDeltaEuler = deltaEuler * cubeEntitySetting.RotateSpeed * deltaTime;
+            float processDegree = 90 * scale;
 
-			Quaternion deltaRot = Quaternion.Euler (processDeltaEuler);
+            switch (axis)
+            {
+                case RowRotateAxis.X:
+                    {
+                        return Quaternion.Euler(processDegree, 0, 0);
+                    }
 
-			currentWholeRot = deltaRot * currentWholeRot;
-			currentWholeEuler = currentWholeRot.eulerAngles;
+                case RowRotateAxis.Y:
+                    {
+                        return Quaternion.Euler(0, processDegree, 0);
+                    }
 
-			cubeCacheDatas.ForEach (cubeEntityDataGroup=>
-				{
-					cubeEntityDataGroup.SetWholeRot (currentWholeRot);
-				});
-		}
+                case RowRotateAxis.Z:
+                    {
+                        return Quaternion.Euler(0, 0, processDegree);
+                    }
+            }
 
-		void InitCubeEntityDatas (CubeBindData cubeTotalBindData)
-		{
-			cubeCacheDatas = new List<CubeCacheData> ();
+            throw new Exception("無對應旋轉設定");
+        }
 
-			Dictionary<Transform,CubeCacheData> cubeCacheDataMappings = new Dictionary<Transform, CubeCacheData> ();
+        List<CubeRowData> GetRotateRowsGroup (RowRotateAxis dir)
+        {
+            switch (dir)
+            {
+                case RowRotateAxis.X:
+                    {
+                        return gamePlayCubeWholeData.X_RotateRows;
+                    }
 
-			cubeTotalBindData.CubeEntitys.ForEach (cubeEntity=>
-				{
-					CubeCacheData cubeCacheData = new CubeCacheData(centerPoint, cubeEntity);
-					cubeCacheDatas.Add (cubeCacheData);
-					cubeCacheDataMappings.Add (cubeEntity, cubeCacheData);
-				});
+                case RowRotateAxis.Y:
+                    {
+                        return gamePlayCubeWholeData.Y_RotateRows;
+                    }
 
-			gamePlayCubeWholeData = new CubeWholeData (cubeTotalBindData, cubeCacheDataMappings);
-			originCubeWholeData = new CubeWholeIndexData (gamePlayCubeWholeData, cubeCacheDatas);
-		}
+                case RowRotateAxis.Z:
+                    {
+                        return gamePlayCubeWholeData.Z_RotateRows;
+                    }
+            }
 
-		public bool Raycast (Vector3 mousePos, out RaycastHit hit)
-		{
-			Ray ray = mainCamera.ScreenPointToRay (mousePos);
+            throw new Exception("無對應所屬群組");
+        }
 
-			Vector3 beginPos = ray.origin;
-			float lineLength = 10f;
-			Vector3 endPos = beginPos + ray.direction * lineLength;
+        public void RotateWhole (Vector3 deltaEuler, float deltaTime)
+        {
+            Vector3 processDeltaEuler = deltaEuler * cubeEntitySetting.RotateSpeed * deltaTime;
 
-			Debug.DrawLine(beginPos, endPos, Color.red, 0.1f);
+            Quaternion deltaRot = Quaternion.Euler(processDeltaEuler);
 
-			return Physics.Raycast (ray, out hit);
-		}
+            currentWholeRot = deltaRot * currentWholeRot;
+            currentWholeEuler = currentWholeRot.eulerAngles;
 
-		public void Reset()
-		{
-			cubeCacheDatas.ForEach (cubeCacheData=>
-				{
-					cubeCacheData.Reset();
-				});
+            cubeCacheDatas.ForEach(cubeEntityDataGroup =>
+               {
+                   cubeEntityDataGroup.SetWholeRot(currentWholeRot);
+               });
+        }
 
-			gamePlayCubeWholeData = originCubeWholeData.GetValue (cubeCacheDatas);
-		}
-	}
+        void InitCubeEntityDatas (CubeBindData cubeTotalBindData)
+        {
+            cubeCacheDatas = new List<CubeCacheData>();
+
+            Dictionary<Transform, CubeCacheData> cubeCacheDataMappings = new Dictionary<Transform, CubeCacheData>();
+
+            cubeTotalBindData.CubeEntitys.ForEach(cubeEntity =>
+               {
+                   CubeCacheData cubeCacheData = new CubeCacheData(centerPoint, cubeEntity);
+                   cubeCacheDatas.Add(cubeCacheData);
+                   cubeCacheDataMappings.Add(cubeEntity, cubeCacheData);
+               });
+
+            gamePlayCubeWholeData = new CubeWholeData(cubeTotalBindData, cubeCacheDataMappings);
+            originCubeWholeData = new CubeWholeIndexData(gamePlayCubeWholeData, cubeCacheDatas);
+        }
+
+        public bool Raycast (Vector3 mousePos, out RaycastHit hit)
+        {
+            Ray ray = mainCamera.ScreenPointToRay(mousePos);
+
+            Vector3 beginPos = ray.origin;
+            float lineLength = 10f;
+            Vector3 endPos = beginPos + ray.direction * lineLength;
+
+            Debug.DrawLine(beginPos, endPos, Color.red, 0.1f);
+
+            return Physics.Raycast(ray, out hit);
+        }
+
+        public void Reset ()
+        {
+            cubeCacheDatas.ForEach(cubeCacheData =>
+               {
+                   cubeCacheData.Reset();
+               });
+
+            gamePlayCubeWholeData = originCubeWholeData.GetValue(cubeCacheDatas);
+        }
+    }
 }

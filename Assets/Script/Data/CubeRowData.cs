@@ -64,5 +64,13 @@ namespace Kun.Data
 					return cubeCacheData.RecieveColl == coll;
 				});
 		}
-	}
+
+        public bool CheckDataExist (CubeCacheData _cubeCacheData)
+        {
+            return cubeCacheDatas.Exists(cubeCacheData =>
+            {
+                return cubeCacheData == _cubeCacheData;
+            });
+        }
+    }
 }
