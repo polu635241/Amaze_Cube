@@ -97,10 +97,11 @@ namespace Kun.Controller
 
 			RowRotateAxis axis = targetDesc.Axis;
 			bool isPositive = (targetDesc.DotValue >= 0);
-			RowRatateCacheData rowRatateCacheData = cubeEntityController.GetRowRatateCacheData (hitColl, axis, isPositive);
+			int rowIndex;
+			RowRatateCacheData rowRatateCacheData = cubeEntityController.GetRowRatateCacheData (hitColl, axis, isPositive, out rowIndex);
 			cubeFlowData.RowRatateCacheData = rowRatateCacheData;
 
-			GameFlowData.AddPlayRowRotateHistory (0, axis, isPositive);
+			GameFlowData.AddPlayRowRotateHistory (rowIndex, axis, isPositive);
 		}
 
 		void ProcessHit (RaycastHit hitCache)
@@ -142,6 +143,11 @@ namespace Kun.Controller
 			remainingAxisDesciptions.RemoveAt (0);
 
 			return remainingAxisDesciptions;
+		}
+
+		void PorcessRowRotateHistory ()
+		{
+			
 		}
 	}
 }

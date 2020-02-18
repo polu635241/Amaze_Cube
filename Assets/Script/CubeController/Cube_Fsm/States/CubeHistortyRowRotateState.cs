@@ -18,10 +18,19 @@ namespace Kun.Controller
 		{
 			base.Enter (prevState);
 
+			GameFlowData.InRowRotate = true;
+
             rowRatateCacheData = GameFlowData.HistoryRowRatateCacheData;
             GameFlowData.HistoryRowRatateCacheData = null;
 
             ProcessRotateCache ();
+		}
+
+		public override void Exit ()
+		{
+			base.Exit ();
+
+			GameFlowData.InRowRotate = false;
 		}
 
         /// <summary>

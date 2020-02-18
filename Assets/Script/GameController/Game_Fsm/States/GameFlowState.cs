@@ -13,11 +13,19 @@ namespace Kun.Controller
 		protected GameFlowController gameFlowController;
 		protected GameFlowData gameFlowData;
 
+		protected CubeController cubeController;
+		protected CubeEntityController cubeEntityController;
+		protected CubeFlowController cubeFlowController;
+
 		public GameFlowState (GameController gameController, GameFlowController gameFlowController)
 		{
 			this.gameController = gameController;
 			this.gameFlowController = gameFlowController;
 			this.gameFlowData = gameFlowController.GameFlowData;
+
+			this.cubeController = gameController.CubeController;
+			this.cubeEntityController = cubeController.CubeEntityController;
+			this.cubeFlowController = cubeController.CubeFlowController;
 		}
 
 		public virtual void Enter(GameFlowState prevState)

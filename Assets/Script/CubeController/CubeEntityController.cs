@@ -78,40 +78,70 @@ namespace Kun.Controller
         [SerializeField]
         Transform mainCameraTransform;
 
-        public RowRatateCacheData GetRowRatateCacheData (Collider receiveColl, RowRotateAxis axis, bool isPositive)
-        {
-            List<CubeRowData> rotateRows = GetRotateRowsGroup(axis);
+		public RowRatateCacheData GetRowRatateCacheData (Collider receiveColl, RowRotateAxis axis, bool isPositive, out int rowIndex)
+		{
+			CubeRowData ownerRow = null;
 
-            CubeRowData ownerRow = rotateRows.Find(rotateRow =>
-               {
-                   return rotateRow.CheckDataExist(receiveColl);
-               });
+			int outRowIndex = 0;
+
+			ownerRow = GetOwnerRow (receiveColl, axis, out outRowIndex);
 
             if (ownerRow != null)
             {
                 Quaternion deltaQuaterniotn = GetDeltaQuaternion(axis, isPositive);
 
-                RowRatateCacheData rowRatateCacheData = new RowRatateCacheData(ownerRow, deltaQuaterniotn, isPositive);
-
+ 		               RowRatateCacheData rowRatateCacheData = new RowRatateCacheData(ownerRow, deltaQuaterniotn, isPositive);
+				rowIndex = outRowIndex;
                 return rowRatateCacheData;
             }
             else
             {
+				rowIndex = -1;
                 string name = receiveColl.gameObject.name;
                 throw new UnityException($"找不到所屬群組 name -> {name}, axis -> {axis}");
             }
         }
 
-        public RowRatateCacheData GetRowRatateCacheData (int cubeIndex, RowRotateAxis axis, bool isPositive)
+		CubeRowData GetOwnerRow (Collider receiveColl, RowRotateAxis axis, out int rowIndex)
+		{
+			List<CubeRowData> rotateRows = GetRotateRowsGroup (axis);
+
+			CubeRowData ownerRow = null;
+
+			int outRowIndex = 0;
+
+			for (int i = 0; i < rotateRows.Count; i++) 
+			{
+				CubeRowData cubeRowData = rotateRows [i];
+
+				bool existData = cubeRowData.CheckDataExist (receiveColl);
+
+				if (existData) 
+				{
+					rowIndex = i;
+					ownerRow = cubeRowData;
+					break;
+				}
+			}
+
+			if (ownerRow != null) 
+			{
+				rowIndex = outRowIndex;
+			}
+			else
+			{
+				rowIndex = -1;
+			}
+
+			return ownerRow;
+		}
+
+
+        public RowRatateCacheData GetRowRatateCacheData (int cubeRowIndex, RowRotateAxis axis, bool isPositive)
         {
             List<CubeRowData> rotateRows = GetRotateRowsGroup(axis);
 
-            CubeCacheData cubeCacheData = cubeCacheDatas[cubeIndex];
-
-            CubeRowData ownerRow = rotateRows.Find(rotateRow =>
-            {
-                return rotateRow.CheckDataExist (cubeCacheData);
-            });
+			CubeRowData ownerRow = rotateRows [cubeRowIndex];
 
             if (ownerRow != null)
             {
@@ -123,7 +153,7 @@ namespace Kun.Controller
             }
             else
             {
-                throw new UnityException($"找不到所屬群組 cubeIndex -> {cubeIndex}, axis -> {axis}");
+				throw new UnityException($"找不到所屬群組 cubeRowIndex -> {cubeRowIndex}, axis -> {axis}");
             }
         }
 

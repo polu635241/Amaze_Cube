@@ -125,6 +125,12 @@ namespace Kun.Controller
 			flowUIController.Reset ();
 		}
 
+		[ContextMenu("Test")]
+		void Test ()
+		{
+			gameFlowController.ForceChangeState<GameHistoyState> ();
+		}
+
 		void OnApplicationQuitClick()
 		{
 			Application.Quit ();

@@ -76,5 +76,20 @@ namespace Kun.Data
         [SerializeField]
         [ReadOnly]
         RowRatateCacheData historyRowRatateCacheData = null;
+
+		public bool InRowRotate
+		{
+			get
+			{
+				return inRowRotate;
+			}
+
+			set
+			{
+				inRowRotate = value;
+			}
+		}
+
+		bool inRowRotate;
     }
 }
