@@ -18,7 +18,8 @@ namespace Kun.Controller
 		public override void Enter (GameFlowState prevState)
 		{
 			base.Enter (prevState);
-		
+			flowUIManager.OnReceiveStatusSwitch (GameFlowUIStatus.GameStart);
+
 			DateTime startTime = DateTime.UtcNow;
 			gameFlowData.PlayHistoryGroup = new PlayHistoryGroup (startTime);
 		}

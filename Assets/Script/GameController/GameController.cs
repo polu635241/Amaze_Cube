@@ -95,17 +95,17 @@ namespace Kun.Controller
 			gameFlowController.Stay (deltaTime);
 		}
 
-		public void OnGameFlowUIClick (GameFlowUIStatus enterStatus)
+		public void OnGameFlowUIClick (GameFlowUICmd cmd)
 		{
-			switch (enterStatus) 
+			switch (cmd) 
 			{
-			case GameFlowUIStatus.GameStart:
+			case GameFlowUICmd.GameStart:
 				{
 					OnGameStart ();
 					break;
 				}
 
-			case GameFlowUIStatus.Reset:
+			case GameFlowUICmd.Reset:
 				{
 					OnGameReset ();
 					break;

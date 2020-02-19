@@ -10,10 +10,9 @@ namespace Kun.Controller
 {
 	public class FlowUIManager
 	{
-		public void SetUp(RefBinder uiRootRefBinder, Action<GameFlowUIStatus> onGameFlowUIClickCallback, Action onApplicationQuitClickCallback)
+		public void SetUp(RefBinder uiRootRefBinder, Action<GameFlowUICmd> onGameFlowUIClickCallback, Action onApplicationQuitClickCallback)
 		{
-			ProcessGameFLowBtn (uiRootRefBinder, AssetKeys.GameStartBtn, GameFlowUIStatus.GameStart);
-			ProcessGameFLowBtn (uiRootRefBinder, AssetKeys.ResetBtn, GameFlowUIStatus.Reset);
+			ProcessGameFLowBtn (uiRootRefBinder);
 
 			GameObject timeTextGO = uiRootRefBinder.GetGameobject (AssetKeys.TimeText);
 			timeText = timeTextGO.GetComponent<Text> ();
@@ -27,13 +26,11 @@ namespace Kun.Controller
 
 		Text timeText;
 
-		GameFlowUIStatus currentBtnStatus;
-
-		event Action<GameFlowUIStatus> onGameFlowUIClickEvent;
+		event Action<GameFlowUICmd> onGameFlowUIClickEvent;
 
 		event Action onApplicationQuitClickEvent;
 
-		Dictionary<GameFlowUIStatus,GameObject> statusPairEntitys = new Dictionary<GameFlowUIStatus, GameObject>();
+		List<UIRootController> uiRootControllers = new List<UIRootController> ();
 
 		public void SetTime(float time)
 		{
@@ -41,13 +38,48 @@ namespace Kun.Controller
 			timeText.text = timeStr;
 		}
 
-		void ProcessGameFLowBtn (RefBinder uiRootRefBinder, string assetKey, GameFlowUIStatus bindStatus)
+		void ProcessGameFLowBtn (RefBinder uiRootRefBinder)
 		{
-			GameObject gameFlowBtnGO = uiRootRefBinder.GetGameobject (assetKey);
-			Button gameFlowBtn = gameFlowBtnGO.GetComponent<Button> ();
-			gameFlowBtn.onClick.AddListener (OnGameFlowUIClick);
+			GameObject gameStartBtnGO = uiRootRefBinder.GetGameobject (AssetKeys.GameStartBtn);
+			Button gameStartBtn = gameStartBtnGO.GetComponent<Button> ();
+			gameStartBtn.onClick.AddListener (()=>
+				{
+					OnGameFlowUIClick (GameFlowUICmd.GameStart);
+				});
+			PlayGameUIController playGameUIController = new PlayGameUIController (gameStartBtnGO);
+			uiRootControllers.Add (playGameUIController);
 
-			statusPairEntitys.Add (bindStatus, gameFlowBtnGO);
+			GameObject resetBtnGO = uiRootRefBinder.GetGameobject (AssetKeys.ResetBtn);
+			Button resetBtn = resetBtnGO.GetComponent<Button> ();
+			resetBtn.onClick.AddListener (()=>
+				{
+					OnGameFlowUIClick (GameFlowUICmd.Reset);
+				});
+			ResetUIController resetUIController = new ResetUIController (resetBtnGO);
+			uiRootControllers.Add (resetUIController);
+		}
+
+
+		/// <summary>
+		/// 收到遊戲核心切換狀態
+		/// </summary>
+		/// <param name="status">Status.</param>
+		public void OnReceiveStatusSwitch (GameFlowUIStatus status)
+		{
+			uiRootControllers.ForEach (uiRootController=>
+				{
+					uiRootController.SwitchStatus (status);
+				});
+		}
+
+		/// <summary>
+		/// 透過按鈕接收到點擊切換狀態
+		/// </summary>
+		/// <param name="status">Status.</param>
+		void OnGameFlowUIClick(GameFlowUICmd cmd)
+		{
+			//Callback觸發當前狀態 
+			onGameFlowUIClickEvent.Invoke (cmd);
 		}
 
 		public void Reset ()
@@ -55,27 +87,6 @@ namespace Kun.Controller
 			SetTime (0f);
 		}
 
-		public void SetGameFlow (GameFlowUIStatus status)
-		{
-			
-		}
-
-		void OnGameFlowUIClick()
-		{
-			//Callback觸發當前狀態 
-			onGameFlowUIClickEvent.Invoke (currentBtnStatus);
-
-			//並關閉按鈕實體
-			GameObject originBtnGO = statusPairEntitys [currentBtnStatus];
-			originBtnGO.SetActive (false);
-
-			//切換為新的狀態
-			currentBtnStatus = currentBtnStatus.NextStatus ();
-
-			//並開啟對應的按鈕實體
-			GameObject currentBtnGO = statusPairEntitys [currentBtnStatus];
-			currentBtnGO.SetActive (true);
-		}
 
 		void OnApplicationQuitClick ()
 		{
