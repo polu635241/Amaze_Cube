@@ -32,7 +32,7 @@ namespace Kun.Controller
 		[SerializeField][ReadOnly]
 		GameFlowController gameFlowController;
 
-		public FlowUIController FlowUIController
+		public FlowUIManager FlowUIController
 		{
 			get
 			{
@@ -40,7 +40,7 @@ namespace Kun.Controller
 			}
 		}
 
-		FlowUIController flowUIController;
+		FlowUIManager flowUIController;
 
 		public ParseManager ParseManager
 		{
@@ -81,7 +81,7 @@ namespace Kun.Controller
 			cubeController.Init (sceneRefBinder, parseManager.CubeSetting, keyboardMouseInputReceiver, this);
 
 			RefBinder uIRootRefBinder = sceneRefBinder.GetComponent<RefBinder> (AssetKeys.UIRoot);
-			flowUIController = new FlowUIController ();
+			flowUIController = new FlowUIManager ();
 			flowUIController.SetUp (uIRootRefBinder, OnGameFlowUIClick, OnApplicationQuitClick);
 
 			gameFlowController = new GameFlowController (this);

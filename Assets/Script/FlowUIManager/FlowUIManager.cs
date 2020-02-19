@@ -8,7 +8,7 @@ using Kun.Data;
 
 namespace Kun.Controller
 {
-	public class FlowUIController
+	public class FlowUIManager
 	{
 		public void SetUp(RefBinder uiRootRefBinder, Action<GameFlowUIStatus> onGameFlowUIClickCallback, Action onApplicationQuitClickCallback)
 		{
@@ -53,6 +53,11 @@ namespace Kun.Controller
 		public void Reset ()
 		{
 			SetTime (0f);
+		}
+
+		public void SetGameFlow (GameFlowUIStatus status)
+		{
+			
 		}
 
 		void OnGameFlowUIClick()
