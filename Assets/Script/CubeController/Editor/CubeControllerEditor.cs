@@ -94,7 +94,9 @@ namespace Kun.Controller
 
 										RowRotateAxis axis = currentFrameInputAxis.Value;
 
-										RowRatateCacheData rowRatateCacheData = cubeEntityController.GetRowRatateCacheData(simulationTarget, axis, isPositive);
+										int rowIndex;
+
+										RowRatateCacheData rowRatateCacheData = cubeEntityController.GetRowRatateCacheData(simulationTarget, axis, isPositive, out rowIndex);
 
 										runtimeScript.CubeFlowController.CubeFlowData.RowRatateCacheData = rowRatateCacheData;
 									}

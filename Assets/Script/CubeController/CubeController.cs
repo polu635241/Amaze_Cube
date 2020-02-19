@@ -11,6 +11,8 @@ namespace Kun.Controller
 	//配合Editor 保留MonoBehaviour
 	public class CubeController : MonoBehaviour
 	{
+		public GameController GameController{ get; private set;}
+		
 		public InputReceiver InputReceiver{ get; private set;}
 
 		public CubeFlowController CubeFlowController
@@ -37,9 +39,10 @@ namespace Kun.Controller
 
 		public CubeSetting CubeSetting{ get; private set;}
 
-		public void Init (RefBinder sceneRefBinder, CubeSetting cubeSetting, InputReceiver inputReceiver)
+		public void Init (RefBinder sceneRefBinder, CubeSetting cubeSetting, InputReceiver inputReceiver, GameController gameController)
 		{
 			this.InputReceiver = inputReceiver;
+			this.GameController = gameController;
 			InitController (sceneRefBinder, cubeSetting);
 		}
 

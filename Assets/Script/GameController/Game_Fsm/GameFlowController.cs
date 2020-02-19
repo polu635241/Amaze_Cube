@@ -12,13 +12,26 @@ namespace Kun.Controller
 	{
 		public GameFlowController (GameController gameController)
 		{
+			gameFlowData = new GameFlowData ();
+			
 			this.gameController = gameController;
 
 			gameFlowRepository = new GameFlowRepository (gameController, this);
 
 			ForceChangeState<GameStandbyState> ();
 		}
-		
+
+		public GameFlowData GameFlowData
+		{
+			get
+			{
+				return gameFlowData;
+			}
+		}
+
+		[SerializeField][ReadOnly]
+		GameFlowData gameFlowData;
+
 		public GameController GameController
 		{
 			get

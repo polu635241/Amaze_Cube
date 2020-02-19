@@ -673,6 +673,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cubeController: {fileID: 0}
   gameFlowController:
+    gameFlowData:
+      flowTime: 0
     currentStateInfo: 
 --- !u!4 &1015256283
 Transform:
@@ -709,7 +711,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1028137941}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.44, y: 8.6, z: -15.88}
+  m_LocalPosition: {x: -2.44, y: 4.8, z: -13.55}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1161932834}

@@ -1,13 +1,10 @@
 ﻿using System;
 using System.IO;
-using System.Text;
 using System.Reflection;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Diagnostics;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace Kun.Tool
 {
@@ -37,7 +34,7 @@ namespace Kun.Tool
 			return string.Format ("<color=#{0}>{1}</color>",left,inputStr);
 		}
 
-		static bool CheckIsSampleType<T>()
+		public static bool CheckIsSampleType<T>()
 		{
 			bool result = false;
 
@@ -291,6 +288,18 @@ namespace Kun.Tool
 
 			return result;
 		}
+
+		public static Vector3 GetPosToEuler (Vector2 deltaPos)
+		{
+			return GetPosToEuler (deltaPos.x, deltaPos.y);
+		}
+
+		public static Vector3 GetPosToEuler (float deltaX, float deltaY)
+		{
+			Vector3 deltaEnler = new Vector3 (deltaY, deltaX * -1);
+
+			return deltaEnler;
+		}
 	}
 
 	[Serializable]
@@ -392,6 +401,69 @@ namespace Kun.Tool
 		public RefKeyValuePair()
 		{
 
+		}
+	}
+
+	[Serializable]
+	public class SerialVector3
+	{
+		public float x;
+		public float y;
+		public float z;
+
+		public SerialVector3 (float x = 0f, float y = 0f, float z = 0f)
+		{
+			this.x = x;
+			this.y = y;
+			this.z = z;
+		}
+
+		public SerialVector3 (Vector3 vector3)
+		{
+			this.x = vector3.x;
+			this.y = vector3.y;
+			this.z = vector3.z;
+		}
+
+		public SerialVector3 (Vector2 vector2)
+		{
+			this.x = vector2.x;
+			this.y = vector2.y;
+			this.z = 0f;
+		}
+
+		public Vector3 GetValue ()
+		{
+			return new Vector3 (x, y, z);
+		}
+	}
+
+	[Serializable]
+	public class SerialVector2
+	{
+		public float x;
+		public float y;
+
+		public SerialVector2 (float x = 0f, float y = 0f)
+		{
+			this.x = x;
+			this.y = y;
+		}
+
+		public SerialVector2 (Vector2 vector2)
+		{
+			this.x = vector2.x;
+			this.y = vector2.y;
+		}
+
+		public SerialVector2 ()
+		{
+
+		}
+
+		public Vector2 GetValue ()
+		{
+			return new Vector2 (x, y);
 		}
 	}
 }

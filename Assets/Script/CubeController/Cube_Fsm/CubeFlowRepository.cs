@@ -36,8 +36,10 @@ namespace Kun.Controller
 			cubeFlowStateDictTable.Add (typeof(CubeStandbyState), new CubeStandbyState (cube_Controller, cubeFlowController));
 			cubeFlowStateDictTable.Add (typeof(CubeWholeRotateState), new CubeWholeRotateState (cube_Controller, cubeFlowController));
 			cubeFlowStateDictTable.Add (typeof(CubeRowRotateStandbyState), new CubeRowRotateStandbyState (cube_Controller, cubeFlowController));
-			cubeFlowStateDictTable.Add (typeof(CubeRowRotateState), new CubeRowRotateState (cube_Controller, cubeFlowController));
+			cubeFlowStateDictTable.Add (typeof(CubeGameRowRotateState), new CubeGameRowRotateState (cube_Controller, cubeFlowController));
 			cubeFlowStateDictTable.Add (typeof(CubeWaitScreenUpState), new CubeWaitScreenUpState (cube_Controller, cubeFlowController));
+			cubeFlowStateDictTable.Add (typeof(CubeHistoryStandbyState), new CubeHistoryStandbyState (cube_Controller, cubeFlowController));
+			cubeFlowStateDictTable.Add (typeof(CubeHistortyRowRotateState), new CubeHistortyRowRotateState (cube_Controller, cubeFlowController));
 		}
 	}
 }

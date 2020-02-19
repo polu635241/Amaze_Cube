@@ -17,9 +17,17 @@ namespace Kun.Controller
 				return cubeController;
 			}
 		}
-		
+
 		[SerializeField][ReadOnly]
 		CubeController cubeController;
+
+		public GameFlowController GameFlowController
+		{
+			get
+			{
+				return gameFlowController;
+			}
+		}
 
 		[SerializeField][ReadOnly]
 		GameFlowController gameFlowController;
@@ -34,11 +42,24 @@ namespace Kun.Controller
 
 		FlowUIController flowUIController;
 
+		public ParseManager ParseManager
+		{
+			get
+			{
+				return parseManager;
+			}
+		}
+
 		[SerializeField][ReadOnly]
 		ParseManager parseManager;
 
 		KeyboardMouseInputReceiver keyboardMouseInputReceiver;
 
+		public PlyerHistoryGroupFlusher PlyerHistoryGroupFlusher 
+		{
+			get;
+			private set;
+		}
 
 		// Use this for initialization
 		void Awake () 
@@ -47,14 +68,17 @@ namespace Kun.Controller
 			
 			parseManager = new ParseManager ();
 			parseManager.ParseSettings ();
-			
+
+			PlyerHistoryGroupFlusher = new PlyerHistoryGroupFlusher (parseManager.FlushPlayerHistoryGroup);
+			PlyerHistoryGroupFlusher.Run ();
+
 			GameObject sceneRefBinderGo = GameObject.FindWithTag (Tags.SceneRefBinder);
 
 			RefBinder sceneRefBinder = sceneRefBinderGo.GetComponent<RefBinder> ();
 
 			GameObject cubeGo = sceneRefBinder.GetGameobject (AssetKeys.Cube);
 			cubeController = cubeGo.AddComponent<CubeController> ();
-			cubeController.Init (sceneRefBinder, parseManager.CubeSetting, keyboardMouseInputReceiver);
+			cubeController.Init (sceneRefBinder, parseManager.CubeSetting, keyboardMouseInputReceiver, this);
 
 			RefBinder uIRootRefBinder = sceneRefBinder.GetComponent<RefBinder> (AssetKeys.UIRoot);
 			flowUIController = new FlowUIController ();
@@ -99,6 +123,12 @@ namespace Kun.Controller
 			gameFlowController.ForceChangeState<GameStandbyState> ();
 			cubeController.Reset ();
 			flowUIController.Reset ();
+		}
+
+		[ContextMenu("Test")]
+		void Test ()
+		{
+			gameFlowController.ForceChangeState<GameHistoyState> ();
 		}
 
 		void OnApplicationQuitClick()

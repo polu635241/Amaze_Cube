@@ -8,11 +8,16 @@ using Kun.Data;
 
 namespace Kun.Tool
 {
+	[Serializable]
 	public class ParseManager 
 	{
 		public void ParseSettings()
 		{
+			DirectoryInfo dirInfo = new DirectoryInfo(Application.dataPath);
+			DirInfoParent = dirInfo.Parent.FullName;
+
 			cubeSetting = JsonLoader<CubeSetting> ();
+			LoadPlayerHistoryGroup ();
 		}
 		
 		[SerializeField][ReadOnly]
@@ -32,7 +37,7 @@ namespace Kun.Tool
         /// <returns>The loader.</returns>
         /// <param name="dataName">Data name.</param>
         /// <typeparam name="T">The 1st type parameter.</typeparam>
-        public static T JsonLoader<T>(string dataName = "")
+        public T JsonLoader<T>(string dataName = "")
         {
             if (dataName == "")
             {
@@ -68,22 +73,83 @@ namespace Kun.Tool
             return process;
         }
 
+		string DirInfoParent;
+
         public const string SettingPath = "GameSetting";
 
-        static string settingfolderPath = "";
+        string settingfolderPath = "";
 
-        public static string SettingFolderPath
+        string SettingFolderPath
         {
             get
             {
                 if (string.IsNullOrEmpty(settingfolderPath))
                 {
-                    DirectoryInfo dirInfo = new DirectoryInfo(Application.dataPath);
-                    settingfolderPath = Path.Combine(dirInfo.Parent.FullName, SettingPath);
+					settingfolderPath = Path.Combine(DirInfoParent, SettingPath);
                 }
 
                 return settingfolderPath;
             }
         }
+
+		void LoadPlayerHistoryGroup ()
+		{
+			playHistoryGroups = new List<PlayHistoryGroup> ();
+
+			using (StreamReader sr = new StreamReader (HistoryFullPath))
+			{
+				while (true) 
+				{
+					//1行1個紀錄
+					string line = sr.ReadLine ();
+
+					if (!string.IsNullOrEmpty (line)) 
+					{
+						PlayHistoryGroup playHistoryGroup = JsonUtility.FromJson<PlayHistoryGroup> (line);
+						playHistoryGroups.Add (playHistoryGroup);
+					}
+					else
+					{
+						break;
+					}
+				}
+			}
+		}
+
+		public void FlushPlayerHistoryGroup (PlayHistoryGroup data)
+		{	
+			using (StreamWriter sw = new StreamWriter (HistoryFullPath, true))
+			{
+				sw.WriteLine (JsonUtility.ToJson (data));
+			}
+		}
+
+		public List<PlayHistoryGroup> PlayHistoryGroups
+		{
+			get
+			{
+				return playHistoryGroups;
+			}
+		}
+
+		[SerializeField][ReadOnly]
+		List<PlayHistoryGroup> playHistoryGroups = new List<PlayHistoryGroup> ();
+
+		const string HistoryPath = "hisp.kp";
+
+		string historyFullPath;
+
+		public string HistoryFullPath
+		{
+			get
+			{
+				if (string.IsNullOrEmpty(historyFullPath))
+				{
+					historyFullPath = Path.Combine (DirInfoParent, HistoryPath);
+				}
+
+				return historyFullPath;
+			}
+		}
     }
 }

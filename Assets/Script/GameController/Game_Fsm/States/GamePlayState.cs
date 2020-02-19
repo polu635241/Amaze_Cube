@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Kun.HardwareInput;
@@ -14,23 +15,32 @@ namespace Kun.Controller
 			
 		}
 
-		float throughTime;
-
 		public override void Enter (GameFlowState prevState)
 		{
 			base.Enter (prevState);
-			throughTime = 0f;
+		
+			DateTime startTime = DateTime.UtcNow;
+			gameFlowData.PlayHistoryGroup = new PlayHistoryGroup (startTime);
 		}
 
 		public override GameFlowState Stay (float deltaTime)
 		{
+			base.Stay (deltaTime);
+			
 			gameController.CubeController.Stay (deltaTime);
 
-			throughTime += deltaTime;
-
-			gameController.FlowUIController.SetTime (throughTime);
+			gameController.FlowUIController.SetTime (gameFlowData.FlowTime);
 
 			return null;
+		}
+
+		public override void Exit ()
+		{
+			base.Exit ();
+			PlayHistoryGroup playHistoryGroup = gameFlowData.PlayHistoryGroup;
+			playHistoryGroup.TotalTime = gameFlowData.FlowTime;
+			gameController.ParseManager.PlayHistoryGroups.Add (playHistoryGroup);
+			gameController.PlyerHistoryGroupFlusher.AddPlayHistoryGroup (playHistoryGroup);
 		}
 	}
 }
