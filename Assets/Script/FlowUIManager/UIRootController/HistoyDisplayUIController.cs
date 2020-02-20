@@ -5,9 +5,9 @@ using Kun.Data;
 
 namespace Kun.Tool
 {
-	public class ResetUIController : UIRootController
+	public class HistoyDisplayUIController : UIRootController
 	{
-		public ResetUIController (GameObject bindGO) : base (bindGO)
+		public HistoyDisplayUIController (GameObject bindGO) : base (bindGO)
 		{
 			
 		}
@@ -21,7 +21,7 @@ namespace Kun.Tool
 			{
 			case GameFlowUIStatus.GameStart:
 				{
-					bindGO.SetActive (true);
+					bindGO.SetActive (false);
 					break;
 				}
 
@@ -31,11 +31,11 @@ namespace Kun.Tool
 					break;
 				}
 
-			case GameFlowUIStatus.History:
-				{
-					bindGO.SetActive (true);
-					break;
-				}
+            case GameFlowUIStatus.History:
+                {
+                    bindGO.SetActive (true);
+                    break;
+                }
 			}
 		}
 	}

@@ -105,6 +105,12 @@ namespace Kun.Controller
 					break;
 				}
 
+			case GameFlowUICmd.PlayHistory:
+				{
+					OnHistoryPlay ();
+					break;
+				}
+
 			case GameFlowUICmd.Reset:
 				{
 					OnGameReset ();
@@ -116,6 +122,11 @@ namespace Kun.Controller
 		void OnGameStart()
 		{
 			gameFlowController.ForceChangeState<GamePlayState> ();
+		}
+
+		void OnHistoryPlay ()
+		{
+			gameFlowController.ForceChangeState<GameHistoyState> ();
 		}
 
 		void OnGameReset()

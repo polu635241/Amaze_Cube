@@ -57,6 +57,20 @@ namespace Kun.Controller
 				});
 			ResetUIController resetUIController = new ResetUIController (resetBtnGO);
 			uiRootControllers.Add (resetUIController);
+
+			GameObject historyBtnGO = uiRootRefBinder.GetGameobject (AssetKeys.HistoryTriggerUIRoot);
+			Button historyBtn = historyBtnGO.GetComponent<Button> ();
+			historyBtn.onClick.AddListener (()=> 
+			{
+				OnGameFlowUIClick (GameFlowUICmd.PlayHistory);
+			});
+			HistoryTriggerUIController historyTriggerUIController = new HistoryTriggerUIController (historyBtnGO);
+			uiRootControllers.Add (historyTriggerUIController);
+
+			GameObject historyDisplayGO = uiRootRefBinder.GetGameobject (AssetKeys.HistoryDisplayUIRoot);
+			Button historyDisplayBtn = historyDisplayGO.GetComponent<Button> ();
+			HistoyDisplayUIController histoyDisplayUIController = new HistoyDisplayUIController (historyDisplayGO);
+			uiRootControllers.Add (histoyDisplayUIController);
 		}
 
 

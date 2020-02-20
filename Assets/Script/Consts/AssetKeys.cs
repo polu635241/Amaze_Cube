@@ -27,5 +27,10 @@ namespace Kun.Data
 		public const string ApplicationQuitBtn = "ApplicationQuitBtn";
         public const string TimeText = "TimeText";
 
-    }
+		public const string HistoryDisplayUIRoot = "HistoryDisplayUIRoot";
+		public const string HistoryTriggerUIRoot = "HistoryTriggerUIRoot";
+		public const string SpeedScaleDropDown = "SpeedScaleDropDown";
+		public const string ProgressValueImage = "ProgressValueImage";
+
+	}
 }
