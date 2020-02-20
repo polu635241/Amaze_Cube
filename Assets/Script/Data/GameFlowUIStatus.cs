@@ -6,6 +6,11 @@ namespace Kun.Data
 {
 	public enum GameFlowUIStatus 
 	{
+		Standby,GameStart,History
+	}
+
+	public enum GameFlowUICmd
+	{
 		GameStart,Reset
 	}
 }
