@@ -1,15 +1,22 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
+using UnityEngine.UI;
 using Kun.Data;
 
 namespace Kun.Tool
 {
 	public class HistoyDisplayUIController : UIRootController
 	{
-		public HistoyDisplayUIController (GameObject bindGO) : base (bindGO)
+		public HistoyDisplayUIController (RefBinder refBinder) : base (refBinder.gameObject)
 		{
-			
+			progressTweenController = refBinder.GetComponent<PosTweenController> (AssetKeys.ProgressValuePosController);
+		}
+
+		PosTweenController progressTweenController;
+
+		public void SetProgress (float progress)
+		{
+			progressTweenController.SetValue (progress);
 		}
 
 		public override void SwitchStatus (GameFlowUIStatus status)

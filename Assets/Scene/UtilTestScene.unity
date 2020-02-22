@@ -118,6 +118,7 @@ GameObject:
   - component: {fileID: 141466522}
   - component: {fileID: 141466524}
   - component: {fileID: 141466523}
+  - component: {fileID: 141466525}
   m_Layer: 5
   m_Name: Bg
   m_TagString: Untagged
@@ -156,14 +157,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.4117647, g: 0.4117647, b: 0.4117647, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 3a41ce548f5501c4f8aa5ab00ff41224, type: 3}
+  m_Sprite: {fileID: 21300000, guid: ce2e40cb926b0d8448a8f137a5703339, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -177,6 +178,21 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 141466521}
+--- !u!114 &141466525
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 141466521}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e69b470d5011fe144b8d537173b0885e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  valueTransform: {fileID: 812801353}
+  beginPos: {x: -285, y: -45, z: 0}
+  endPos: {x: 285, y: -45, z: 0}
+  proportionDeltaPos: {x: 5.7, y: 0, z: 0}
 --- !u!1 &155197003
 GameObject:
   m_ObjectHideFlags: 0
@@ -1005,17 +1021,17 @@ RectTransform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 812801352}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 141466522}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 570, y: 54}
+  m_AnchoredPosition: {x: -285, y: -45}
+  m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &812801354
 MonoBehaviour:
@@ -1036,7 +1052,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 3a41ce548f5501c4f8aa5ab00ff41224, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 98ded06308c5b3a48b33be4ada0a1110, type: 3}
   m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1164,8 +1180,8 @@ MonoBehaviour:
   refGathers:
   - key: SpeedScaleDropDown
     go: {fileID: 560564146}
-  - key: ProgressValueImage
-    go: {fileID: 812801352}
+  - key: ProgressValuePosController
+    go: {fileID: 141466521}
 --- !u!224 &963779479
 RectTransform:
   m_ObjectHideFlags: 0

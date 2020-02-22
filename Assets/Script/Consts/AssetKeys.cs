@@ -30,7 +30,7 @@ namespace Kun.Data
 		public const string HistoryDisplayUIRoot = "HistoryDisplayUIRoot";
 		public const string HistoryTriggerUIRoot = "HistoryTriggerUIRoot";
 		public const string SpeedScaleDropDown = "SpeedScaleDropDown";
-		public const string ProgressValueImage = "ProgressValueImage";
+		public const string ProgressValuePosController = "ProgressValuePosController";
 
 	}
 }

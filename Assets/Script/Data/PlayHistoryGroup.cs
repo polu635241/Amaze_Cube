@@ -12,11 +12,11 @@ namespace Kun.Data
 	{
 		public PlayHistoryGroup (DateTime startTime)
 		{
-			this.startTime = startTime;
+			this.startTime = startTime.ToString ("yyyy-MM-dd");
 			this.playHistorys = new List<PlayHistory> ();
 		}
 		
-		public DateTime StartTime
+		public string StartTime
 		{
 			get
 			{
@@ -24,7 +24,8 @@ namespace Kun.Data
 			}
 		}
 		
-		DateTime startTime;
+		[SerializeField]
+		string startTime;
 
 		public float TotalTime
 		{
@@ -39,6 +40,7 @@ namespace Kun.Data
 			}
 		}
 
+		[SerializeField]
 		float totalTime;
 
 		public List<PlayHistory> PlayHistorys
