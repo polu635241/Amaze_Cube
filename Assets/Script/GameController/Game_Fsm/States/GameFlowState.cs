@@ -37,7 +37,7 @@ namespace Kun.Controller
 
 		public virtual GameFlowState Stay (float deltaTime)
 		{
-			gameFlowData.FlowTime += Time.deltaTime;
+			gameFlowData.FlowTime += deltaTime;
 			return null;
 		}
 
