@@ -90,7 +90,7 @@ namespace Kun.Controller
             {
                 Quaternion deltaQuaterniotn = GetDeltaQuaternion(axis, isPositive);
 
- 		               RowRatateCacheData rowRatateCacheData = new RowRatateCacheData(ownerRow, deltaQuaterniotn, isPositive);
+ 		        RowRatateCacheData rowRatateCacheData = new RowRatateCacheData(ownerRow, deltaQuaterniotn, isPositive);
 				rowIndex = outRowIndex;
                 return rowRatateCacheData;
             }
@@ -118,7 +118,7 @@ namespace Kun.Controller
 
 				if (existData) 
 				{
-					rowIndex = i;
+                    outRowIndex = i;
 					ownerRow = cubeRowData;
 					break;
 				}
