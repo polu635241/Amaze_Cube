@@ -82,7 +82,7 @@ namespace Kun.Controller
 
 			RefBinder uIRootRefBinder = sceneRefBinder.GetComponent<RefBinder> (AssetKeys.UIRoot);
 			flowUIController = new FlowUIManager ();
-			flowUIController.SetUp (uIRootRefBinder, OnGameFlowUIClick, OnApplicationQuitClick);
+			flowUIController.SetUp (uIRootRefBinder, parseManager, OnGameFlowUIClick, OnApplicationQuitClick);
 
 			gameFlowController = new GameFlowController (this);
 		}

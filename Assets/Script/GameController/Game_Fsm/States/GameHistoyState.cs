@@ -22,6 +22,8 @@ namespace Kun.Controller
 			base.Enter (prevState);
 			flowUIManager.OnReceiveStatusSwitch (GameFlowUIStatus.History);
 			histoyDisplayUIController = flowUIManager.GetRootController<HistoyDisplayUIController> ();
+			histoyDisplayUIController.RegeistSpeedChangeEvent (OnPlaySpeedChange);
+			histoyDisplayUIController.SetDefaultSpeed ();
 			histoyDisplayUIController.SetProgress (0f);
 
 			gameFlowData.InRowRotate = false;
@@ -36,11 +38,21 @@ namespace Kun.Controller
 		List<PlayHistory> playHistorys;
 		float totalTime;
 
+		float playSpeed = 1f;
+
+		void OnPlaySpeedChange (float newSpeed)
+		{
+			playSpeed = newSpeed;
+		}
+
 		public override GameFlowState Stay (float deltaTime)
 		{
-			base.Stay (deltaTime);
+			float processDeltaTime = deltaTime * playSpeed;
 
-			ProcessCubeRow (deltaTime);
+			//時間是在底層處裡的 所以要先處理完deltaTime再傳給底層
+			base.Stay (processDeltaTime);
+
+			ProcessCubeRow (processDeltaTime);
 
 			float gameTime = gameFlowData.FlowTime;
 
@@ -113,6 +125,8 @@ namespace Kun.Controller
 		public override void Exit ()
 		{
 			base.Exit ();
+
+			histoyDisplayUIController.RemoveSpeedChangeEvent (OnPlaySpeedChange);
 		}
 	}
 }

@@ -10,9 +10,9 @@ namespace Kun.Controller
 {
 	public class FlowUIManager
 	{
-		public void SetUp(RefBinder uiRootRefBinder, Action<GameFlowUICmd> onGameFlowUIClickCallback, Action onApplicationQuitClickCallback)
+		public void SetUp (RefBinder uiRootRefBinder, ParseManager parseManager, Action<GameFlowUICmd> onGameFlowUIClickCallback, Action onApplicationQuitClickCallback)
 		{
-			ProcessGameFLowBtn (uiRootRefBinder);
+			ProcessGameFLowBtn (uiRootRefBinder, parseManager);
 
 			GameObject timeTextGO = uiRootRefBinder.GetGameobject (AssetKeys.TimeText);
 			timeText = timeTextGO.GetComponent<Text> ();
@@ -54,7 +54,7 @@ namespace Kun.Controller
 			timeText.text = timeStr;
 		}
 
-		void ProcessGameFLowBtn (RefBinder uiRootRefBinder)
+		void ProcessGameFLowBtn (RefBinder uiRootRefBinder, ParseManager parseManager)
 		{
 			GameObject gameStartBtnGO = uiRootRefBinder.GetGameobject (AssetKeys.GameStartBtn);
 			Button gameStartBtn = gameStartBtnGO.GetComponent<Button> ();
@@ -85,7 +85,7 @@ namespace Kun.Controller
 
 			GameObject historyDisplayGO = uiRootRefBinder.GetGameobject (AssetKeys.HistoryDisplayUIRoot);
 			RefBinder historyDisplayRefBinder = historyDisplayGO.GetComponent<RefBinder> ();
-			HistoyDisplayUIController histoyDisplayUIController = new HistoyDisplayUIController (historyDisplayRefBinder);
+			HistoyDisplayUIController histoyDisplayUIController = new HistoyDisplayUIController (historyDisplayRefBinder, parseManager.SpeedSettingData);
 			uiRootControllerTables.Add (typeof (HistoyDisplayUIController), histoyDisplayUIController);
 		}
 
