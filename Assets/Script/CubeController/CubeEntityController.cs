@@ -225,7 +225,7 @@ namespace Kun.Controller
                });
         }
 
-        Quaternion GetDeltaQuaternion (RowRotateAxis axis, bool isPositive)
+        public static Quaternion GetDeltaQuaternion (RowRotateAxis axis, bool isPositive)
         {
             float scale = isPositive ? 1 : -1;
 

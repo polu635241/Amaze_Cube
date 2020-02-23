@@ -22,6 +22,9 @@ namespace Kun.Data
 			}
 		}
 
+		[SerializeField][ReadOnly]
+		float time;
+
 		public PlayHistoryStyle PlayHistoryStyle
 		{
 			get
@@ -32,9 +35,6 @@ namespace Kun.Data
 
 		[SerializeField][ReadOnly]
 		PlayHistoryStyle playHistoryStyle;
-
-		[SerializeField][ReadOnly]
-		float time;
 		
 		public WholeRotateHistory WholeRotateHistory
 		{
@@ -64,7 +64,7 @@ namespace Kun.Data
 		/// <returns>The play row rotate history.</returns>
 		/// <param name="time">Time.</param>
 		/// <param name="deltaPos">Delta position.</param>
-		public static PlayHistory GetPlayRowRotateHistory (float time, int rowIndex, RowRotateAxis rowRotateAxis, bool isPositive)
+		public static PlayHistory GetRowRotateHistory (float time, int rowIndex, RowRotateAxis rowRotateAxis, bool isPositive)
 		{
 			PlayHistory playHistory = new PlayHistory ();
 			playHistory.time = time;
@@ -80,7 +80,7 @@ namespace Kun.Data
 		/// <param name="time">Time.</param>
 		/// <param name="rowRotateAxis">Row rotate axis.</param>
 		/// <param name="isPositive">If set to <c>true</c> is positive.</param>
-		public static PlayHistory GetPlayWholeRotateHistory (float time, Vector2 deltaPos)
+		public static PlayHistory GetWholeRotateHistory (float time, Vector2 deltaPos)
 		{
 			PlayHistory playHistory = new PlayHistory ();
 			playHistory.time = time;
@@ -148,6 +148,11 @@ namespace Kun.Data
 		{
 			this.deltaPosX = deltaPos.x;
 			this.deltaPosY = deltaPos.y;
+		}
+
+		WholeRotateHistory ()
+		{
+			
 		}
 
 		[SerializeField][ReadOnly]
