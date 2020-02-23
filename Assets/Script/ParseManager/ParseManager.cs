@@ -17,6 +17,7 @@ namespace Kun.Tool
 			DirInfoParent = dirInfo.Parent.FullName;
 
 			cubeSetting = JsonLoader<CubeSetting> ();
+			speedSettingData = JsonLoader<SpeedSettingData> ();
 			LoadPlayerHistoryGroup ();
 		}
 		
@@ -31,13 +32,24 @@ namespace Kun.Tool
 			}
 		}
 
-        /// <summary>
-        /// 若檔名與泛型名一樣 則直接套用
-        /// </summary>
-        /// <returns>The loader.</returns>
-        /// <param name="dataName">Data name.</param>
-        /// <typeparam name="T">The 1st type parameter.</typeparam>
-        public T JsonLoader<T>(string dataName = "")
+		[SerializeField][ReadOnly]
+		SpeedSettingData speedSettingData;
+
+		public SpeedSettingData SpeedSettingData
+		{
+			get 
+			{
+				return speedSettingData;
+			}
+		}
+
+		/// <summary>
+		/// 若檔名與泛型名一樣 則直接套用
+		/// </summary>
+		/// <returns>The loader.</returns>
+		/// <param name="dataName">Data name.</param>
+		/// <typeparam name="T">The 1st type parameter.</typeparam>
+		public T JsonLoader<T>(string dataName = "")
         {
             if (dataName == "")
             {
@@ -95,6 +107,12 @@ namespace Kun.Tool
 		void LoadPlayerHistoryGroup ()
 		{
 			playHistoryGroups = new List<PlayHistoryGroup> ();
+
+			if (!File.Exists (HistoryFullPath))
+			{
+				FileStream fileStream = File.Create (HistoryFullPath);
+				fileStream.Dispose ();
+			}
 
 			using (StreamReader sr = new StreamReader (HistoryFullPath))
 			{

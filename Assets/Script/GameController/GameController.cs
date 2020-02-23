@@ -82,7 +82,7 @@ namespace Kun.Controller
 
 			RefBinder uIRootRefBinder = sceneRefBinder.GetComponent<RefBinder> (AssetKeys.UIRoot);
 			flowUIController = new FlowUIManager ();
-			flowUIController.SetUp (uIRootRefBinder, OnGameFlowUIClick, OnApplicationQuitClick);
+			flowUIController.SetUp (uIRootRefBinder, parseManager, OnGameFlowUIClick, OnApplicationQuitClick);
 
 			gameFlowController = new GameFlowController (this);
 		}
@@ -105,6 +105,12 @@ namespace Kun.Controller
 					break;
 				}
 
+			case GameFlowUICmd.PlayHistory:
+				{
+					OnHistoryPlay ();
+					break;
+				}
+
 			case GameFlowUICmd.Reset:
 				{
 					OnGameReset ();
@@ -118,17 +124,23 @@ namespace Kun.Controller
 			gameFlowController.ForceChangeState<GamePlayState> ();
 		}
 
+		void OnHistoryPlay ()
+		{
+			if (parseManager.PlayHistoryGroups.Count > 0)
+			{
+				gameFlowController.ForceChangeState<GameHistoyState> ();
+			}
+			else
+			{
+				Debug.LogError ("尚未有歷史紀錄");
+			}
+		}
+
 		void OnGameReset()
 		{
 			gameFlowController.ForceChangeState<GameStandbyState> ();
 			cubeController.Reset ();
 			flowUIController.Reset ();
-		}
-
-		[ContextMenu("Test")]
-		void Test ()
-		{
-			gameFlowController.ForceChangeState<GameHistoyState> ();
 		}
 
 		void OnApplicationQuitClick()

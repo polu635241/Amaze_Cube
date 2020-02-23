@@ -11,6 +11,6 @@ namespace Kun.Data
 
 	public enum GameFlowUICmd
 	{
-		GameStart,Reset
+		GameStart,Reset,PlayHistory
 	}
 }

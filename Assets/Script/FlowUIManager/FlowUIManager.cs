@@ -10,9 +10,9 @@ namespace Kun.Controller
 {
 	public class FlowUIManager
 	{
-		public void SetUp(RefBinder uiRootRefBinder, Action<GameFlowUICmd> onGameFlowUIClickCallback, Action onApplicationQuitClickCallback)
+		public void SetUp (RefBinder uiRootRefBinder, ParseManager parseManager, Action<GameFlowUICmd> onGameFlowUIClickCallback, Action onApplicationQuitClickCallback)
 		{
-			ProcessGameFLowBtn (uiRootRefBinder);
+			ProcessGameFLowBtn (uiRootRefBinder, parseManager);
 
 			GameObject timeTextGO = uiRootRefBinder.GetGameobject (AssetKeys.TimeText);
 			timeText = timeTextGO.GetComponent<Text> ();
@@ -30,7 +30,23 @@ namespace Kun.Controller
 
 		event Action onApplicationQuitClickEvent;
 
-		List<UIRootController> uiRootControllers = new List<UIRootController> ();
+		Dictionary<Type, UIRootController> uiRootControllerTables = new Dictionary<Type, UIRootController> ();
+
+		public T GetRootController<T> () where T: UIRootController
+		{
+			Type type = typeof (T);
+
+			UIRootController uIRootController;
+
+			if (uiRootControllerTables.TryGetValue (type, out uIRootController))
+			{
+				return uIRootController as T;
+			}
+			else
+			{
+				throw new UnityException ($"Can't get controller -> {type}");
+			}
+		}
 
 		public void SetTime(float time)
 		{
@@ -38,7 +54,7 @@ namespace Kun.Controller
 			timeText.text = timeStr;
 		}
 
-		void ProcessGameFLowBtn (RefBinder uiRootRefBinder)
+		void ProcessGameFLowBtn (RefBinder uiRootRefBinder, ParseManager parseManager)
 		{
 			GameObject gameStartBtnGO = uiRootRefBinder.GetGameobject (AssetKeys.GameStartBtn);
 			Button gameStartBtn = gameStartBtnGO.GetComponent<Button> ();
@@ -47,7 +63,7 @@ namespace Kun.Controller
 					OnGameFlowUIClick (GameFlowUICmd.GameStart);
 				});
 			PlayGameUIController playGameUIController = new PlayGameUIController (gameStartBtnGO);
-			uiRootControllers.Add (playGameUIController);
+			uiRootControllerTables.Add (typeof (PlayGameUIController), playGameUIController);
 
 			GameObject resetBtnGO = uiRootRefBinder.GetGameobject (AssetKeys.ResetBtn);
 			Button resetBtn = resetBtnGO.GetComponent<Button> ();
@@ -56,7 +72,21 @@ namespace Kun.Controller
 					OnGameFlowUIClick (GameFlowUICmd.Reset);
 				});
 			ResetUIController resetUIController = new ResetUIController (resetBtnGO);
-			uiRootControllers.Add (resetUIController);
+			uiRootControllerTables.Add (typeof (ResetUIController), resetUIController);
+
+			GameObject historyBtnGO = uiRootRefBinder.GetGameobject (AssetKeys.HistoryTriggerUIRoot);
+			Button historyBtn = historyBtnGO.GetComponent<Button> ();
+			historyBtn.onClick.AddListener (()=> 
+			{
+				OnGameFlowUIClick (GameFlowUICmd.PlayHistory);
+			});
+			HistoryTriggerUIController historyTriggerUIController = new HistoryTriggerUIController (historyBtnGO);
+			uiRootControllerTables.Add (typeof (HistoryTriggerUIController), historyTriggerUIController);
+
+			GameObject historyDisplayGO = uiRootRefBinder.GetGameobject (AssetKeys.HistoryDisplayUIRoot);
+			RefBinder historyDisplayRefBinder = historyDisplayGO.GetComponent<RefBinder> ();
+			HistoyDisplayUIController histoyDisplayUIController = new HistoyDisplayUIController (historyDisplayRefBinder, parseManager.SpeedSettingData);
+			uiRootControllerTables.Add (typeof (HistoyDisplayUIController), histoyDisplayUIController);
 		}
 
 
@@ -66,7 +96,7 @@ namespace Kun.Controller
 		/// <param name="status">Status.</param>
 		public void OnReceiveStatusSwitch (GameFlowUIStatus status)
 		{
-			uiRootControllers.ForEach (uiRootController=>
+			uiRootControllerTables.ForEach (uiRootController=>
 				{
 					uiRootController.SwitchStatus (status);
 				});
