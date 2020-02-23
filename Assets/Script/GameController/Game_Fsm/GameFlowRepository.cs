@@ -35,7 +35,7 @@ namespace Kun.Controller
 			gameFlowStateDictTable = new Dictionary<Type, GameFlowState> ();
 			gameFlowStateDictTable.Add (typeof(GameStandbyState), new GameStandbyState (gameController, gameFlowController));
 			gameFlowStateDictTable.Add (typeof(GamePlayState), new GamePlayState (gameController, gameFlowController));
-			gameFlowStateDictTable.Add (typeof(GameHistoyState), new GameHistoyState (gameController, gameFlowController));
+			gameFlowStateDictTable.Add (typeof(GameHistoryState), new GameHistoryState (gameController, gameFlowController));
 		}
 	}
 }

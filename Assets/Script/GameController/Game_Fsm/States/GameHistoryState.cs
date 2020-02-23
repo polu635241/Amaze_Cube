@@ -8,9 +8,9 @@ using Kun.Data;
 
 namespace Kun.Controller
 {
-	public class GameHistoyState : GameFlowState 
+	public class GameHistoryState : GameFlowState 
 	{
-		public  GameHistoyState (GameController gameController, GameFlowController gameFlowController) : base (gameController, gameFlowController)
+		public  GameHistoryState (GameController gameController, GameFlowController gameFlowController) : base (gameController, gameFlowController)
 		{
 			
 		}

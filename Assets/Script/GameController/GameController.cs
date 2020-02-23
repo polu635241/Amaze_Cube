@@ -128,7 +128,7 @@ namespace Kun.Controller
 		{
 			if (parseManager.PlayHistoryGroups.Count > 0)
 			{
-				gameFlowController.ForceChangeState<GameHistoyState> ();
+				gameFlowController.ForceChangeState<GameHistoryState> ();
 			}
 			else
 			{
