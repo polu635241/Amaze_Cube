@@ -39,11 +39,6 @@ namespace Kun.Controller
 
             bool isPositive = rowRatateCacheData.IsPositive;
 
-            cubeRowData.CubeCacheDatas.ForEach (cubeCacheData =>
-            {
-                cubeCacheData.DeltaSingleRot (rowDeltaQuaternion);
-            });
-
             throuthTime += deltaTime;
 
             if (throuthTime < rowRotateTime)
@@ -80,12 +75,12 @@ namespace Kun.Controller
 
                 Quaternion currentRot = Quaternion.Lerp (originRot, targetRot, progress);
 
-                cubeCacheData.SetSingleRot (currentRot);
+                cubeCacheData.SetRowRot (currentRot);
             });
 
             Quaternion centerPointCurrentRot = Quaternion.Lerp (centerPointOriginRot, centetPointTargetRot, progress);
 
-            cubeRowData.RowCenterPoint.SetSingleRot (centerPointCurrentRot);
+            cubeRowData.RowCenterPoint.SetRowRot (centerPointCurrentRot);
         }
 
         protected void ProcessRotateCache ()

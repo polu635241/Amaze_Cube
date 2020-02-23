@@ -80,14 +80,14 @@ namespace Kun.Data
 			Flush ();
 		}
 
-		public void SetSingleRot(Quaternion rowRot)
+		public void SetRowRot(Quaternion rowRot)
 		{
 			this.rowRot = rowRot;
 
 			Flush ();
 		}
 
-		public void DeltaSingleRot(Quaternion deltaRot)
+		public void DeltaRowRot(Quaternion deltaRot)
 		{
 			rowRot = deltaRot * rowRot;
 
