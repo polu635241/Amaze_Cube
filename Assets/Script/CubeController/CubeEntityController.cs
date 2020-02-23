@@ -88,7 +88,7 @@ namespace Kun.Controller
 
             if (ownerRow != null)
             {
-                Quaternion deltaQuaterniotn = GetDeltaQuaternion(axis, isPositive);
+                Quaternion deltaQuaterniotn = CubeUnility.GetDeltaQuaternion (axis, isPositive);
 
  		        RowRatateCacheData rowRatateCacheData = new RowRatateCacheData(ownerRow, deltaQuaterniotn, isPositive);
 				rowIndex = outRowIndex;
@@ -145,7 +145,7 @@ namespace Kun.Controller
 
             if (ownerRow != null)
             {
-                Quaternion deltaQuaterniotn = GetDeltaQuaternion(axis, isPositive);
+                Quaternion deltaQuaterniotn = CubeUnility.GetDeltaQuaternion (axis, isPositive);
 
                 RowRatateCacheData rowRatateCacheData = new RowRatateCacheData(ownerRow, deltaQuaterniotn, isPositive);
 
@@ -223,33 +223,6 @@ namespace Kun.Controller
                        cubeRowData.RowCenterPoint = transferCenterCubeCaheData;
                    }
                });
-        }
-
-        public static Quaternion GetDeltaQuaternion (RowRotateAxis axis, bool isPositive)
-        {
-            float scale = isPositive ? 1 : -1;
-
-            float processDegree = 90 * scale;
-
-            switch (axis)
-            {
-                case RowRotateAxis.X:
-                    {
-                        return Quaternion.Euler(processDegree, 0, 0);
-                    }
-
-                case RowRotateAxis.Y:
-                    {
-                        return Quaternion.Euler(0, processDegree, 0);
-                    }
-
-                case RowRotateAxis.Z:
-                    {
-                        return Quaternion.Euler(0, 0, processDegree);
-                    }
-            }
-
-            throw new Exception("無對應旋轉設定");
         }
 
         public CubeRowData GetCubeRowData (RowRotateAxis axis, int index)

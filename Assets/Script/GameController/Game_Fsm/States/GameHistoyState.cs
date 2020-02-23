@@ -156,7 +156,7 @@ namespace Kun.Controller
 			RowRotateAxis rowRotateAxis = rowRotateHistory.RowRotateAxis;
 			bool isPositive = rowRotateHistory.IsPositive;
 
-			Quaternion rowRotate = CubeEntityController.GetDeltaQuaternion (rowRotateAxis, isPositive);
+			Quaternion rowRotate = CubeUnility.GetDeltaQuaternion (rowRotateAxis, isPositive);
 
 			Quaternion partRowRotate = Quaternion.Slerp (Quaternion.identity, rowRotate, ((float)1 / RowRatateLerpCount));
 
