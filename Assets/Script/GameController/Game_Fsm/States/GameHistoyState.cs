@@ -16,6 +16,7 @@ namespace Kun.Controller
 		}
 
 		HistoyDisplayUIController histoyDisplayUIController;
+		const int RowRatateLerpCount = 10;
 
 		public override void Enter (GameFlowState prevState)
 		{
@@ -26,16 +27,14 @@ namespace Kun.Controller
 			histoyDisplayUIController.SetDefaultSpeed ();
 			histoyDisplayUIController.SetProgress (0f);
 
-			gameFlowData.InRowRotate = false;
-
 			PlayHistoryGroup playHistoryGroup = gameController.ParseManager.PlayHistoryGroups [0];
 
 			//複製 因為會有移除的操作 避免動到本體
-			playHistorys = new List<PlayHistory> (playHistoryGroup.PlayHistorys);
+			playHistoryProcessDatas = GetPlayHistoryProcessDatas (playHistoryGroup.PlayHistorys);
 			totalTime = playHistoryGroup.TotalTime;
 		}
 
-		List<PlayHistory> playHistorys;
+		List<PlayHistoryProcessData> playHistoryProcessDatas;
 		float totalTime;
 
 		float playSpeed = 1f;
@@ -74,35 +73,29 @@ namespace Kun.Controller
 
 		void ProcessCubeRow (float deltaTime)
 		{
-			gameController.CubeController.CubeFlowController.Stay (deltaTime);
+			float currentTime = gameFlowData.FlowTime;
 
-			if (!gameFlowData.InRowRotate)
+			//可能因為延遲等等原因 一禎數旋轉多次
+			List<PlayHistoryProcessData> clonePlayHistoryProcessDatas = new List<PlayHistoryProcessData> (playHistoryProcessDatas);
+
+			//遞迴跟迭代發生在同一個集合時 會發生指標偏差
+			clonePlayHistoryProcessDatas.ForEach ((playHistoryProcessData) =>
 			{
-				float currentTime = gameFlowData.FlowTime;
-
-				//可能因為延遲等等原因 一禎數旋轉多次
-				List<PlayHistory> clonePlayHistorys = new List<PlayHistory> (playHistorys);
-
-				//遞迴跟迭代發生在同一個集合時 會發生指標偏差
-				clonePlayHistorys.ForEach ((playHistory) =>
+				if (currentTime > playHistoryProcessData.Time)
 				{
-					if (currentTime > playHistory.Time)
-					{
-						playHistorys.Remove (playHistory);
+					playHistoryProcessDatas.Remove (playHistoryProcessData);
 
-						//如果是行旋轉那就等轉完再繼續
-						if (playHistory.PlayHistoryStyle == PlayHistoryStyle.RowRotate)
-						{
-							ProcessRowRotateData (playHistory.RowRotateHistory);
-							return;
-						}
-						else
-						{
-							ProcessWholeRotateData (playHistory.WholeRotateHistory, deltaTime);
-						}
+					//如果是行旋轉那就等轉完再繼續
+					if (playHistoryProcessData.PlayHistoryStyle == PlayHistoryStyle.RowRotate)
+					{
+						ProcessRowRotateData (playHistoryProcessData.RowRotateHistoryProcessData);
 					}
-				});
-			}
+					else
+					{
+						ProcessWholeRotateData (playHistoryProcessData.WholeRotateHistory, deltaTime);
+					}
+				}
+			});
 		}
 
 		void ProcessWholeRotateData (WholeRotateHistory wholeRotateHistory, float deltaTime)
@@ -111,14 +104,73 @@ namespace Kun.Controller
 			cubeEntityController.RotateWhole (deltaEuler, deltaTime);
 		}
 
-		void ProcessRowRotateData (RowRotateHistory rowRotateHistory)
+		void ProcessRowRotateData (RowRotateHistoryProcessData rowRotateProcessData)
 		{
-			int cubeRowIndex = rowRotateHistory.RowIndex;
-			RowRotateAxis axis = rowRotateHistory.RowRotateAxis;
+			int cubeRowIndex = rowRotateProcessData.RowIndex;
+			RowRotateAxis axis = rowRotateProcessData.RowRotateAxis;
+			CubeRowData cubeRowData = cubeEntityController.GetCubeRowData (axis, cubeRowIndex);
+			cubeRowData.CubeCacheDatas.ForEach (cubeCacheData=> 
+			{
+				cubeCacheData.DeltaRowRot (rowRotateProcessData.PartRowRotate);
+			});
+
+			if (rowRotateProcessData.IsFinish)
+			{
+				cubeEntityController.OnRowRotateFinish (cubeRowData, rowRotateProcessData.IsPositive);
+			}
+		}
+
+		List<PlayHistoryProcessData> GetPlayHistoryProcessDatas (List<PlayHistory> playHistorys)
+		{
+			List<PlayHistoryProcessData> playHistoryProcessDatas = new List<PlayHistoryProcessData> ();
+
+			playHistorys.ForEach (playHistory=> 
+			{
+				float time = playHistory.Time;
+
+				if (playHistory.PlayHistoryStyle == PlayHistoryStyle.WholeRotate)
+				{
+					PlayHistoryProcessData processData = PlayHistoryProcessData.GetWholeRotateData (time, playHistory.WholeRotateHistory);
+					playHistoryProcessDatas.Add (processData);
+				}
+				else
+				{
+					List<PlayHistoryProcessData> processDatas = GetRowRotateHistoryDatas (playHistory);
+					playHistoryProcessDatas.AddRange (processDatas);
+				}
+			});
+
+			return playHistoryProcessDatas;
+		}
+
+		List<PlayHistoryProcessData> GetRowRotateHistoryDatas (PlayHistory playHistory)
+		{
+			List<PlayHistoryProcessData> playHistoryProcessDatas = new List<PlayHistoryProcessData> ();
+
+			float rowRotateTime = parseManager.CubeSetting.CubeEntitySetting.RowRotateTime;
+			float partRowRotateTime = rowRotateTime / RowRatateLerpCount;
+			float beginTime = playHistory.Time;
+
+			RowRotateHistory rowRotateHistory = playHistory.RowRotateHistory;
+
+			RowRotateAxis rowRotateAxis = rowRotateHistory.RowRotateAxis;
 			bool isPositive = rowRotateHistory.IsPositive;
-			RowRatateCacheData rowRatateCacheData = cubeEntityController.GetRowRatateCacheData (cubeRowIndex, axis, isPositive);
-			gameFlowData.HistoryRowRatateCacheData = rowRatateCacheData;
-			cubeFlowController.ForceChangeState<CubeHistortyRowRotateState> ();
+
+			Quaternion rowRotate = CubeEntityController.GetDeltaQuaternion (rowRotateAxis, isPositive);
+
+			Quaternion partRowRotate = Quaternion.Slerp (Quaternion.identity, rowRotate, ((float)1 / RowRatateLerpCount));
+
+			for (int i = 1 ; i <= RowRatateLerpCount ; i++)
+			{
+				//最後一frame
+				bool isFinish = (i == RowRatateLerpCount);
+				float processBeginTime = partRowRotateTime * i + beginTime;
+				PlayHistoryProcessData rowRotateHistoryProcessData = PlayHistoryProcessData.GetRowRotateData (processBeginTime, rowRotateHistory, partRowRotate, isFinish);
+				playHistoryProcessDatas.Add (rowRotateHistoryProcessData);
+			}
+
+			
+			return playHistoryProcessDatas;
 		}
 
 
