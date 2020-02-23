@@ -252,9 +252,16 @@ namespace Kun.Controller
             throw new Exception("無對應旋轉設定");
         }
 
-        List<CubeRowData> GetRotateRowsGroup (RowRotateAxis dir)
+        public CubeRowData GetCubeRowData (RowRotateAxis axis, int index)
         {
-            switch (dir)
+            List<CubeRowData> cubeRowDatas = GetRotateRowsGroup (axis);
+            CubeRowData cubeRowData = cubeRowDatas[index];
+            return cubeRowData;
+        }
+
+        List<CubeRowData> GetRotateRowsGroup (RowRotateAxis axis)
+        {
+            switch (axis)
             {
                 case RowRotateAxis.X:
                     {
