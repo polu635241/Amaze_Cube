@@ -108,6 +108,12 @@ namespace Kun.Tool
 		{
 			playHistoryGroups = new List<PlayHistoryGroup> ();
 
+			if (!File.Exists (HistoryFullPath))
+			{
+				FileStream fileStream = File.Create (HistoryFullPath);
+				fileStream.Dispose ();
+			}
+
 			using (StreamReader sr = new StreamReader (HistoryFullPath))
 			{
 				while (true) 

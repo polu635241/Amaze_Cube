@@ -126,7 +126,14 @@ namespace Kun.Controller
 
 		void OnHistoryPlay ()
 		{
-			gameFlowController.ForceChangeState<GameHistoyState> ();
+			if (parseManager.PlayHistoryGroups.Count > 0)
+			{
+				gameFlowController.ForceChangeState<GameHistoyState> ();
+			}
+			else
+			{
+				Debug.LogError ("尚未有歷史紀錄");
+			}
 		}
 
 		void OnGameReset()
@@ -134,12 +141,6 @@ namespace Kun.Controller
 			gameFlowController.ForceChangeState<GameStandbyState> ();
 			cubeController.Reset ();
 			flowUIController.Reset ();
-		}
-
-		[ContextMenu("Test")]
-		void Test ()
-		{
-			gameFlowController.ForceChangeState<GameHistoyState> ();
 		}
 
 		void OnApplicationQuitClick()
