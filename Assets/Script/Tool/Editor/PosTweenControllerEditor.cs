@@ -6,40 +6,86 @@ namespace Kun.Tool
     [CustomEditor (typeof (PosTweenController))]
     public class PosTweenControllerEditor : SerializedObjectEditor<PosTweenController>
     {
-        float value;
-
         Vector3 oldBenginPos;
         Vector3 oldEndPos;
 
         protected override void OnEnable ()
         {
             base.OnEnable ();
-            oldBenginPos = runtimeScript.BeginPos;
-            oldEndPos = runtimeScript.EndPos;
+            
+            if (NullProxyPointCheck)
+            {
+                return;
+            }
+
+            oldBenginPos = GetCurrentBeginPos;
+            oldEndPos = GetCurrentEndPos;
+
+            runtimeScript.Refresh ();
+        }
+
+        Vector3 GetCurrentBeginPos
+        {
+            get 
+            {
+                return runtimeScript.BeginPosProxy.position;
+            }
+        }
+
+        Vector3 GetCurrentEndPos
+        {
+            get
+            {
+                return runtimeScript.EndPosProxy.position;
+            }
+        }
+
+        bool NullProxyPointCheck
+        {
+            get 
+            {
+                if (runtimeScript.BeginPosProxy == null || runtimeScript.EndPosProxy == null)
+                {
+                    return true;
+                }
+
+                return false;
+            }
         }
 
         public override void OnInspectorGUI ()
         {
             base.OnInspectorGUI ();
 
-            bool currentFrameNeedRefresh = false;
+            float value = runtimeScript.Value;
 
-            if (oldBenginPos != runtimeScript.BeginPos)
+            float newValue = EditorGUILayout.Slider (value, 0, 1);
+
+            if (NullProxyPointCheck)
             {
-                currentFrameNeedRefresh = true;
+                return;
             }
 
-            if (oldEndPos != runtimeScript.EndPos)
+            bool currentFrameNeedRefresh = false;
+
+            Vector3 currentBeginPos = GetCurrentBeginPos;
+            if (oldBenginPos != currentBeginPos)
             {
                 currentFrameNeedRefresh = true;
+                oldBenginPos = currentBeginPos;
+            }
+
+            Vector3 currentEndPos = GetCurrentEndPos;
+            if (oldEndPos != currentEndPos)
+            {
+                currentFrameNeedRefresh = true;
+                oldEndPos = currentEndPos;
             }
 
             if (currentFrameNeedRefresh)
             {
                 ForceRefresh ();
             }
-
-            float newValue = EditorGUILayout.Slider (value, 0, 1);
 
             if (newValue != value)
             {
