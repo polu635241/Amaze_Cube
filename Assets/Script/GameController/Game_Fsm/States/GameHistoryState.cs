@@ -16,22 +16,16 @@ namespace Kun.Controller
 		}
 
 		HistoyDisplayUIController histoyDisplayUIController;
+		PosTweenController progressController;
+
 		const int RowRatateLerpCount = 10;
 
 		public override void Enter (GameFlowState prevState)
 		{
 			base.Enter (prevState);
 			flowUIManager.OnReceiveStatusSwitch (GameFlowUIStatus.History);
-			histoyDisplayUIController = flowUIManager.GetRootController<HistoyDisplayUIController> ();
-			histoyDisplayUIController.RegeistSpeedChangeEvent (OnPlaySpeedChange);
-			histoyDisplayUIController.SetDefaultSpeed ();
-			histoyDisplayUIController.SetProgress (0f);
-
-			PlayHistoryGroup playHistoryGroup = gameController.ParseManager.PlayHistoryGroups [0];
-
-			//複製 因為會有移除的操作 避免動到本體
-			playHistoryProcessDatas = GetPlayHistoryProcessDatas (playHistoryGroup.PlayHistorys);
-			totalTime = playHistoryGroup.TotalTime;
+			BindController ();
+			RefreshVarible ();
 		}
 
 		List<PlayHistoryProcessData> playHistoryProcessDatas;
@@ -39,36 +33,80 @@ namespace Kun.Controller
 
 		float playSpeed = 1f;
 
-		void OnPlaySpeedChange (float newSpeed)
-		{
-			playSpeed = newSpeed;
-		}
+		bool inDrag = false;
+
+		float progress;
+		float gameTime;
+		Vector3 screenPos;
 
 		public override GameFlowState Stay (float deltaTime)
 		{
-			float processDeltaTime = deltaTime * playSpeed;
-
-			//時間是在底層處裡的 所以要先處理完deltaTime再傳給底層
-			base.Stay (processDeltaTime);
-
-			ProcessCubeRow (processDeltaTime);
-
-			float gameTime = gameFlowData.FlowTime;
-
-			if (gameTime <= totalTime)
+			//不觸發底層的時間流控制 這個狀態較為特殊 時間流自己管
+			if (!inDrag)
 			{
-				float progress = gameTime / totalTime;
+				ProcessTimeUpdate (deltaTime);
 
-				if (progress > 1)
-				{
-					progress = 1;
-				}
-
-				histoyDisplayUIController.SetProgress (progress);
-				flowUIManager.SetTime (gameTime);
+				CheckClickBar ();
+			}
+			else
+			{
+				UpdateValueBar ();
 			}
 
+			histoyDisplayUIController.SetValue (progress);
+			flowUIManager.SetTime (gameTime);
+			gameFlowData.FlowTime = gameTime;
+
 			return null;
+
+			//ProcessCubeRow (processDeltaTime);
+		}
+
+		void CheckClickBar ()
+		{
+			if (inputReceiver.ScreenTrigger (out screenPos))
+			{
+				Vector3 rectPos;
+
+				if (progressController.CheckContatin (screenPos, out rectPos))
+				{
+					progressController.SetFixPos (rectPos);
+					inDrag = true;
+				}
+			}
+		}
+
+		void UpdateValueBar ()
+		{
+			if (inputReceiver.ScreenTrigger (out screenPos))
+			{
+				progressController.AttachPoint (screenPos, out progress);
+
+				gameTime = Mathf.Lerp (0, totalTime, progress);
+			}
+			else
+			{
+				inDrag = false;
+			}
+		}
+
+		void ProcessTimeUpdate (float deltaTime)
+		{
+			float processDeltaTime = deltaTime * playSpeed;
+
+			gameTime = gameFlowData.FlowTime + processDeltaTime;
+
+			if (gameTime > totalTime)
+			{
+				gameTime = totalTime;
+			}
+
+			progress = gameTime / totalTime;
+
+			if (progress > 1)
+			{
+				progress = 1;
+			}
 		}
 
 		void ProcessCubeRow (float deltaTime)
@@ -173,6 +211,29 @@ namespace Kun.Controller
 			return playHistoryProcessDatas;
 		}
 
+		void BindController ()
+		{
+			histoyDisplayUIController = flowUIManager.GetRootController<HistoyDisplayUIController> ();
+			histoyDisplayUIController.RegeistSpeedChangeEvent (OnPlaySpeedChange);
+			histoyDisplayUIController.Refresh ();
+			progressController = histoyDisplayUIController.ProgressController;
+		}
+
+		void RefreshVarible ()
+		{
+			PlayHistoryGroup playHistoryGroup = gameController.ParseManager.PlayHistoryGroups[0];
+
+			//複製 因為會有移除的操作 避免動到本體
+			playHistoryProcessDatas = GetPlayHistoryProcessDatas (playHistoryGroup.PlayHistorys);
+			totalTime = playHistoryGroup.TotalTime;
+
+			inDrag = false;
+		}
+
+		void OnPlaySpeedChange (float newSpeed)
+		{
+			playSpeed = newSpeed;
+		}
 
 		public override void Exit ()
 		{
