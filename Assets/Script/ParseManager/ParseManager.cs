@@ -13,9 +13,6 @@ namespace Kun.Tool
 	{
 		public void ParseSettings()
 		{
-			DirectoryInfo dirInfo = new DirectoryInfo(Application.dataPath);
-			DirInfoParent = dirInfo.Parent.FullName;
-
 			cubeSetting = JsonLoader<CubeSetting> ();
 			speedSettingData = JsonLoader<SpeedSettingData> ();
 			LoadPlayerHistoryGroup ();
@@ -85,13 +82,27 @@ namespace Kun.Tool
             return process;
         }
 
-		string DirInfoParent;
+		public static string DirInfoParent
+		{
+			get 
+			{
+				if (string.IsNullOrEmpty (dirInfoParent))
+				{
+					DirectoryInfo dirInfo = new DirectoryInfo (Application.dataPath);
+					dirInfoParent = dirInfo.Parent.FullName;
+				}
+
+				return dirInfoParent;
+			}
+		}
+
+		static string dirInfoParent;
 
         public const string SettingPath = "GameSetting";
 
-        string settingfolderPath = "";
+        static string settingfolderPath = "";
 
-        string SettingFolderPath
+        public static string SettingFolderPath
         {
             get
             {
@@ -155,9 +166,9 @@ namespace Kun.Tool
 
 		const string HistoryPath = "hisp.kp";
 
-		string historyFullPath;
+		static string historyFullPath;
 
-		public string HistoryFullPath
+		public static string HistoryFullPath
 		{
 			get
 			{
