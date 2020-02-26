@@ -8,11 +8,11 @@ using Kun.Data;
 
 namespace Kun.Controller
 {
-	public class GameHistoryState : GameFlowState 
+	public class GameHistoryState : GameFlowState
 	{
-		public  GameHistoryState (GameController gameController, GameFlowController gameFlowController) : base (gameController, gameFlowController)
+		public GameHistoryState (GameController gameController, GameFlowController gameFlowController) : base (gameController, gameFlowController)
 		{
-			
+
 		}
 
 		HistoyDisplayUIController histoyDisplayUIController;
@@ -37,10 +37,14 @@ namespace Kun.Controller
 
 		float progress;
 		float gameTime;
+		float prevFrameGameTime;
+		int processIndex = -1;
 		Vector3 screenPos;
 
 		public override GameFlowState Stay (float deltaTime)
 		{
+			prevFrameGameTime = gameTime;
+
 			//不觸發底層的時間流控制 這個狀態較為特殊 時間流自己管
 			if (!inDrag)
 			{
@@ -53,13 +57,13 @@ namespace Kun.Controller
 				UpdateValueBar ();
 			}
 
+			ProcessCubeRows ();
+
 			histoyDisplayUIController.SetValue (progress);
 			flowUIManager.SetTime (gameTime);
 			gameFlowData.FlowTime = gameTime;
-
 			return null;
 
-			//ProcessCubeRow (processDeltaTime);
 		}
 
 		void CheckClickBar ()
@@ -109,31 +113,64 @@ namespace Kun.Controller
 			}
 		}
 
-		void ProcessCubeRow ()
+		void ProcessCubeRows ()
 		{
-			float currentTime = gameFlowData.FlowTime;
-
-			//可能因為延遲等等原因 一禎數旋轉多次
-			List<PlayHistoryProcessData> clonePlayHistoryProcessDatas = new List<PlayHistoryProcessData> (playHistoryProcessDatas);
-
-			//遞迴跟迭代發生在同一個集合時 會發生指標偏差
-			clonePlayHistoryProcessDatas.ForEach ((playHistoryProcessData) =>
+			if (prevFrameGameTime == gameTime)
 			{
-				if (currentTime > playHistoryProcessData.Time)
-				{
-					playHistoryProcessDatas.Remove (playHistoryProcessData);
+				return;
+			}
 
-					//如果是行旋轉那就等轉完再繼續
-					if (playHistoryProcessData.PlayHistoryStyle == PlayHistoryStyle.RowRotate)
-					{
-						ProcessRowRotateData (playHistoryProcessData.RowRotateHistoryProcessData);
-					}
-					else
-					{
-						ProcessWholeRotateData (playHistoryProcessData.WholeRotateHistoryProcessData);
-					}
+			bool plus = gameTime > prevFrameGameTime;
+
+
+			while (true)
+			{
+				bool chechProcessResult = false;
+
+				if (plus)
+				{
+					chechProcessResult = CheckProcessNext ();
 				}
-			});
+
+				if (!chechProcessResult)
+				{
+					break;
+				}
+			}
+		}
+
+		bool CheckProcessNext ()
+		{
+			//最後了 沒得做了
+			if (processIndex == playHistoryProcessDatas.Count - 1)
+			{
+				return false;
+			}
+
+			PlayHistoryProcessData nextProcessData = playHistoryProcessDatas[processIndex + 1];
+
+			if (gameTime >= nextProcessData.Time)
+			{
+				ProcessCubeRow (nextProcessData);
+				processIndex++;
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+		void ProcessCubeRow (PlayHistoryProcessData playHistoryProcessData)
+		{
+			if (playHistoryProcessData.PlayHistoryStyle == PlayHistoryStyle.RowRotate)
+			{
+				ProcessRowRotateData (playHistoryProcessData.RowRotateHistoryProcessData);
+			}
+			else
+			{
+				ProcessWholeRotateData (playHistoryProcessData.WholeRotateHistoryProcessData);
+			}
 		}
 
 		void ProcessWholeRotateData (WholeRotateHistoryProcessData wholeRotateHistoryProcessData)
@@ -229,6 +266,7 @@ namespace Kun.Controller
 			totalTime = playHistoryGroup.TotalTime;
 
 			inDrag = false;
+			processIndex = -1;
 		}
 
 		void OnPlaySpeedChange (float newSpeed)

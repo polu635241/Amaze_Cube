@@ -173,7 +173,7 @@ namespace Kun.Data
 		[SerializeField][ReadOnly]
 		float deltaTime;
 
-		public Vector3 GetEuler()
+		public Vector3 GetEuler ()
 		{
 			return Tool.Tool.GetPosToEuler (deltaPosX, deltaPosY);
 		}
