@@ -155,5 +155,10 @@ namespace Kun.Controller
 		{
 			Application.Quit ();
 		}
+
+		void OnApplicationQuit ()
+		{
+			PlyerHistoryGroupFlusher.Close ();
+		}
 	}
 }
