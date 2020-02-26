@@ -16,9 +16,9 @@ namespace Kun.Controller
             this.centerPoint = cubeTotalBindData.CenterPoint;
 
             currentWholeRot = centerPoint.rotation;
-            currentWholeEuler = centerPoint.eulerAngles;
+            originWholeRot = currentWholeRot;
 
-            InitCubeEntityDatas(cubeTotalBindData);
+            InitCubeEntityDatas (cubeTotalBindData);
 
             this.cubeEntitySetting = cubeEntitySetting;
 
@@ -44,16 +44,13 @@ namespace Kun.Controller
             }
         }
 
-        [SerializeField]
-        [ReadOnly]
+        [SerializeField][ReadOnly]
         Quaternion currentWholeRot;
 
-        [SerializeField]
-        [ReadOnly]
-        Vector3 currentWholeEuler;
+        [SerializeField][ReadOnly]
+        Quaternion originWholeRot;
 
-        [SerializeField]
-        [ReadOnly]
+        [SerializeField][ReadOnly]
         List<CubeCacheData> cubeCacheDatas = new List<CubeCacheData>();
 
         [SerializeField]
@@ -262,7 +259,6 @@ namespace Kun.Controller
             Quaternion deltaRot = Quaternion.Euler(processDeltaEuler);
 
             currentWholeRot = deltaRot * currentWholeRot;
-            currentWholeEuler = currentWholeRot.eulerAngles;
 
             cubeCacheDatas.ForEach(cubeEntityDataGroup =>
                {
@@ -308,6 +304,8 @@ namespace Kun.Controller
                });
 
             gamePlayCubeWholeData = originCubeWholeData.GetValue(cubeCacheDatas);
+
+            currentWholeRot = originWholeRot;
         }
     }
 }
