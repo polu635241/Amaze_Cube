@@ -73,9 +73,9 @@ namespace Kun.Data
 		/// <param name="time">Time.</param>
 		/// <param name="rowRotateAxis">Row rotate axis.</param>
 		/// <param name="isPositive">If set to <c>true</c> is positive.</param>
-		public void AddPlayWholeRotateHistory (float time, Vector2 deltaPos)
+		public void AddPlayWholeRotateHistory (float time, Vector2 deltaPos, float deltaTime)
 		{
-			PlayHistory wholeRotateHistory = PlayHistory.GetWholeRotateHistory (time, deltaPos);
+			PlayHistory wholeRotateHistory = PlayHistory.GetWholeRotateHistory (time, deltaPos, deltaTime);
 			this.playHistorys.Add (wholeRotateHistory);
 		}
 	}

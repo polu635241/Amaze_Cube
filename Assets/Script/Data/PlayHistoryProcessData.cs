@@ -34,16 +34,16 @@ namespace Kun.Data
 		[SerializeField][ReadOnly]
 		float time;
 
-		public WholeRotateHistory WholeRotateHistory
+		public WholeRotateHistoryProcessData WholeRotateHistoryProcessData
 		{
 			get
 			{
-				return wholeRotateHistory;
+				return wholeRotateHistoryProcessData;
 			}
 		}
 
 		[SerializeField][ReadOnly]
-		WholeRotateHistory wholeRotateHistory;
+		WholeRotateHistoryProcessData wholeRotateHistoryProcessData;
 
 		public RowRotateHistoryProcessData RowRotateHistoryProcessData
 		{
@@ -63,7 +63,7 @@ namespace Kun.Data
 			playHistoryProcessData.playHistoryStyle = PlayHistoryStyle.WholeRotate;
 			playHistoryProcessData.time = time;
 			//避免改到原始參考
-			playHistoryProcessData.wholeRotateHistory = Tool.Tool.DeepClone (wholeRotateHistory);
+			playHistoryProcessData.wholeRotateHistoryProcessData = new WholeRotateHistoryProcessData (wholeRotateHistory);
 			return playHistoryProcessData;
 		}
 
@@ -145,5 +145,34 @@ namespace Kun.Data
 
 		[SerializeField][ReadOnly]
 		bool isFinish;
+	}
+
+	public class WholeRotateHistoryProcessData
+	{
+		public WholeRotateHistoryProcessData (WholeRotateHistory wholeRotateHistory)
+		{
+			this.deltaEuler = wholeRotateHistory.GetEuler ();
+			this.deltaTime = wholeRotateHistory.DeltaTime;
+		}
+
+		public Vector3 DeltaEuler
+		{
+			get 
+			{
+				return deltaEuler;
+			}
+		}
+
+		Vector3 deltaEuler;
+
+		public float DeltaTime
+		{
+			get 
+			{
+				return deltaTime;
+			}
+		}
+
+		float deltaTime;
 	}
 }

@@ -109,7 +109,7 @@ namespace Kun.Controller
 			}
 		}
 
-		void ProcessCubeRow (float deltaTime)
+		void ProcessCubeRow ()
 		{
 			float currentTime = gameFlowData.FlowTime;
 
@@ -130,15 +130,16 @@ namespace Kun.Controller
 					}
 					else
 					{
-						ProcessWholeRotateData (playHistoryProcessData.WholeRotateHistory, deltaTime);
+						ProcessWholeRotateData (playHistoryProcessData.WholeRotateHistoryProcessData);
 					}
 				}
 			});
 		}
 
-		void ProcessWholeRotateData (WholeRotateHistory wholeRotateHistory, float deltaTime)
+		void ProcessWholeRotateData (WholeRotateHistoryProcessData wholeRotateHistoryProcessData)
 		{
-			Vector3 deltaEuler = wholeRotateHistory.GetEuler ();
+			Vector3 deltaEuler = wholeRotateHistoryProcessData.DeltaEuler;
+			float deltaTime = wholeRotateHistoryProcessData.DeltaTime;
 			cubeEntityController.RotateWhole (deltaEuler, deltaTime);
 		}
 

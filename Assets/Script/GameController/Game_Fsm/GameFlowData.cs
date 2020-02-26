@@ -39,9 +39,9 @@ namespace Kun.Data
 		/// 因為反序列化的時候 不能判斷抽象型別 所以使用變數緩存再透過內部的enum判斷回傳
 		/// </summary>
 		/// <param name="deltaPos">Delta position.</param>
-		public void AddPlayWholeRotateHistory (Vector2 deltaPos)
+		public void AddPlayWholeRotateHistory (Vector2 deltaPos, float deltaTime)
 		{
-			this.playHistoryGroup.AddPlayWholeRotateHistory (flowTime, deltaPos);
+			this.playHistoryGroup.AddPlayWholeRotateHistory (flowTime, deltaPos, deltaTime);
 		}
 
 		public PlayHistoryGroup PlayHistoryGroup
