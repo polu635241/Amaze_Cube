@@ -28,7 +28,9 @@ namespace Kun.Controller
 			RefreshVarible ();
 		}
 
-		List<PlayHistoryProcessData> playHistoryProcessDatas;
+		List<PlayHistoryProcessData> historyProcessDatas;
+		List<PlayHistoryProcessData> reverseHistoryProcessDatas;
+
 		float totalTime;
 
 		float playSpeed = 1f;
@@ -142,12 +144,12 @@ namespace Kun.Controller
 		bool CheckProcessNext ()
 		{
 			//最後了 沒得做了
-			if (processIndex == playHistoryProcessDatas.Count - 1)
+			if (processIndex == historyProcessDatas.Count - 1)
 			{
 				return false;
 			}
 
-			PlayHistoryProcessData nextProcessData = playHistoryProcessDatas[processIndex + 1];
+			PlayHistoryProcessData nextProcessData = historyProcessDatas[processIndex + 1];
 
 			if (gameTime >= nextProcessData.Time)
 			{
@@ -261,8 +263,7 @@ namespace Kun.Controller
 		{
 			PlayHistoryGroup playHistoryGroup = gameController.ParseManager.PlayHistoryGroups[0];
 
-			//複製 因為會有移除的操作 避免動到本體
-			playHistoryProcessDatas = GetPlayHistoryProcessDatas (playHistoryGroup.PlayHistorys);
+			historyProcessDatas = GetPlayHistoryProcessDatas (playHistoryGroup.PlayHistorys);
 			totalTime = playHistoryGroup.TotalTime;
 
 			inDrag = false;

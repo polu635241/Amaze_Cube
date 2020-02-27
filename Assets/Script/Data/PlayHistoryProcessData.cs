@@ -56,6 +56,38 @@ namespace Kun.Data
 		[SerializeField][ReadOnly]
 		RowRotateHistoryProcessData rowRotateHistoryProcessData;
 
+		public PlayHistoryProcessData GetReverseData ()
+		{
+			PlayHistoryProcessData reverseData = new PlayHistoryProcessData ();
+			reverseData.time = this.time;
+			reverseData.playHistoryStyle = this.playHistoryStyle;
+			reverseData.MappingReverseRowData (this);
+
+			return reverseData;
+		}
+
+		void MappingReverseRowData (PlayHistoryProcessData source)
+		{
+			this.playHistoryStyle = source.playHistoryStyle;
+
+			switch (source.playHistoryStyle) 
+			{
+			case PlayHistoryStyle.WholeRotate:
+				{
+					this.wholeRotateHistoryProcessData = source.wholeRotateHistoryProcessData.GetReverseData ();
+				}
+
+			case PlayHistoryStyle.RowRotate:
+				{
+					this.rowRotateHistoryProcessData = source.rowRotateHistoryProcessData.GetReverseData ();
+				}
+
+			default:
+				{
+					throw new NotSupportedException ("Mapping fail");
+				}
+			}
+		}
 
 		public static PlayHistoryProcessData GetWholeRotateData (float time, WholeRotateHistory wholeRotateHistory)
 		{
@@ -145,6 +177,14 @@ namespace Kun.Data
 
 		[SerializeField][ReadOnly]
 		bool isFinish;
+
+		public RowRotateHistoryProcessData GetReverseData ()
+		{
+			RowRotateHistoryProcessData reverseData = Tool.Tool.DeepClone (this);
+			reverseData.isPositive = !reverseData.isPositive;
+			reverseData.partRowRotate = Quaternion.Inverse (reverseData.partRowRotate);
+			return reverseData;
+		}
 	}
 
 	public class WholeRotateHistoryProcessData
@@ -174,5 +214,12 @@ namespace Kun.Data
 		}
 
 		float deltaTime;
+
+		public WholeRotateHistoryProcessData GetReverseData ()
+		{
+			WholeRotateHistoryProcessData reverseData = Tool.Tool.DeepClone (this);
+			reverseData.deltaEuler *= -1;
+			return reverseData;
+		}
 	}
 }
