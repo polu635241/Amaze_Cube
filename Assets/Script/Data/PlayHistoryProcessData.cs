@@ -202,7 +202,6 @@ namespace Kun.Data
 		public WholeRotateHistoryProcessData (WholeRotateHistory wholeRotateHistory)
 		{
 			this.deltaRot = wholeRotateHistory.GetRot ();
-			this.deltaTime = wholeRotateHistory.DeltaTime;
 		}
 
 		WholeRotateHistoryProcessData ()
@@ -220,21 +219,10 @@ namespace Kun.Data
 
 		Quaternion deltaRot;
 
-		public float DeltaTime
-		{
-			get 
-			{
-				return deltaTime;
-			}
-		}
-
-		float deltaTime;
-
 		public WholeRotateHistoryProcessData GetReverseData ()
 		{
 			WholeRotateHistoryProcessData reverseData = new WholeRotateHistoryProcessData ();
 			reverseData.deltaRot = Quaternion.Inverse (this.deltaRot);
-			reverseData.deltaTime = this.deltaTime;
 			return reverseData;
 		}
 	}

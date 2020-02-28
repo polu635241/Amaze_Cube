@@ -37,8 +37,8 @@ namespace Kun.Controller
 						
 						Quaternion deltaRot = Tool.Tool.GetPosToRot (deltaPos);
 						
-						cubeController.CubeEntityController.RotateWhole (deltaRot, deltaTime);
-						GameFlowData.AddPlayWholeRotateHistory (deltaPos, deltaTime);
+						cubeController.CubeEntityController.RotateWhole (deltaRot);
+						GameFlowData.AddPlayWholeRotateHistory (deltaPos);
 					}
 				}
 

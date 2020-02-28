@@ -252,9 +252,9 @@ namespace Kun.Controller
             throw new Exception("無對應所屬群組");
         }
 
-		public void RotateWhole (Quaternion deltaRot, float deltaTime)
+		public void RotateWhole (Quaternion deltaRot)
         {
-			float processScale = cubeEntitySetting.RotateSpeed * deltaTime;
+			float processScale = cubeEntitySetting.RotateSpeed;
 			Quaternion processRot = Quaternion.LerpUnclamped (Quaternion.identity, deltaRot, processScale);
 
             currentWholeRot = processRot * currentWholeRot;

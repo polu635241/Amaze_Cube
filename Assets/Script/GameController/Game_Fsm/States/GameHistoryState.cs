@@ -205,8 +205,7 @@ namespace Kun.Controller
 		void ProcessWholeRotateData (WholeRotateHistoryProcessData wholeRotateHistoryProcessData)
 		{
 			Quaternion deltaRot = wholeRotateHistoryProcessData.DeltaRot;
-			float deltaTime = wholeRotateHistoryProcessData.DeltaTime;
-			cubeEntityController.RotateWhole (deltaRot, deltaTime);
+			cubeEntityController.RotateWhole (deltaRot);
 		}
 
 		void ProcessRowRotateData (RowRotateHistoryProcessData rowRotateProcessData)

@@ -80,12 +80,12 @@ namespace Kun.Data
 		/// <param name="time">Time.</param>
 		/// <param name="rowRotateAxis">Row rotate axis.</param>
 		/// <param name="isPositive">If set to <c>true</c> is positive.</param>
-		public static PlayHistory GetWholeRotateHistory (float time, Vector2 deltaPos, float deltaTime)
+		public static PlayHistory GetWholeRotateHistory (float time, Vector2 deltaPos)
 		{
 			PlayHistory playHistory = new PlayHistory ();
 			playHistory.time = time;
 			playHistory.playHistoryStyle = PlayHistoryStyle.WholeRotate;
-			playHistory.wholeRotateHistory = new WholeRotateHistory (deltaPos, deltaTime);
+			playHistory.wholeRotateHistory = new WholeRotateHistory (deltaPos);
 			return playHistory;
 		}
 	
@@ -144,11 +144,10 @@ namespace Kun.Data
 	[Serializable]
 	public class WholeRotateHistory
 	{
-		public WholeRotateHistory (Vector2 deltaPos, float deltaTime)
+		public WholeRotateHistory (Vector2 deltaPos)
 		{
 			this.deltaPosX = deltaPos.x;
 			this.deltaPosY = deltaPos.y;
-			this.deltaTime = deltaTime;
 		}
 
 		WholeRotateHistory ()
@@ -161,17 +160,6 @@ namespace Kun.Data
 
 		[SerializeField][ReadOnly]
 		float deltaPosY;
-
-		public float DeltaTime
-		{
-			get 
-			{
-				return deltaTime;
-			}
-		}
-
-		[SerializeField][ReadOnly]
-		float deltaTime;
 
 		public Quaternion GetRot ()
 		{
