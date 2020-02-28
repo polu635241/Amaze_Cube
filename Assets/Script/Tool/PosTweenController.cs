@@ -94,50 +94,8 @@ namespace Kun.Tool
             return false;
         }
 
-        [SerializeField]
-        bool debug;
-
         [SerializeField][ReadOnly]
         bool inDrag;
-
-        void Update ()
-        {
-            if (!debug)
-                return;
-
-            Vector3 mousePos = Input.mousePosition;
-
-            if (!inDrag)
-            {
-                value += Time.deltaTime * 0.1f;
-                SetValue (value);
-
-                if (Input.GetMouseButton (0))
-                {
-                    Vector3 rectPos;
-
-                    if (CheckContatin (mousePos, out rectPos))
-                    {
-                        SetFixPos (rectPos);
-
-                        inDrag = true;
-                    }
-                }
-            }
-            else
-            {
-                if (Input.GetMouseButton (0))
-                {
-                    float progress;
-
-                    AttachPoint (mousePos, out progress);
-                }
-                else
-                {
-                    inDrag = false;
-                }
-            }
-        }
 
         public void SetFixPos (Vector3 rectPos)
         {
@@ -167,13 +125,12 @@ namespace Kun.Tool
             }
         }
 
-
         public void Refresh ()
         {
-            proportionDeltaPos = (endPos - beginPos);
-
             beginPos = beginPosProxy.position;
             endPos = endPosProxy.position;
+
+			proportionDeltaPos = (endPos - beginPos);
 
             SetValue (0f);
         }

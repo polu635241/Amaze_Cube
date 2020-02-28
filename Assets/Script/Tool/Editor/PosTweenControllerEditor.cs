@@ -21,7 +21,10 @@ namespace Kun.Tool
             oldBenginPos = GetCurrentBeginPos;
             oldEndPos = GetCurrentEndPos;
 
-            runtimeScript.Refresh ();
+			if (!Application.isPlaying) 
+			{
+				ForceRefresh ();
+			}
         }
 
         Vector3 GetCurrentBeginPos
@@ -61,7 +64,7 @@ namespace Kun.Tool
 
             float newValue = EditorGUILayout.Slider (value, 0, 1);
 
-            if (NullProxyPointCheck)
+			if (NullProxyPointCheck || Application.isPlaying)
             {
                 return;
             }
@@ -87,7 +90,7 @@ namespace Kun.Tool
                 ForceRefresh ();
             }
 
-            if (newValue != value)
+			if (newValue != value)
             {
                 value = newValue;
                 runtimeScript.SetValue (value);
