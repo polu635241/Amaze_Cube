@@ -127,14 +127,18 @@ namespace Kun.Controller
 
 			while (true)
 			{
-				bool chechProcessResult = false;
+				bool checkProcessResult = false;
 
-				if (plus)
+				if (plus) 
 				{
-					chechProcessResult = CheckProcessNext ();
+					checkProcessResult = CheckProcessNext ();
+				}
+				else 
+				{
+					checkProcessResult = CheckProcessPrev ();
 				}
 
-				if (!chechProcessResult)
+				if (!checkProcessResult)
 				{
 					break;
 				}
@@ -163,6 +167,29 @@ namespace Kun.Controller
 			}
 		}
 
+		bool CheckProcessPrev ()
+		{
+			//最前面了 沒得做了
+			if (processIndex < 0)
+			{
+				return false;
+			}
+
+			PlayHistoryProcessData currentProcessData = reverseHistoryProcessDatas [processIndex];
+
+			//倒退是取消當前的 所以是要觸發當前的逆轉
+			if (gameTime <= currentProcessData.Time)
+			{
+				ProcessCubeRow (currentProcessData);
+				processIndex--;
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+
 		void ProcessCubeRow (PlayHistoryProcessData playHistoryProcessData)
 		{
 			if (playHistoryProcessData.PlayHistoryStyle == PlayHistoryStyle.RowRotate)
@@ -177,9 +204,9 @@ namespace Kun.Controller
 
 		void ProcessWholeRotateData (WholeRotateHistoryProcessData wholeRotateHistoryProcessData)
 		{
-			Vector3 deltaEuler = wholeRotateHistoryProcessData.DeltaEuler;
+			Quaternion deltaRot = wholeRotateHistoryProcessData.DeltaRot;
 			float deltaTime = wholeRotateHistoryProcessData.DeltaTime;
-			cubeEntityController.RotateWhole (deltaEuler, deltaTime);
+			cubeEntityController.RotateWhole (deltaRot, deltaTime);
 		}
 
 		void ProcessRowRotateData (RowRotateHistoryProcessData rowRotateProcessData)
@@ -264,6 +291,15 @@ namespace Kun.Controller
 			PlayHistoryGroup playHistoryGroup = gameController.ParseManager.PlayHistoryGroups[0];
 
 			historyProcessDatas = GetPlayHistoryProcessDatas (playHistoryGroup.PlayHistorys);
+
+			reverseHistoryProcessDatas = new List<PlayHistoryProcessData> ();
+
+			historyProcessDatas.ForEach (historyProcessData=>
+				{
+					PlayHistoryProcessData reverseHistoryProcessData = historyProcessData.GetReverseData ();
+					reverseHistoryProcessDatas.Add (reverseHistoryProcessData);
+				});
+
 			totalTime = playHistoryGroup.TotalTime;
 
 			inDrag = false;

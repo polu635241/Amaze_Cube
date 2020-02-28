@@ -252,13 +252,12 @@ namespace Kun.Controller
             throw new Exception("無對應所屬群組");
         }
 
-        public void RotateWhole (Vector3 deltaEuler, float deltaTime)
+		public void RotateWhole (Quaternion deltaRot, float deltaTime)
         {
-            Vector3 processDeltaEuler = deltaEuler * cubeEntitySetting.RotateSpeed * deltaTime;
+			float processScale = cubeEntitySetting.RotateSpeed * deltaTime;
+			Quaternion processRot = Quaternion.LerpUnclamped (Quaternion.identity, deltaRot, processScale);
 
-            Quaternion deltaRot = Quaternion.Euler(processDeltaEuler);
-
-            currentWholeRot = deltaRot * currentWholeRot;
+            currentWholeRot = processRot * currentWholeRot;
 
             cubeCacheDatas.ForEach(cubeEntityDataGroup =>
                {

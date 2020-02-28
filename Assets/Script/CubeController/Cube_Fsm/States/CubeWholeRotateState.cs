@@ -35,9 +35,9 @@ namespace Kun.Controller
 					{
 						Vector3 deltaPos = (mousePos - mouseLastPos.Value);
 						
-						Vector3 deltaEnler = Tool.Tool.GetPosToEuler (deltaPos);
+						Quaternion deltaRot = Tool.Tool.GetPosToRot (deltaPos);
 						
-						cubeController.CubeEntityController.RotateWhole (deltaEnler, deltaTime);
+						cubeController.CubeEntityController.RotateWhole (deltaRot, deltaTime);
 						GameFlowData.AddPlayWholeRotateHistory (deltaPos, deltaTime);
 					}
 				}

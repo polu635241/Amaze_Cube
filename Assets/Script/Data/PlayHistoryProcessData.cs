@@ -75,11 +75,13 @@ namespace Kun.Data
 			case PlayHistoryStyle.WholeRotate:
 				{
 					this.wholeRotateHistoryProcessData = source.wholeRotateHistoryProcessData.GetReverseData ();
+					break;
 				}
 
 			case PlayHistoryStyle.RowRotate:
 				{
 					this.rowRotateHistoryProcessData = source.rowRotateHistoryProcessData.GetReverseData ();
+					break;
 				}
 
 			default:
@@ -119,6 +121,11 @@ namespace Kun.Data
 			this.rowIndex = rowRotateHistory.RowIndex;
 			this.isPositive = rowRotateHistory.IsPositive;
 			this.isFinish = isFinish;
+		}
+
+		RowRotateHistoryProcessData()
+		{
+			
 		}
 
 		public int RowIndex
@@ -180,9 +187,12 @@ namespace Kun.Data
 
 		public RowRotateHistoryProcessData GetReverseData ()
 		{
-			RowRotateHistoryProcessData reverseData = Tool.Tool.DeepClone (this);
-			reverseData.isPositive = !reverseData.isPositive;
-			reverseData.partRowRotate = Quaternion.Inverse (reverseData.partRowRotate);
+			RowRotateHistoryProcessData reverseData = new RowRotateHistoryProcessData ();
+			reverseData.rowRotateAxis = this.rowRotateAxis;
+			reverseData.partRowRotate = Quaternion.Inverse (this.partRowRotate);
+			reverseData.rowIndex = this.rowIndex;
+			reverseData.isPositive = !this.isPositive;
+			reverseData.isFinish = this.isFinish;
 			return reverseData;
 		}
 	}
@@ -191,19 +201,24 @@ namespace Kun.Data
 	{
 		public WholeRotateHistoryProcessData (WholeRotateHistory wholeRotateHistory)
 		{
-			this.deltaEuler = wholeRotateHistory.GetEuler ();
+			this.deltaRot = wholeRotateHistory.GetRot ();
 			this.deltaTime = wholeRotateHistory.DeltaTime;
 		}
 
-		public Vector3 DeltaEuler
+		WholeRotateHistoryProcessData ()
+		{
+			
+		}
+
+		public Quaternion DeltaRot
 		{
 			get 
 			{
-				return deltaEuler;
+				return deltaRot;
 			}
 		}
 
-		Vector3 deltaEuler;
+		Quaternion deltaRot;
 
 		public float DeltaTime
 		{
@@ -217,8 +232,9 @@ namespace Kun.Data
 
 		public WholeRotateHistoryProcessData GetReverseData ()
 		{
-			WholeRotateHistoryProcessData reverseData = Tool.Tool.DeepClone (this);
-			reverseData.deltaEuler *= -1;
+			WholeRotateHistoryProcessData reverseData = new WholeRotateHistoryProcessData ();
+			reverseData.deltaRot = Quaternion.Inverse (this.deltaRot);
+			reverseData.deltaTime = this.deltaTime;
 			return reverseData;
 		}
 	}

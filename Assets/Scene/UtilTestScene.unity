@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -193,10 +193,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   valueTransform: {fileID: 812801353}
   beginPosProxy: {fileID: 1991841531}
-  beginPos: {x: 716, y: 75, z: 0}
+  beginPos: {x: 264.77084, y: 48.359375, z: 0}
   endPosProxy: {fileID: 1113450243}
-  endPos: {x: 1286.2, y: 75, z: 0}
-  proportionDeltaPos: {x: 0, y: 0, z: 0}
+  endPos: {x: 475.62604, y: 48.359375, z: 0}
+  proportionDeltaPos: {x: 570.19995, y: 0, z: 0}
   rectCamera: {fileID: 0}
   fixPos: {x: 0, y: 0, z: 0}
   debug: 0

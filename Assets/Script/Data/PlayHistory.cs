@@ -173,9 +173,9 @@ namespace Kun.Data
 		[SerializeField][ReadOnly]
 		float deltaTime;
 
-		public Vector3 GetEuler ()
+		public Quaternion GetRot ()
 		{
-			return Tool.Tool.GetPosToEuler (deltaPosX, deltaPosY);
+			return Tool.Tool.GetPosToRot (deltaPosX, deltaPosY);
 		}
 	}
 }
