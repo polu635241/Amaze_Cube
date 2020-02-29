@@ -13,6 +13,7 @@ namespace Kun.Controller
 		public PlyerHistoryGroupFlusher (Action<PlayHistoryGroup> onFlushCallback)
 		{
 			waitProcessLocker = new object ();
+			waitFlusherLocker = new object ();
 			waitProcessDatas = new List<PlayHistoryGroup> ();
 			onFlushEvent = onFlushCallback;
 		}
@@ -34,6 +35,8 @@ namespace Kun.Controller
 		event Action<PlayHistoryGroup> onFlushEvent;
 
 		object waitProcessLocker;
+
+		object waitFlusherLocker;
 
 		List<PlayHistoryGroup> waitProcessDatas = new List<PlayHistoryGroup> ();
 
@@ -77,19 +80,27 @@ namespace Kun.Controller
 
 		void Flush (PlayHistoryGroup data)
 		{
-			onFlushEvent.Invoke (data);
+			lock (waitFlusherLocker) 
+			{
+				onFlushEvent.Invoke (data);
+			}
 		}
 
-		/// <summary>
-		/// 除非遊戲被關掉 不然不應該進到解構式
-		/// </summary>
-		~PlyerHistoryGroupFlusher ()
+		// 透過Locker確保存檔完畢
+		void WaitFlushFinish ()
 		{
-			#if UNITY_EDITOR
-			Debug.LogError ("PlyerHistoryGroupFlusher destructor");
-			#endif
+			lock (waitFlusherLocker) 
+			{
+				
+			}
+		}
 
-			if (runThread != null) 
+
+		public void Close ()
+		{
+			WaitFlushFinish ();
+			
+			if (runThread != null)
 			{
 				runThread.Abort ();
 			}

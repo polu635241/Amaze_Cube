@@ -289,6 +289,18 @@ namespace Kun.Tool
 			return result;
 		}
 
+		public static Quaternion GetPosToRot (Vector2 deltaPos)
+		{
+			Vector3 euler = GetPosToEuler (deltaPos.x, deltaPos.y);
+			return Quaternion.Euler (euler);
+		}
+
+		public static Quaternion GetPosToRot (float deltaX, float deltaY)
+		{
+			Vector3 euler = GetPosToEuler (deltaX, deltaY);
+			return Quaternion.Euler (euler);
+		}
+
 		public static Vector3 GetPosToEuler (Vector2 deltaPos)
 		{
 			return GetPosToEuler (deltaPos.x, deltaPos.y);

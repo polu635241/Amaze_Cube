@@ -12,7 +12,9 @@ namespace Kun.Controller
 		protected GameController gameController;
 		protected GameFlowController gameFlowController;
 		protected GameFlowData gameFlowData;
+		protected ParseManager parseManager;
 		protected FlowUIManager flowUIManager;
+		protected InputReceiver inputReceiver;
 
 		protected CubeController cubeController;
 		protected CubeEntityController cubeEntityController;
@@ -24,6 +26,8 @@ namespace Kun.Controller
 			this.gameFlowController = gameFlowController;
 			this.gameFlowData = gameFlowController.GameFlowData;
 			this.flowUIManager = gameController.FlowUIController;
+			this.parseManager = gameController.ParseManager;
+			this.inputReceiver = gameController.InputReceiver;
 
 			this.cubeController = gameController.CubeController;
 			this.cubeEntityController = cubeController.CubeEntityController;

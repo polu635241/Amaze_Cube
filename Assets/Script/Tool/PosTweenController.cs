@@ -5,41 +5,132 @@ namespace Kun.Tool
     public class PosTweenController : MonoBehaviour
     {
         [SerializeField]
-        Transform valueTransform;
+        RectTransform valueTransform;
 
-        public Vector3 BeginPos
+        public Transform BeginPosProxy
         {
             get 
             {
-                return beginPos;
+                return beginPosProxy;
             }
         }
 
         [SerializeField]
+        Transform beginPosProxy;
+
+        [SerializeField][ReadOnly]
         Vector3 beginPos = Vector3.zero;
+
+        public Transform EndPosProxy
+        {
+            get 
+            {
+                return endPosProxy;
+            }
+        }
+
+        [SerializeField]
+        Transform endPosProxy;
 
         public Vector3 EndPos
         {
-            get 
+            get
             {
                 return endPos;
             }
         }
 
-        [SerializeField]
+        [SerializeField][ReadOnly]
         Vector3 endPos = Vector3.zero;
+
 
         [SerializeField][ReadOnly][Header ("把差距值分成100等分")]
         Vector3 proportionDeltaPos;
+
+        public Camera RectCamera
+        {
+            set 
+            {
+                rectCamera = value;
+            }
+        }
+
+        [SerializeField][Header("繪畫出的Camera overlay的話設定為null")]
+        Camera rectCamera;
+
+        [SerializeField]
+        Vector3 fixPos;
+
+        public float Value
+        {
+            get 
+            {
+                return value;
+            }
+        }
+
+        float value;
 
         void Awake ()
         {
             Refresh ();
         }
 
+        /// <summary>
+        /// 滑鼠點下去的時候 會記下滑鼠與物件座標的delta當作補正值 保證點到物件的邊緣時 物件不會瞬間飛到滑鼠的點上
+        /// </summary>
+        /// <param name="progress"></param>
+        /// <param name="setFixPos"></param>
+        /// <returns></returns>
+        public bool CheckContatin (Vector3 screenPos ,out Vector3 rectPos)
+        {
+            if (RectTransformUtility.ScreenPointToWorldPointInRectangle (valueTransform, screenPos, null, out rectPos))
+            {
+                if (RectTransformUtility.RectangleContainsScreenPoint (valueTransform, rectPos))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        [SerializeField][ReadOnly]
+        bool inDrag;
+
+        public void SetFixPos (Vector3 rectPos)
+        {
+            fixPos = rectPos - valueTransform.position;
+        }
+
+        public void AttachPoint (Vector3 screenPos, out float progress)
+        {
+            Vector3 rectPos;
+
+            Vector3 processScreenPos = screenPos - fixPos;
+
+            if (RectTransformUtility.ScreenPointToWorldPointInRectangle (valueTransform, processScreenPos, rectCamera, out rectPos))
+            {
+                // 拖動物件的時候 應該要用X來回推Y 縱向離開物件碰撞時還是可以拖動 橫向就看range (0,1)
+
+                float unclampedProgress = (rectPos.x - beginPos.x) / (endPos.x - beginPos.x);
+
+                progress = Mathf.Clamp (unclampedProgress, 0, 1);
+
+                SetValue (progress);
+            }
+            else
+            {
+                Debug.LogError ("not in same rect");
+                progress = -1;
+            }
+        }
+
         public void Refresh ()
         {
-            proportionDeltaPos = (endPos - beginPos);
+            beginPos = beginPosProxy.position;
+            endPos = endPosProxy.position;
+
+			proportionDeltaPos = (endPos - beginPos);
 
             SetValue (0f);
         }
@@ -60,8 +151,10 @@ namespace Kun.Tool
 
             if (valueTransform != null)
             {
-                valueTransform.localPosition = progressPos;
+                valueTransform.position = progressPos;
             }
+
+            this.value = value;
         }
     }
 }

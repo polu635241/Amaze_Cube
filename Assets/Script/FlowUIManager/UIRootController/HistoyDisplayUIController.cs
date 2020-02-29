@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.UI;
 using Kun.Data;
 
@@ -10,7 +11,7 @@ namespace Kun.Tool
 	{
 		public HistoyDisplayUIController (RefBinder refBinder, SpeedSettingData speedSettingData) : base (refBinder.gameObject)
 		{
-			progressTweenController = refBinder.GetComponent<PosTweenController> (AssetKeys.ProgressValuePosController);
+			progressController = refBinder.GetComponent<PosTweenController> (AssetKeys.ProgressValuePosController);
 			speedDropdown = refBinder.GetComponent<Dropdown> (AssetKeys.SpeedScaleDropDown);
 
 			speeds = new List<float> (speedSettingData.Speeds);
@@ -31,7 +32,16 @@ namespace Kun.Tool
 		int defaultIndex;
 
 		Dropdown speedDropdown;
-		PosTweenController progressTweenController;
+
+		public PosTweenController ProgressController
+		{
+			get 
+			{
+				return progressController;
+			}
+		}
+
+		PosTweenController progressController;
 		event Action<float> onSpeedChangeEvent;
 
 		public void SetDefaultSpeed ()
@@ -56,9 +66,16 @@ namespace Kun.Tool
 			onSpeedChangeEvent -= callback;
 		}
 
-		public void SetProgress (float progress)
+		public void Refresh ()
 		{
-			progressTweenController.SetValue (progress);
+			SetDefaultSpeed ();
+			SetValue (0f);
+			progressController.Refresh ();
+		}
+
+		public void SetValue (float progress)
+		{
+			progressController.SetValue (progress);
 		}
 
 		public override void SwitchStatus (GameFlowUIStatus status)

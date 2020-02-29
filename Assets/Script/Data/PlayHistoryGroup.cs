@@ -62,20 +62,18 @@ namespace Kun.Data
 		/// <param name="isPositive">If set to <c>true</c> is positive.</param>
 		public void AddPlayRowRotateHistory (float time, int rowIndex, RowRotateAxis rowRotateAxis, bool isPositive)
 		{
-			PlayHistory rowRotateHistory = PlayHistory.GetPlayRowRotateHistory (time, rowIndex, rowRotateAxis, isPositive);
+			PlayHistory rowRotateHistory = PlayHistory.GetRowRotateHistory (time, rowIndex, rowRotateAxis, isPositive);
 			this.playHistorys.Add (rowRotateHistory);
 		}
 
 		/// <summary>
-		//  因為反序列化的時候 不能判斷抽象型別 所以使用變數緩存再透過內部的enum判斷回傳
+		/// 因為反序列化的時候 不能判斷抽象型別 所以使用變數緩存再透過內部的enum判斷回傳
 		/// </summary>
-		/// <returns>The play whole rotate history.</returns>
 		/// <param name="time">Time.</param>
-		/// <param name="rowRotateAxis">Row rotate axis.</param>
-		/// <param name="isPositive">If set to <c>true</c> is positive.</param>
+		/// <param name="deltaPos">Delta position.</param>
 		public void AddPlayWholeRotateHistory (float time, Vector2 deltaPos)
 		{
-			PlayHistory wholeRotateHistory = PlayHistory.GetPlayWholeRotateHistory (time, deltaPos);
+			PlayHistory wholeRotateHistory = PlayHistory.GetWholeRotateHistory (time, deltaPos);
 			this.playHistorys.Add (wholeRotateHistory);
 		}
 	}

@@ -16,9 +16,9 @@ namespace Kun.Controller
             this.centerPoint = cubeTotalBindData.CenterPoint;
 
             currentWholeRot = centerPoint.rotation;
-            currentWholeEuler = centerPoint.eulerAngles;
+            originWholeRot = currentWholeRot;
 
-            InitCubeEntityDatas(cubeTotalBindData);
+            InitCubeEntityDatas (cubeTotalBindData);
 
             this.cubeEntitySetting = cubeEntitySetting;
 
@@ -44,16 +44,13 @@ namespace Kun.Controller
             }
         }
 
-        [SerializeField]
-        [ReadOnly]
+        [SerializeField][ReadOnly]
         Quaternion currentWholeRot;
 
-        [SerializeField]
-        [ReadOnly]
-        Vector3 currentWholeEuler;
+        [SerializeField][ReadOnly]
+        Quaternion originWholeRot;
 
-        [SerializeField]
-        [ReadOnly]
+        [SerializeField][ReadOnly]
         List<CubeCacheData> cubeCacheDatas = new List<CubeCacheData>();
 
         [SerializeField]
@@ -88,7 +85,7 @@ namespace Kun.Controller
 
             if (ownerRow != null)
             {
-                Quaternion deltaQuaterniotn = GetDeltaQuaternion(axis, isPositive);
+                Quaternion deltaQuaterniotn = CubeUnility.GetDeltaQuaternion (axis, isPositive);
 
  		        RowRatateCacheData rowRatateCacheData = new RowRatateCacheData(ownerRow, deltaQuaterniotn, isPositive);
 				rowIndex = outRowIndex;
@@ -145,7 +142,7 @@ namespace Kun.Controller
 
             if (ownerRow != null)
             {
-                Quaternion deltaQuaterniotn = GetDeltaQuaternion(axis, isPositive);
+                Quaternion deltaQuaterniotn = CubeUnility.GetDeltaQuaternion (axis, isPositive);
 
                 RowRatateCacheData rowRatateCacheData = new RowRatateCacheData(ownerRow, deltaQuaterniotn, isPositive);
 
@@ -225,36 +222,16 @@ namespace Kun.Controller
                });
         }
 
-        Quaternion GetDeltaQuaternion (RowRotateAxis axis, bool isPositive)
+        public CubeRowData GetCubeRowData (RowRotateAxis axis, int index)
         {
-            float scale = isPositive ? 1 : -1;
-
-            float processDegree = 90 * scale;
-
-            switch (axis)
-            {
-                case RowRotateAxis.X:
-                    {
-                        return Quaternion.Euler(processDegree, 0, 0);
-                    }
-
-                case RowRotateAxis.Y:
-                    {
-                        return Quaternion.Euler(0, processDegree, 0);
-                    }
-
-                case RowRotateAxis.Z:
-                    {
-                        return Quaternion.Euler(0, 0, processDegree);
-                    }
-            }
-
-            throw new Exception("無對應旋轉設定");
+            List<CubeRowData> cubeRowDatas = GetRotateRowsGroup (axis);
+            CubeRowData cubeRowData = cubeRowDatas[index];
+            return cubeRowData;
         }
 
-        List<CubeRowData> GetRotateRowsGroup (RowRotateAxis dir)
+        List<CubeRowData> GetRotateRowsGroup (RowRotateAxis axis)
         {
-            switch (dir)
+            switch (axis)
             {
                 case RowRotateAxis.X:
                     {
@@ -275,14 +252,12 @@ namespace Kun.Controller
             throw new Exception("無對應所屬群組");
         }
 
-        public void RotateWhole (Vector3 deltaEuler, float deltaTime)
+		public void RotateWhole (Quaternion deltaRot)
         {
-            Vector3 processDeltaEuler = deltaEuler * cubeEntitySetting.RotateSpeed * deltaTime;
+			float processScale = cubeEntitySetting.RotateSpeed;
+			Quaternion processRot = Quaternion.LerpUnclamped (Quaternion.identity, deltaRot, processScale);
 
-            Quaternion deltaRot = Quaternion.Euler(processDeltaEuler);
-
-            currentWholeRot = deltaRot * currentWholeRot;
-            currentWholeEuler = currentWholeRot.eulerAngles;
+            currentWholeRot = processRot * currentWholeRot;
 
             cubeCacheDatas.ForEach(cubeEntityDataGroup =>
                {
@@ -328,6 +303,8 @@ namespace Kun.Controller
                });
 
             gamePlayCubeWholeData = originCubeWholeData.GetValue(cubeCacheDatas);
+
+            currentWholeRot = originWholeRot;
         }
     }
 }
