@@ -32,6 +32,8 @@ namespace Kun.Tool
 
 		GUIContent searchContent;
 
+		bool setClose;
+
 		void Init (SerializedProperty valueProperty, string[] originItems)
 		{
 			this.valueProperty = valueProperty;
@@ -88,11 +90,6 @@ namespace Kun.Tool
 			if (EditorWindow.focusedWindow != null && EditorWindow.focusedWindow != this)
 			{
 				setClose = true;
-			}
-
-			if (setClose) 
-			{
-				Close ();
 			}
 		}
 
@@ -160,7 +157,13 @@ namespace Kun.Tool
 			}
 		}
 
-		bool setClose;
+		void Update ()
+		{
+			if (setClose) 
+			{
+				Close ();
+			}
+		}
 
 		void DrawItem (int index, string item, Event currentEvent)
 		{
